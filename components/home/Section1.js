@@ -11,7 +11,7 @@ const NextCyberLanding = () => {
         <div className="text-center mb-20">
           <h1 className="text-3xl font-bold">
             <span className="text-[#69EDFE]">
-              The World's ⚡ Leading Platform
+              The World&apos;s ⚡ Leading Platform
             </span>
             <br />
             <span className="text-[#69EDFE]">for Cyber Professionals</span>
@@ -61,7 +61,7 @@ const NextCyberLanding = () => {
                 <span className="underline decoration-[#69EDFE] text-white decoration-2">
                   faster and smarter
                 </span>{" "}
-                with the world's first
+                with the world&apos;s first
                 <br />
                 <span className="underline decoration-[#69EDFE] text-white  decoration-2">
                   AI recruiter

@@ -230,7 +230,7 @@ const NextCyberAuth = () => {
             {/* Header */}
             <div className="space-y-6 text-start">
               <h2 className="text-2xl  font-bold text-[#69EDFE] leading-tight max-w-sm">
-                The World's ⚡ Leading Platform for Cyber Professionals
+                The World&apos;s ⚡ Leading Platform for Cyber Professionals
               </h2>
               <div
                 className="inline-blockborder w-fit border-transparent bg-gradient-to-r from-[#111214] to-[#2F3031] bg-clip-border
@@ -281,8 +281,8 @@ const NextCyberAuth = () => {
 
                 {/* Testimonial Quote */}
                 <blockquote className="text-white text-sm leading-relaxed">
-                  "What impressed me most was their strategic approach. Every
-                  design choice had a reason behind it"
+                  &quot;What impressed me most was their strategic approach.
+                  Every design choice had a reason behind it&quot;
                 </blockquote>
               </div>
             </div>

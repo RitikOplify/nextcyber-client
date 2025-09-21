@@ -111,10 +111,10 @@ const FAQSection = () => {
             Frequently Asked Questions
           </h2>
           <p className="text-gray-400 text-sm max-w-3xl mx-auto leading-relaxed">
-            Got questions? We've got answers. Check out our frequently asked
-            questions section to find valuable insights into our processes,
-            pricing, and more. Transparency is at the core of our client
-            interactions.
+            Got questions? We&apos;ve got answers. Check out our frequently
+            asked questions section to find valuable insights into our
+            processes, pricing, and more. Transparency is at the core of our
+            client interactions.
           </p>
         </div>
 
