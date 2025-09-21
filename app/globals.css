@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+.bg-radial-b {
+  background: radial-gradient(ellipse at bottom, #025bcfcc, #07080a);
+}
+
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #f7f7f9;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #025bcf;
+}
