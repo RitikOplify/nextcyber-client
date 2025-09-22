@@ -5,7 +5,7 @@ import React from "react";
 
 function Nav() {
   return (
-    <nav className="absolute top-0 left-0 w-full bg-gradient-to-r from-[#0C0D0F] to-[#111214] flex items-center justify-between px-20 py-3 z-30">
+    <nav className="w-full bg-gradient-to-r from-[#0C0D0F] to-[#111214] flex items-center justify-between px-20 py-3 z-30">
       <Link href={"/"}>
         <Image
           src="/logo.png"

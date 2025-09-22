@@ -1,8 +1,8 @@
-'use client'
-import Footer from "@/components/Footer";
-import Nav from "@/components/Nav";
-import { usePathname } from "next/navigation";
+"use client";
 import React from "react";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
+import { usePathname } from "next/navigation";
 
 function Wrapper({ children }) {
   const pathname = usePathname();

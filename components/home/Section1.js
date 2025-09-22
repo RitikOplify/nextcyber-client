@@ -1,13 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { ChevronDown } from "lucide-react";
 
 const NextCyberLanding = () => {
   const [activeTab, setActiveTab] = useState("Recruiter");
 
   return (
     <div className="w-full bg-black text-white relative overflow-hidden">
-      <div className="flex flex-col items-center pt-18 relative z-10 mt-18 px-5 sm:px-10 max-w-[1440px] mx-auto">
+      <div className="flex flex-col items-center pt-18 relative z-10 px-5 sm:px-10 max-w-[1440px] mx-auto">
         <div className="text-center mb-20">
           <h1 className="text-3xl font-bold">
             <span className="text-[#69EDFE]">
