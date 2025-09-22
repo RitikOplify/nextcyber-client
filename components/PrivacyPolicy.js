@@ -123,11 +123,13 @@ const PrivacyPolicy = () => {
   return (
     <section className="w-full">
       <div className="max-w-[1440px] mx-auto px-5 sm:px-10 flex flex-col gap-5 py-15 pt-25">
-        <h1 className=" mt-5 text-[32px] leading-[40px] sm:text-[48px] sm:leading-[60px] text-gray-100">Privacy Policy</h1>
-        <div className="space-y-10 font-montserrat text-base leading-relaxed text-text">
+        <h1 className=" mt-5 text-[32px] leading-[40px] sm:text-[48px] sm:leading-[60px] text-gray-100">
+          Privacy Policy
+        </h1>
+        <div className="space-y-10 text-base leading-relaxed text-text">
           {privacyData.map((item, index) => (
             <div key={index}>
-              <h4 className="font-semibold text-xl font-monda text-heading text-gray-200">
+              <h4 className="font-semibold text-xl text-heading text-gray-200">
                 {item.title}
               </h4>
 
