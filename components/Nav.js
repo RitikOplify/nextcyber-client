@@ -1,15 +1,18 @@
 import { ChevronDown } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 function Nav() {
   return (
     <nav className="absolute top-0 left-0 w-full bg-gradient-to-r from-[#0C0D0F] to-[#111214] flex items-center justify-between px-20 py-3 z-30">
-      <div className="flex items-center justify-center">
-        <div className="text-xl font-bold tracking-wider text-white">
-          NEXTCYBR
-        </div>
-      </div>
+      <Image
+        src="/logo.png"
+        className=" h-9 w-auto"
+        height={72}
+        width={329}
+        alt="nextcybr-logo"
+      />
 
       {/* Navigation Links */}
       <div className="flex items-center space-x-8">

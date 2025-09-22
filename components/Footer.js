@@ -1,5 +1,6 @@
 "use client";
 import { ArrowRight, MailIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import { BiLogoInstagram, BiLogoLinkedin, BiLogoTwitter } from "react-icons/bi";
@@ -23,9 +24,14 @@ const Footer = () => {
       <div className=" relative flex flex-col items-start pt-20 px-20 pb-0 gap-15 w-full max-w-[1440px] mx-auto text-white">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
-            <div className="mb-5.5">
-              <h2 className="text-2xl font-bold tracking-wide">NEXTCYBR</h2>
-            </div>
+            <Image
+              src="/logo.png"
+              className=" h-9 w-auto mb-5.5"
+              height={72}
+              width={329}
+              alt="nextcybr-logo"
+            />
+
             <p className="text-gray-300 text-sm mb-5 leading-relaxed">
               Where tech founders hire great developers really fast.
             </p>

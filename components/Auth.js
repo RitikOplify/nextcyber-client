@@ -5,6 +5,8 @@ import { Eye, EyeOff, ArrowRight, Star, Briefcase, User } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { BiLogoLinkedinSquare } from "react-icons/bi";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { FaLinkedin } from "react-icons/fa6";
 
 const NextCyberAuth = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -36,9 +38,14 @@ const NextCyberAuth = () => {
         <div className="w-1/2 flex items-center justify-center">
           <div className="w-full max-w-sm space-y-7.5">
             {/* Logo */}
-            <div className="mb-7.5 text-white font-semibold text-xl">
-              NEXTCYBR
-            </div>
+
+            <Image
+              src="/logo.png"
+              className=" h-9 w-auto mb-7.5"
+              height={72}
+              width={329}
+              alt="nextcybr-logo"
+            />
 
             {/* Form Header */}
             <div className="space-y-1 mb-7.5">
@@ -87,7 +94,7 @@ const NextCyberAuth = () => {
               <div className="space-y-7.5 mb-7.5">
                 <div className="flex gap-4">
                   <button className="flex-1 bg-[#1B1C1E] text-[#9C9C9D] py-2 px-4 border border-[#2F3031] rounded-full font-medium text-sm flex items-center justify-center gap-2 transition-colors">
-                    <BiLogoLinkedinSquare size={20} />
+                    <FaLinkedin size={20} className="text-white" />
                     LinkedIn
                   </button>
                   <button className="flex-1 bg-[#1B1C1E] text-[#9C9C9D] py-2 px-4 border border-[#2F3031] rounded-full font-medium text-sm flex items-center justify-center gap-2 transition-colors">
