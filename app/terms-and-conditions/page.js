@@ -127,26 +127,26 @@ const TermsAndConditions = () => {
   return (
     <section className="w-full">
       <div className="max-w-[1440px] mx-auto px-5 sm:px-10 flex flex-col items-start gap-5 py-15 pt-25">
-        <h1 className=" mt-5 text-[32px] leading-[40px] sm:text-[48px] sm:leading-[60px]">
+        <h1 className=" mt-5 text-[32px] leading-[40px] sm:text-[48px] sm:leading-[60px] text-gray-100">
           Terms & Conditions
         </h1>
 
         <div className="space-y-10 text-base leading-relaxed text-text">
           {termsData.map((item, index) => (
             <div key={index}>
-              <h4 className="font-semibold text-xl text-heading">
+              <h4 className="font-semibold text-xl text-heading text-gray-200">
                 {item.title}
               </h4>
 
               {item.list ? (
-                <ul className="list-disc pl-5 mt-5 space-y-1">
+                <ul className="list-disc pl-5 mt-5 space-y-1 text-gray-300">
                   {item.list.map((li, i) => (
                     <li key={i}>{li}</li>
                   ))}
                 </ul>
               ) : (
                 item.content?.map((p, i) => (
-                  <p key={i} className="mt-5">
+                  <p key={i} className="mt-5 text-gray-300">
                     {p}
                   </p>
                 ))
