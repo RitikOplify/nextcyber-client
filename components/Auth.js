@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, ArrowRight, Star, Briefcase, User } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
-import { BiLogoLinkedinSquare } from "react-icons/bi";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaLinkedin } from "react-icons/fa6";
@@ -13,6 +12,7 @@ const NextCyberAuth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRole, setSelectedRole] = useState("recruiter");
   const router = useRouter();
+
   const {
     register,
     handleSubmit,

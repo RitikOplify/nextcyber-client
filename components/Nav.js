@@ -6,13 +6,15 @@ import React from "react";
 function Nav() {
   return (
     <nav className="absolute top-0 left-0 w-full bg-gradient-to-r from-[#0C0D0F] to-[#111214] flex items-center justify-between px-20 py-3 z-30">
-      <Image
-        src="/logo.png"
-        className=" h-9 w-auto"
-        height={72}
-        width={329}
-        alt="nextcybr-logo"
-      />
+      <Link href={"/"}>
+        <Image
+          src="/logo.png"
+          className=" h-9 w-auto"
+          height={72}
+          width={329}
+          alt="nextcybr-logo"
+        />
+      </Link>
 
       {/* Navigation Links */}
       <div className="flex items-center space-x-8">

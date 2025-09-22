@@ -24,13 +24,15 @@ const Footer = () => {
       <div className=" relative flex flex-col items-start pt-20 px-20 pb-0 gap-15 w-full max-w-[1440px] mx-auto text-white">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
-            <Image
-              src="/logo.png"
-              className=" h-9 w-auto mb-5.5"
-              height={72}
-              width={329}
-              alt="nextcybr-logo"
-            />
+            <Link href={"/"}>
+              <Image
+                src="/logo.png"
+                className=" h-9 w-auto mb-5.5"
+                height={72}
+                width={329}
+                alt="nextcybr-logo"
+              />
+            </Link>
 
             <p className="text-gray-300 text-sm mb-5 leading-relaxed">
               Where tech founders hire great developers really fast.
@@ -144,17 +146,19 @@ const Footer = () => {
               ©2025 NextCybr. All Rights Reserved.
             </div>
             <div className="flex space-x-5">
-              {["Privacy Policy", "Terms & Conditions", "Cookie Policy"].map(
-                (link) => (
-                  <Link
-                    key={link}
-                    href=""
-                    className="text-[#9C9C9D] hover:text-white transition-colors duration-200 text-sm hover:underline"
-                  >
-                    {link}
-                  </Link>
-                )
-              )}
+              {[
+                { name: "Privacy Policy", url: "/privacy-policy" },
+                { name: "Terms & Conditions", url: "/terms-and-conditions" },
+                { name: "Cookie Policy", url: "/cookie-policy" },
+              ].map((link) => (
+                <Link
+                  key={link.url}
+                  href={link.url}
+                  className="text-[#9C9C9D] hover:text-white transition-colors duration-200 text-sm hover:underline"
+                >
+                  {link.name}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
