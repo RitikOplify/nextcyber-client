@@ -76,10 +76,10 @@ const CybersecurityJobBoard = () => {
   ];
 
   return (
-    <div className="bg-black pt-20 text-white ">
+    <div className="bg-g-900 pt-20">
       <div className="overflow-hidden px-5 sm:px-10">
         <div className="text-center mb-11">
-          <h2 className="text-xl text-[#69EDFE] font-medium">
+          <h2 className="heading2 font-medium text-accent-color-1">
             Trusted by Startups and Agencies
           </h2>
         </div>
@@ -101,14 +101,14 @@ const CybersecurityJobBoard = () => {
 
       <div className="max-w-[1440px] mx-auto pt-40  px-5 sm:px-10">
         <div className="text-center">
-          <h1 className="text-4xl font-light text-[#9C9C9D] mb-5 leading-tight">
+          <h1 className="heading2 font-medium text-g-200 mb-5">
             Browse Thousands of{" "}
-            <span className="text-[#69EDFE]">Cybersecurity</span>
+            <span className="text-accent-color-1">Cybersecurity</span>
             <br />
-            <span className="text-[#69EDFE]">Jobs Daily</span>, Connect on Your
-            Terms
+            <span className="text-accent-color-1">Jobs Daily</span>, Connect on
+            Your Terms
           </h1>
-          <p className="text-[#6A6B6C] text-base max-w-lg mx-auto leading-relaxed">
+          <p className="text-g-300 body max-w-lg mx-auto">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi mi
             lectus, pharetra sit amet elit in, condimentum rutrum ante.
           </p>
@@ -119,62 +119,60 @@ const CybersecurityJobBoard = () => {
           {jobs.map((job) => (
             <div
               key={job.id}
-              className="bg-[#1B1C1E] rounded-[10px] p-5 border border-[#2F3031]"
+              className="bg-g-600 rounded-[10px] p-5 border border-g-500"
             >
               {/* Badges */}
               <div className="flex justify-between items-center mb-6">
                 <div className="flex gap-2">
                   {job.featured && (
-                    <span className="inline-flex items-center gap-1.5 p-1 rounded text-xs bg-[#DBF9FF] text-[#025BCF]">
+                    <span className="inline-flex small font-semibold items-center gap-1.5 p-1 rounded text-xs bg-light-blue text-primary">
                       <Star size={12} />
                       Featured
                     </span>
                   )}
                   {job.urgent && (
-                    <span className="inline-flex items-center gap-1.5 p-1 rounded text-xs bg-[#DBF9FF] text-[#025BCF]">
+                    <span className="inline-flex small font-semibold items-center gap-1.5 p-1 rounded text-xs  bg-light-blue text-primary">
                       <Zap size={12} />
                       Urgent
                     </span>
                   )}
                 </div>
-                <div className="bg-[#2F3031] p-1.5 rounded">
-                  <Bookmark size={16} className=" text-[#6A6B6C]" />
+                <div className="bg-g-500 p-1.5 rounded">
+                  <Bookmark size={16} className=" text-g-300" />
                 </div>
               </div>
 
               {/* Job Title */}
-              <h3 className="text-base font-medium text-[#9C9C9D]">
-                {job.title}
-              </h3>
+              <h3 className="caption font-semibold text-g-200">{job.title}</h3>
               <p className="text-[#9C9C9D] text-sm">{job.location}</p>
 
               {/* Job Details */}
-              <div className="mt-6 mb-2 flex items-center gap-3">
-                <div className="flex items-center gap-1.5 text-sm text-[#6A6B6C]">
+              <div className="mt-6 mb-2 flex items-center gap-3 text-g-600 small">
+                <div className="flex items-center gap-1.5  ">
                   <Clock size={16} />
                   <span>{job.type}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-[#6A6B6C]">
+                <div className="flex items-center gap-2  ">
                   <Users size={16} />
                   <span>{job.experience}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-[#6A6B6C]">
+                <div className="flex items-center gap-2  ">
                   <DollarSign size={16} />
                   <span>{job.salary}</span>
                 </div>
               </div>
 
               {/* Posted Date */}
-              <p className="text-[#6A6B6C] text-xs">Posted on {job.posted}</p>
+              <p className="text-g-300 text-xs">Posted on {job.posted}</p>
 
               {/* Company and Apply Button */}
-              <div className="flex items-center justify-between mt-11 pt-5.5 border-t border-[#2F3031]">
+              <div className="flex items-center justify-between mt-11 pt-5.5 border-t border-g-500">
                 <div className="flex items-center gap-2 text-[#9C9C9D]">
                   {/* Google Logo Placeholder */}
                   <FcGoogle />
                   Google
                 </div>
-                <button className=" text-[#9C9C9D] px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 border border-[#2F3031]">
+                <button className=" text-g-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 border border-g-500">
                   Apply Now
                 </button>
               </div>

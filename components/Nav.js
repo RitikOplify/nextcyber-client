@@ -5,7 +5,7 @@ import React from "react";
 
 function Nav() {
   return (
-    <nav className=" sticky top-0 left-0 w-full bg-gradient-to-r from-[#0C0D0F] to-[#111214] flex items-center justify-between px-20 py-3 z-30">
+    <nav className=" sticky top-0 left-0 w-full bg-g-800 flex items-center justify-between px-20 py-3 z-30">
       <Link href={"/"}>
         <Image
           src="/logo.png"
@@ -16,36 +16,29 @@ function Nav() {
         />
       </Link>
 
-      {/* Navigation Links */}
-      <div className="flex items-center space-x-8">
+      <div className="flex items-center space-x-8 text-g-200 text-sm font-semibold">
+        <div className="flex items-center space-x-2 cursor-pointer ">
+          <span>For Recruiter</span>
+          <ChevronDown size={20} />
+        </div>
         <div className="flex items-center space-x-2 cursor-pointer">
-          <span className="text-sm font-semibold text-[#9C9C9D]">
-            For Recruiter
-          </span>
-          <ChevronDown className="w-5 h-5 text-[#9C9C9D]" />
+          <span>For Candidates</span>
+          <ChevronDown size={20} />
         </div>
-        <div className="flex items-center space-x-2 cursor-pointer text-[#9C9C9D]">
-          <span className="text-sm font-semibold ">For Candidates</span>
-          <ChevronDown className="w-5 h-5" />
-        </div>
-        <div className="flex items-center space-x-2 cursor-pointer text-[#9C9C9D]">
-          <span className="text-sm font-semibold">Blogs</span>
-          <ChevronDown className="w-5 h-5" />
+        <div className="flex items-center space-x-2 cursor-pointer">
+          <span>Blogs</span>
+          <ChevronDown size={20} />
         </div>
       </div>
 
-      {/* Auth Buttons */}
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-4 text-white text-base font-medium">
         <Link
           href={"/auth"}
-          className="px-6 py-3 text-white bg-[#1B1C1E] border border-[#2F3031] rounded-full text-sm font-medium"
+          className="px-6 py-3 bg-g-600 border border-g-500 rounded-full"
         >
           Login
         </Link>
-        <Link
-          href={"/auth"}
-          className="px-6 py-3 text-white bg-[#025BCF] rounded-full text-sm font-medium"
-        >
+        <Link href={"/auth"} className="px-6 py-3 bg-primary rounded-full ">
           Sign up
         </Link>
       </div>
