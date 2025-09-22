@@ -8,7 +8,7 @@ const NextCyberLanding = () => {
     <section className="w-full bg-g-900 relative overflow-hidden">
       <div className="flex flex-col items-center pt-18 relative z-10 px-5 sm:px-10 max-w-[1440px] mx-auto">
         <div className="text-center mb-20">
-          <h1 className="heading2 text-accent-color-1 font-semibold">
+          <h1 className="text-4xl leading-11 text-accent-color-1 font-semibold">
             <span>The World&apos;s ⚡ Leading Platform</span>
             <br />
             <span>for Cyber Professionals</span>
