@@ -1,7 +1,37 @@
 @import "tailwindcss";
 
-.bg-radial-b {
-  background: radial-gradient(ellipse at bottom, #025bcfcc, #07080a);
+@theme {
+  /* Brand colors */
+  --color-primary: #025bcf;
+  --color-accent: #1b6392;
+  --color-secondary: #8592a3;
+  --color-basewhite: #ffffff;
+
+  /* Grey scale */
+  --color-grey-900: #07080a;
+  --color-grey-800: #0c0d0f;
+  --color-grey-700: #111214;
+  --color-grey-600: #1b1c1e;
+  --color-grey-500: #2f3031;
+  --color-grey-400: #434345;
+  --color-grey-300: #6a6b6c;
+  --color-grey-200: #9c9c9d;
+  --color-grey-100: #cdecec;
+  --color-grey-50: #e6e6e6;
+
+  /* Backgrounds & borders */
+  --color-background: #f7f7f7;
+  --color-border: #e7e3e4;
+
+  /* Utility colors */
+  --color-light-green: #cfffc8;
+  --color-dark-green: #16a600;
+  --color-light-red: #ffecec;
+  --color-dark-red: #dc4848;
+  --color-light-yellow: #fffad2;
+  --color-dark-yellow: #ffab00;
+  --color-light-blue: #dbf9ff;
+  --color-dark-blue: #03c3ec;
 }
 
 *::-webkit-scrollbar {

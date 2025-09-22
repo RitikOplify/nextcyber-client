@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 
 const FAQSection = () => {
-  const [openItems, setOpenItems] = useState(new Set([])); // First item open by default
+  const [openItems, setOpenItems] = useState(new Set([]));
 
   const faqItems = [
     {
@@ -59,6 +59,10 @@ const FAQSection = () => {
         "We use modern cross-platform frameworks like React Native and Flutter, along with thorough testing across different devices and operating systems.",
     },
   ];
+
+  const half = Math.ceil(faqItems.length / 2);
+  const leftItems = faqItems.slice(0, half);
+  const rightItems = faqItems.slice(half);
 
   const toggleItem = (id) => {
     const newOpenItems = new Set(openItems);
@@ -118,34 +122,66 @@ const FAQSection = () => {
           </p>
         </div>
 
-        {/* FAQ Grid */}
-        <div className="columns-1 lg:columns-2 gap-6">
-          {faqItems.map((item, index) => (
-            <div
-              key={item.id}
-              className={`break-inside-avoid border-b border-[#2F3031] flex flex-col gap-6 overflow-hidden p-7.5`}
-            >
-              <button
-                onClick={() => toggleItem(item.id)}
-                className="w-full text-left flex items-center justify-between"
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left column */}
+          <div className="flex flex-col gap-6">
+            {leftItems.map((item) => (
+              <div
+                key={item.id}
+                className="border-b border-[#2F3031] flex flex-col gap-6 overflow-hidden p-7.5"
               >
-                <span className="text-white font-medium text-sm lg:text-base">
-                  {item.question}
-                </span>
-                <div className="text-[#9C9C9D] p-2 rounded-full bg-[#1B1C1E] flex-shrink-0">
-                  {openItems.has(item.id) ? <MinusIcon /> : <PlusIcon />}
-                </div>
-              </button>
+                <button
+                  onClick={() => toggleItem(item.id)}
+                  className="w-full text-left flex items-center justify-between"
+                >
+                  <span className="text-white font-medium text-sm lg:text-base">
+                    {item.question}
+                  </span>
+                  <div className="text-[#9C9C9D] p-2 rounded-full bg-[#1B1C1E] flex-shrink-0">
+                    {openItems.has(item.id) ? <MinusIcon /> : <PlusIcon />}
+                  </div>
+                </button>
 
-              {openItems.has(item.id) && (
-                <div>
-                  <p className="text-[#9C9C9D] pr-8 text-sm lg:text-base leading-relaxed">
-                    {item.answer}
-                  </p>
-                </div>
-              )}
-            </div>
-          ))}
+                {openItems.has(item.id) && (
+                  <div>
+                    <p className="text-[#9C9C9D] pr-8 text-sm lg:text-base leading-relaxed">
+                      {item.answer}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Right column */}
+          <div className="flex flex-col gap-6">
+            {rightItems.map((item) => (
+              <div
+                key={item.id}
+                className="border-b border-[#2F3031] flex flex-col gap-6 overflow-hidden p-7.5"
+              >
+                <button
+                  onClick={() => toggleItem(item.id)}
+                  className="w-full text-left flex items-center justify-between"
+                >
+                  <span className="text-white font-medium text-sm lg:text-base">
+                    {item.question}
+                  </span>
+                  <div className="text-[#9C9C9D] p-2 rounded-full bg-[#1B1C1E] flex-shrink-0">
+                    {openItems.has(item.id) ? <MinusIcon /> : <PlusIcon />}
+                  </div>
+                </button>
+
+                {openItems.has(item.id) && (
+                  <div>
+                    <p className="text-[#9C9C9D] pr-8 text-sm lg:text-base leading-relaxed">
+                      {item.answer}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

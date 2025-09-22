@@ -65,7 +65,7 @@ const NextCyberAuth = () => {
                       : "bg-[#1B1C1E] text-[#9C9C9D]"
                   }`}
                 >
-                  <Briefcase className="w-4 h-4" />
+                  <Briefcase className="w-5 h-5" />
                   Recruiter
                 </button>
                 <button
@@ -76,7 +76,7 @@ const NextCyberAuth = () => {
                       : "bg-[#1B1C1E] text-[#9C9C9D]"
                   }`}
                 >
-                  <User className="w-4 h-4" />
+                  <User className="w-5 h-5" />
                   Candidate
                 </button>
               </div>
@@ -87,11 +87,11 @@ const NextCyberAuth = () => {
               <div className="space-y-7.5 mb-7.5">
                 <div className="flex gap-4">
                   <button className="flex-1 bg-[#1B1C1E] text-[#9C9C9D] py-2 px-4 border border-[#2F3031] rounded-full font-medium text-sm flex items-center justify-center gap-2 transition-colors">
-                    <BiLogoLinkedinSquare />
+                    <BiLogoLinkedinSquare size={20} />
                     LinkedIn
                   </button>
                   <button className="flex-1 bg-[#1B1C1E] text-[#9C9C9D] py-2 px-4 border border-[#2F3031] rounded-full font-medium text-sm flex items-center justify-center gap-2 transition-colors">
-                    <FcGoogle />
+                    <FcGoogle size={20} />
                     Google
                   </button>
                 </div>
