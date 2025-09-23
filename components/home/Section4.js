@@ -45,24 +45,7 @@ const FAQSection = () => {
       answer:
         "We utilize SEO optimization, content marketing, social media marketing, PPC campaigns, and analytics-driven strategies to increase your website's visibility and traffic.",
     },
-    {
-      id: 6,
-      question: "Can you integrate third-party APIs into our mobile app?",
-      answer:
-        "Yes, we have expertise in integrating various third-party APIs including payment gateways, social media APIs, mapping services, and custom business APIs.",
-    },
-    {
-      id: 7,
-      question:
-        "How do you ensure cross-platform compatibility for mobile apps?",
-      answer:
-        "We use modern cross-platform frameworks like React Native and Flutter, along with thorough testing across different devices and operating systems.",
-    },
   ];
-
-  const half = Math.ceil(faqItems.length / 2);
-  const leftItems = faqItems.slice(0, half);
-  const rightItems = faqItems.slice(half);
 
   const toggleItem = (id) => {
     const newOpenItems = new Set(openItems);
@@ -109,7 +92,6 @@ const FAQSection = () => {
   return (
     <div className="bg-g-900 py-20 ">
       <div className=" max-w-[1440px] mx-auto px-5 sm:px-10">
-        {/* Header Section */}
         <div className="text-center mb-15">
           <h2 className="text-accent-color-1 text-4xl leading-11 font-medium mb-3.5">
             Frequently Asked Questions
@@ -122,66 +104,33 @@ const FAQSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left column */}
-          <div className="flex flex-col gap-6">
-            {leftItems.map((item) => (
-              <div
-                key={item.id}
-                className="border-b border-g-500 flex flex-col gap-6 overflow-hidden p-7.5"
+        <div className="flex flex-col gap-2.5 mx-auto max-w-3xl">
+          {faqItems.map((item) => (
+            <div
+              key={item.id}
+              className="border-b border-g-600 bg-[#FFFFFF0D] rounded-lg flex flex-col gap-6 overflow-hidden py-3.5 px-7.5"
+            >
+              <button
+                onClick={() => toggleItem(item.id)}
+                className="w-full text-left flex items-center justify-between"
               >
-                <button
-                  onClick={() => toggleItem(item.id)}
-                  className="w-full text-left flex items-center justify-between"
-                >
-                  <span className="text-g-100 font-medium text-base leading-6">
-                    {item.question}
-                  </span>
-                  <div className="text-g-200 p-2 rounded-full bg-g-600 flex-shrink-0">
-                    {openItems.has(item.id) ? <MinusIcon /> : <PlusIcon />}
-                  </div>
-                </button>
+                <span className="text-g-100 font-medium text-base leading-6">
+                  {item.question}
+                </span>
+                <div className="text-g-200 p-2 rounded-full bg-g-600 flex-shrink-0">
+                  {openItems.has(item.id) ? <MinusIcon /> : <PlusIcon />}
+                </div>
+              </button>
 
-                {openItems.has(item.id) && (
-                  <div>
-                    <p className="text-g-200 pr-8 text-base leading-[150%]">
-                      {item.answer}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Right column */}
-          <div className="flex flex-col gap-6">
-            {rightItems.map((item) => (
-              <div
-                key={item.id}
-                className="border-b border-g-500 flex flex-col gap-6 overflow-hidden p-7.5"
-              >
-                <button
-                  onClick={() => toggleItem(item.id)}
-                  className="w-full text-left flex items-center justify-between"
-                >
-                  <span className="text-g-100 font-medium text-base leading-6">
-                    {item.question}
-                  </span>
-                  <div className="text-g-200 p-2 rounded-full bg-g-600 flex-shrink-0">
-                    {openItems.has(item.id) ? <MinusIcon /> : <PlusIcon />}
-                  </div>
-                </button>
-
-                {openItems.has(item.id) && (
-                  <div>
-                    <p className="text-g-200 pr-8 text-base leading-[150%]">
-                      {item.answer}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+              {openItems.has(item.id) && (
+                <div>
+                  <p className="text-g-200 pr-8 text-base leading-[150%]">
+                    {item.answer}
+                  </p>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </div>
