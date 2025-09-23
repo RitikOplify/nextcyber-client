@@ -12,6 +12,7 @@ import {
   Bookmark,
 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import Image from "next/image";
 
 const CybersecurityJobBoard = () => {
   const companies = [
@@ -76,7 +77,7 @@ const CybersecurityJobBoard = () => {
   ];
 
   return (
-    <div className="bg-g-900 pt-20">
+    <div className="bg-g-900 py-20">
       <div className="overflow-hidden px-5 sm:px-10">
         <div className="text-center mb-11">
           <h2 className="text-4xl leading-11 font-medium text-accent-color-1">
@@ -180,6 +181,82 @@ const CybersecurityJobBoard = () => {
               </div>
             </div>
           ))}
+        </div>
+        <div className=" pt-10">
+          <h2 className="text-accent-color-1 text-center font-medium text-4xl leading-11 tracking-[-1%] pb-5">
+            Stop Guessing. Start Growing.
+          </h2>
+          <p className=" text-base leading-6 font-medium text-center max-w-lg mx-auto text-g-300">
+            Your career deserves more than a standard CV. With{" "}
+            <span className=" text-accent-color-1">NextGen CV</span>, AI
+            transforms your profile into a living, evolving career map
+          </p>
+          <div className=" pt-17.5 grid grid-cols-4 gap-5">
+            <div className=" flex flex-col items-center justify-center text-center">
+              <Image
+                src={"/build-once-grow-forever.png"}
+                height={140}
+                width={160}
+                alt="build-once-grow-forever"
+                className="pb-7.5"
+              />
+              <h4 className=" text-g-200 font-semibold text-base leading-6 ">
+                Build once, grow forever
+              </h4>
+              <p className=" text-g-300 text-sm leading-5 mt-2.5">
+                AI auto-updates your CV as you add skills, certifications, and
+                experience.
+              </p>
+            </div>
+            <div className=" flex flex-col items-center justify-center text-center">
+              <Image
+                src={"/personalized-roadmap.png"}
+                height={140}
+                width={160}
+                alt="personalized-roadmap"
+                className="pb-7.5"
+              />
+              <h4 className=" text-g-200 font-semibold text-base leading-6 ">
+                Personalized roadmap
+              </h4>
+              <p className=" text-g-300 text-sm leading-5 mt-2.5">
+                AI auto-updates your CV as you add skills, certifications, and
+                experience.
+              </p>
+            </div>
+            <div className=" flex flex-col items-center justify-center text-center">
+              <Image
+                src={"/showcase-your-wins.png"}
+                height={140}
+                width={160}
+                alt="showcase-your-wins"
+                className="pb-7.5"
+              />
+              <h4 className=" text-g-200 font-semibold text-base leading-6 ">
+                Showcase your wins
+              </h4>
+              <p className=" text-g-300 text-sm leading-5 mt-2.5">
+                AI auto-updates your CV as you add skills, certifications, and
+                experience.
+              </p>
+            </div>
+            <div className=" flex flex-col items-center justify-center text-center">
+              <Image
+                src={"/land-faster.png"}
+                height={140}
+                width={160}
+                alt="land-faster"
+                className="pb-7.5"
+              />
+              <h4 className=" text-g-200 font-semibold text-base leading-6 ">
+                Land faster
+              </h4>
+              <p className=" text-g-300 text-sm leading-5 mt-2.5">
+                AI auto-updates your CV as you add skills, certifications, and
+                experience.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

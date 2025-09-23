@@ -107,7 +107,7 @@ const FAQSection = () => {
   );
 
   return (
-    <div className="bg-black py-20 ">
+    <div className="bg-g-900 py-20 ">
       <div className=" max-w-[1440px] mx-auto px-5 sm:px-10">
         {/* Header Section */}
         <div className="text-center mb-15">

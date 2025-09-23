@@ -52,10 +52,10 @@ const ClientReviewsSection = () => {
   };
 
   return (
-    <div className="bg-black py-20 ">
+    <div className="bg-g-900 py-20 ">
       <div className="max-w-[1440px] mx-auto px-5 sm:px-10">
         {/* Header Section */}
-        <div className="flex flex-col lg:flex-row justify-between items-start mb-20 h-[350px] text-4xl leading-11 font-medium">
+        <div className="flex flex-col lg:flex-row justify-between items-start mb-20 text-4xl leading-11 font-medium">
           <div>
             <h2 className="text-g-100 ">4.5/5 client review</h2>
           </div>
@@ -66,9 +66,9 @@ const ClientReviewsSection = () => {
         </div>
 
         {/* Reviews Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr] h-[350px] gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr]  gap-5">
           {/* Rating Card - Fixed */}
-          <div className="bg-g-600 rounded-[10px] p-10 lg:sticky lg:top-0 self-start">
+          <div className="bg-g-600 rounded-[10px] p-10 lg:sticky lg:left-0 self-start h-[350px]">
             <div className="text-start">
               <div className="text-6xl font-medium leading-[150%] -translate-[1px] text-white mb-4">
                 4.5
@@ -83,11 +83,11 @@ const ClientReviewsSection = () => {
           </div>
 
           {/* Testimonials - Scrollable */}
-          <div className="overflow-x-auto flex gap-5 pb-4 scrollbar">
+          <div className=" overflow-hidden flex gap-5 h-[350px]">
             {testimonials.map((testimonial) => (
               <div
                 key={testimonial.id}
-                className="bg-g-600 rounded-[10px] p-10 min-w-[350px]"
+                className="bg-g-600 rounded-[10px] p-10 min-w-[350px] "
               >
                 {/* User Info */}
                 <div className="flex items-center gap-5 mb-15">
