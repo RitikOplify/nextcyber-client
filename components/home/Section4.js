@@ -158,23 +158,23 @@ const FAQSection = () => {
             {rightItems.map((item) => (
               <div
                 key={item.id}
-                className="border-b border-[#2F3031] flex flex-col gap-6 overflow-hidden p-7.5"
+                className="border-b border-g-500 flex flex-col gap-6 overflow-hidden p-7.5"
               >
                 <button
                   onClick={() => toggleItem(item.id)}
                   className="w-full text-left flex items-center justify-between"
                 >
-                  <span className="text-white font-medium text-sm lg:text-base">
+                  <span className="text-g-100 font-medium text-base leading-6">
                     {item.question}
                   </span>
-                  <div className="text-[#9C9C9D] p-2 rounded-full bg-[#1B1C1E] flex-shrink-0">
+                  <div className="text-g-200 p-2 rounded-full bg-g-600 flex-shrink-0">
                     {openItems.has(item.id) ? <MinusIcon /> : <PlusIcon />}
                   </div>
                 </button>
 
                 {openItems.has(item.id) && (
                   <div>
-                    <p className="text-[#9C9C9D] pr-8 text-sm lg:text-base leading-relaxed">
+                    <p className="text-g-200 pr-8 text-base leading-[150%]">
                       {item.answer}
                     </p>
                   </div>
