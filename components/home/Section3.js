@@ -55,69 +55,67 @@ const ClientReviewsSection = () => {
     <div className="bg-black py-20 ">
       <div className="max-w-[1440px] mx-auto px-5 sm:px-10">
         {/* Header Section */}
-        <div className="flex flex-col lg:flex-row justify-between items-start mb-20">
+        <div className="flex flex-col lg:flex-row justify-between items-start mb-20 text-4xl leading-11 font-medium">
           <div>
-            <h2 className="text-[#CDCECE] text-2xl lg:text-3xl font-semibold">
-              4.5/5 client review
-            </h2>
+            <h2 className="text-g-100 ">4.5/5 client review</h2>
           </div>
-          <div className="text-right text-[#69EDFE]">
-            <h3 className=" text-xl lg:text-2xl font-medium">
-              Thousands of Satisfied
-            </h3>
-            <h3 className=" text-xl lg:text-2xl font-medium">
-              Clients and Jobseekers
-            </h3>
+          <div className="text-right text-accent-color-1">
+            <h3>Thousands of Satisfied</h3>
+            <h3>Clients and Jobseekers</h3>
           </div>
         </div>
 
         {/* Reviews Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
-          {/* Rating Card */}
-          <div className="bg-[#1B1C1E] rounded-[10px] p-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-5">
+          {/* Rating Card - Fixed */}
+          <div className="bg-g-600 rounded-[10px] p-10 lg:sticky lg:top-0 self-start">
             <div className="text-start">
-              <div className="text-6xl font-bold text-white mb-4">4.5</div>
-              <div className="text-gray-400 text-sm mb-15">
+              <div className="text-6xl font-medium leading-[150%] -translate-[1px] text-white mb-4">
+                4.5
+              </div>
+              <div className="text-g-100 text-base leading-6 mb-15">
                 Client Satisfaction Rate
               </div>
-              <div className="text-white text-xl font-medium">
+              <div className="text-white text-2xl leading-8 font-medium">
                 Trusted by clients worldwide
               </div>
             </div>
           </div>
 
-          {/* Testimonial Cards */}
-          {testimonials.map((testimonial) => (
-            <div
-              key={testimonial.id}
-              className="bg-[#1B1C1E] rounded-[10px] p-10"
-            >
-              {/* User Info */}
-              <div className="flex items-center gap-5 mb-15">
-                <img
-                  src={testimonial.avatar}
-                  alt={testimonial.name}
-                  className="w-16 h-16 rounded-full object-cover"
-                />
-                <div>
-                  <h4 className="text-white font-medium text-sm mb-1">
-                    {testimonial.name}
-                  </h4>
-                  <p className="text-[#6A6B6C] text-xs whitespace-nowrap">
-                    {testimonial.position}
-                  </p>
+          {/* Testimonials - Scrollable */}
+          <div className="overflow-x-auto flex gap-5 pb-4 scrollbar">
+            {testimonials.map((testimonial) => (
+              <div
+                key={testimonial.id}
+                className="bg-g-600 rounded-[10px] p-10 min-w-[350px]"
+              >
+                {/* User Info */}
+                <div className="flex items-center gap-5 mb-15">
+                  <img
+                    src={testimonial.avatar}
+                    alt={testimonial.name}
+                    className="w-16 h-16 rounded-full object-cover"
+                  />
+                  <div>
+                    <h4 className="text-white font-medium text-2xl leading-8 mb-1">
+                      {testimonial.name}
+                    </h4>
+                    <p className="text-g-300 text-base leading-6 whitespace-nowrap">
+                      {testimonial.position}
+                    </p>
+                  </div>
                 </div>
+
+                {/* Star Rating */}
+                <StarRating rating={testimonial.rating} />
+
+                {/* Review Text */}
+                <p className="text-white text-base mt-5 leading-6">
+                  &quot;{testimonial.review}&quot;
+                </p>
               </div>
-
-              {/* Star Rating */}
-              <StarRating rating={testimonial.rating} />
-
-              {/* Review Text */}
-              <p className="text-gray-300 text-sm mt-5 leading-relaxed">
-                &quot;{testimonial.review}&quot;
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>

@@ -111,10 +111,10 @@ const FAQSection = () => {
       <div className=" max-w-[1440px] mx-auto px-5 sm:px-10">
         {/* Header Section */}
         <div className="text-center mb-15">
-          <h2 className="text-[#69EDFE] text-3xl lg:text-4xl font-bold mb-3.5">
+          <h2 className="text-accent-color-1 text-4xl leading-11 font-medium mb-3.5">
             Frequently Asked Questions
           </h2>
-          <p className="text-gray-400 text-sm max-w-3xl mx-auto leading-relaxed">
+          <p className="text-g-200 text-base leading-6 max-w-3xl mx-auto">
             Got questions? We&apos;ve got answers. Check out our frequently
             asked questions section to find valuable insights into our
             processes, pricing, and more. Transparency is at the core of our
@@ -128,23 +128,23 @@ const FAQSection = () => {
             {leftItems.map((item) => (
               <div
                 key={item.id}
-                className="border-b border-[#2F3031] flex flex-col gap-6 overflow-hidden p-7.5"
+                className="border-b border-g-500 flex flex-col gap-6 overflow-hidden p-7.5"
               >
                 <button
                   onClick={() => toggleItem(item.id)}
                   className="w-full text-left flex items-center justify-between"
                 >
-                  <span className="text-white font-medium text-sm lg:text-base">
+                  <span className="text-g-100 font-medium text-base leading-6">
                     {item.question}
                   </span>
-                  <div className="text-[#9C9C9D] p-2 rounded-full bg-[#1B1C1E] flex-shrink-0">
+                  <div className="text-g-200 p-2 rounded-full bg-g-600 flex-shrink-0">
                     {openItems.has(item.id) ? <MinusIcon /> : <PlusIcon />}
                   </div>
                 </button>
 
                 {openItems.has(item.id) && (
                   <div>
-                    <p className="text-[#9C9C9D] pr-8 text-sm lg:text-base leading-relaxed">
+                    <p className="text-g-200 pr-8 text-base leading-[150%]">
                       {item.answer}
                     </p>
                   </div>

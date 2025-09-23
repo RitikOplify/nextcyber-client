@@ -51,5 +51,18 @@ body {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #025bcf;
+  background: #0073cf;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #0053cf;
+}
+
+.scrollbar::-webkit-scrollbar {
+  height: 3px !important;
+  width: 5px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent;
 }

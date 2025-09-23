@@ -21,7 +21,7 @@ const Footer = () => {
 
   return (
     <footer className="w-full bg-[radial-gradient(69.34%_100%_at_50%_0%,rgba(2,91,207,0.32)_0%,rgba(7,8,10,0.4)_40%)] bg-[#07080A] border-t border-[#2F3031]">
-      <div className=" relative flex flex-col items-start pt-20 px-20 pb-0 gap-15 w-full max-w-[1440px] mx-auto text-white">
+      <div className=" relative flex flex-col items-start pt-20 px-20 pb-0 gap-15 w-full max-w-[1440px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
             <Link href={"/"}>
@@ -34,7 +34,7 @@ const Footer = () => {
               />
             </Link>
 
-            <p className="text-gray-300 text-sm mb-5 leading-relaxed">
+            <p className="text-g-200 text-sm mb-5 leading-4">
               Where tech founders hire great developers really fast.
             </p>
             <div className="flex space-x-4">
@@ -64,7 +64,7 @@ const Footer = () => {
 
           {/* Website Links */}
           <div className="md:col-span-1">
-            <h3 className="text-white font-semibold mb-5 text-sm uppercase tracking-wide">
+            <h3 className="text-g-100 font-medium mb-5 text-base leading-4 uppercase">
               WEBSITE
             </h3>
             <ul className="space-y-3">
@@ -78,7 +78,7 @@ const Footer = () => {
                 <li key={link}>
                   <Link
                     href=""
-                    className="text-[#9C9C9D] hover:text-white transition-colors duration-200 text-sm hover:underline"
+                    className="text-g-200 hover:text-white transition-colors duration-200 text-sm  hover:underline"
                   >
                     {link}
                   </Link>
@@ -88,7 +88,7 @@ const Footer = () => {
           </div>
 
           <div className="md:col-span-1">
-            <h3 className="text-white font-semibold mb-5 text-sm uppercase tracking-wide">
+            <h3 className="text-g-100 font-medium mb-5 text-base leading-4 uppercase">
               RESOURCES
             </h3>
             <ul className="space-y-3">
@@ -97,7 +97,7 @@ const Footer = () => {
                   <li key={link}>
                     <Link
                       href=""
-                      className="text-[#9C9C9D] hover:text-white transition-colors duration-200 text-sm hover:underline"
+                      className="text-g-200 hover:text-white transition-colors duration-200 text-sm hover:underline"
                     >
                       {link}
                     </Link>
@@ -108,10 +108,10 @@ const Footer = () => {
           </div>
 
           <div className="md:col-span-1">
-            <h3 className="text-white font-semibold mb-5 text-sm uppercase tracking-wide">
+            <h3 className="text-g-100 font-medium mb-5 text-base leading-4 uppercase">
               SIGN UP
             </h3>
-            <div className="flex items-center mb-6 text-[#9C9C9D]">
+            <div className="flex items-center mb-6 text-g-200">
               <MailIcon size={18} />
               <span className="ml-2 text-sm">
                 Email us for updates and offer
@@ -123,7 +123,7 @@ const Footer = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your Email Address"
-                className="w-full border border-[#1B1C1E] px-4 py-3 pr-12 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#025BCF] focus:border-[#025BCF] transition-colors duration-200 text-sm"
+                className="w-full border border-[#1B1C1E] px-4 py-3 pr-12 text-white placeholder-g-200 focus:outline-none focus:ring-2 focus:ring-[#025BCF] focus:border-[#025BCF] transition-colors duration-200 text-sm"
                 required
               />
               <button
@@ -141,8 +141,8 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-[#1F1F1F] w-full py-6 mt-16">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-[#9C9C9D] text-sm mb-4 md:mb-0">
+          <div className="flex flex-col md:flex-row justify-between items-center text-g-200 text-sm leading-6">
+            <div className=" mb-4 md:mb-0">
               ©2025 NextCybr. All Rights Reserved.
             </div>
             <div className="flex space-x-5">
@@ -154,7 +154,7 @@ const Footer = () => {
                 <Link
                   key={link.url}
                   href={link.url}
-                  className="text-[#9C9C9D] hover:text-white transition-colors duration-200 text-sm hover:underline"
+                  className="hover:text-white transition-colors duration-200  hover:underline"
                 >
                   {link.name}
                 </Link>
