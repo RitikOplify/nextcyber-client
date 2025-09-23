@@ -25,7 +25,7 @@ const NextCyberLanding = () => {
           </div>
 
           <div className="p-10 z-10 bg-gradient-to-b from-g-900 via-g-600 to-g-900 rounded-[40px]">
-            <div className="flex items-center justify-start space-x-4 mb-7 caption font-medium">
+            <div className="flex items-center justify-start space-x-4 mb-7 text-sm leading-4 font-medium">
               <button
                 onClick={() => setActiveTab("Recruiter")}
                 className={`px-4 py-2 rounded-full ${
@@ -49,7 +49,7 @@ const NextCyberLanding = () => {
             </div>
 
             <div className="mb-7 text-start">
-              <p className="text-xl leading-relaxed font-normal text-g-200 heading2 ">
+              <p className="text-2xl leading-8 font-normal text-g-200 ">
                 <span className="underline decoration-accent-color-1 text-white decoration-2">
                   Hire
                 </span>{" "}
@@ -69,7 +69,7 @@ const NextCyberLanding = () => {
               </p>
             </div>
 
-            <button className="w-full py-4 px-8 subtitle bg-gradient-to-b from-accent-color-1 to-primary rounded-full text-white text-xl font-semibold hover:opacity-90 transition-all duration-300">
+            <button className="w-full py-4 px-8 text-xl leading-6 bg-gradient-to-b from-accent-color-1 to-primary rounded-full text-white font-semibold hover:opacity-90 transition-all duration-300">
               Create your profile
             </button>
           </div>

@@ -42,30 +42,6 @@ body {
   --color-accent-color-1: #69edfe;
 }
 
-@layer components {
-  .heading {
-    @apply text-5xl leading-14;
-  }
-  .heading2 {
-    @apply text-4xl leading-11;
-  }
-  .heading2 {
-    @apply text-2xl leading-8;
-  }
-  .subtitle {
-    @apply text-xl leading-6;
-  }
-  .body {
-    @apply text-base leading-6;
-  }
-  .caption {
-    @apply text-sm leading-4;
-  }
-  .small {
-    @apply text-xs leading-4;
-  }
-}
-
 *::-webkit-scrollbar {
   width: 5px;
 }

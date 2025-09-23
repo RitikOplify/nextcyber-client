@@ -79,7 +79,7 @@ const CybersecurityJobBoard = () => {
     <div className="bg-g-900 pt-20">
       <div className="overflow-hidden px-5 sm:px-10">
         <div className="text-center mb-11">
-          <h2 className="heading2 font-medium text-accent-color-1">
+          <h2 className="text-4xl leading-11 font-medium text-accent-color-1">
             Trusted by Startups and Agencies
           </h2>
         </div>
@@ -101,7 +101,7 @@ const CybersecurityJobBoard = () => {
 
       <div className="max-w-[1440px] mx-auto pt-40  px-5 sm:px-10">
         <div className="text-center">
-          <h1 className="heading2 font-medium text-g-200 mb-5">
+          <h1 className="text-4xl leading-11 font-medium text-g-200 mb-5">
             Browse Thousands of{" "}
             <span className="text-accent-color-1">Cybersecurity</span>
             <br />
@@ -125,13 +125,13 @@ const CybersecurityJobBoard = () => {
               <div className="flex justify-between items-center mb-6">
                 <div className="flex gap-2">
                   {job.featured && (
-                    <span className="inline-flex small font-semibold items-center gap-1.5 p-1 rounded text-xs bg-light-blue text-primary">
+                    <span className="inline-flex text-xs leading-4 font-semibold items-center gap-1.5 p-1 rounded bg-light-blue text-primary">
                       <Star size={12} />
                       Featured
                     </span>
                   )}
                   {job.urgent && (
-                    <span className="inline-flex small font-semibold items-center gap-1.5 p-1 rounded text-xs  bg-light-blue text-primary">
+                    <span className="inline-flex text-xs leading-4 font-semibold items-center gap-1.5 p-1 rounded  bg-light-blue text-primary">
                       <Zap size={12} />
                       Urgent
                     </span>
@@ -143,11 +143,13 @@ const CybersecurityJobBoard = () => {
               </div>
 
               {/* Job Title */}
-              <h3 className="caption font-semibold text-g-200">{job.title}</h3>
+              <h3 className="text-sm leading-4 font-semibold text-g-200">
+                {job.title}
+              </h3>
               <p className="text-[#9C9C9D] text-sm">{job.location}</p>
 
               {/* Job Details */}
-              <div className="mt-6 mb-2 flex items-center gap-3 text-g-600 small">
+              <div className="mt-6 mb-2 flex items-center gap-3 text-g-600 text-xs leading-4">
                 <div className="flex items-center gap-1.5  ">
                   <Clock size={16} />
                   <span>{job.type}</span>
