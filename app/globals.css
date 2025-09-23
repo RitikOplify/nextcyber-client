@@ -66,3 +66,33 @@ body {
 .scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
+
+.ellipse-21 {
+  position: absolute;
+  width: 444px;
+  height: 444px;
+  left: calc(50% - 222px);
+  background: #025bcf;
+  filter: blur(275px);
+  border-radius: 50%;
+}
+
+.ellipse-22 {
+  position: absolute;
+  left: 10%;
+  width: 346px;
+  height: 230px;
+  background: #7f1aab;
+  filter: blur(200px);
+  border-radius: 50%;
+}
+
+.ellipse-23 {
+  position: absolute;
+  right: 10%;
+  width: 346px;
+  height: 230px;
+  background: #7f1aab;
+  filter: blur(200px);
+  border-radius: 50%;
+}
