@@ -59,7 +59,7 @@ const FAQSection = () => {
 
   const PlusIcon = () => (
     <svg
-      className="w-5 h-5"
+      className="w-4 h-4"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -75,7 +75,7 @@ const FAQSection = () => {
 
   const MinusIcon = () => (
     <svg
-      className="w-5 h-5"
+      className="w-4 h-4"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -117,8 +117,10 @@ const FAQSection = () => {
                 <span className="text-g-100 font-medium text-base leading-6">
                   {item.question}
                 </span>
-                <div className="text-g-200 p-2 rounded-full bg-g-600 flex-shrink-0">
-                  {openItems.has(item.id) ? <MinusIcon /> : <PlusIcon />}
+                <div className="btn-gradient overflow-hidden">
+                  <div className=" p-2.5 bg-g-600 rounded-[calc(100%-2px)] text-g-200 flex-shrink-0">
+                    {openItems.has(item.id) ? <MinusIcon /> : <PlusIcon />}
+                  </div>
                 </div>
               </button>
 

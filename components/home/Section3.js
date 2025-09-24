@@ -68,16 +68,18 @@ const ClientReviewsSection = () => {
         {/* Reviews Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr]  gap-5">
           {/* Rating Card - Fixed */}
-          <div className="bg-g-600 rounded-[10px] p-10 lg:sticky lg:left-0 self-start h-[350px]">
-            <div className="text-start">
-              <div className="text-6xl font-medium leading-[150%] -translate-[1px] text-white mb-4">
-                4.5
-              </div>
-              <div className="text-g-100 text-base leading-6 mb-15">
-                Client Satisfaction Rate
-              </div>
-              <div className="text-white text-2xl leading-8 font-medium">
-                Trusted by clients worldwide
+          <div className="gradient-border p-0.5">
+            <div className="bg-g-600 p-10 lg:sticky lg:left-0 self-start h-[346px] rounded-lg">
+              <div className="text-start">
+                <div className="text-6xl font-medium leading-[150%] -translate-[1px] text-white mb-4">
+                  4.5
+                </div>
+                <div className="text-g-100 text-base leading-6 mb-15">
+                  Client Satisfaction Rate
+                </div>
+                <div className="text-white text-2xl leading-8 font-medium">
+                  Trusted by clients worldwide
+                </div>
               </div>
             </div>
           </div>

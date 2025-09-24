@@ -96,3 +96,29 @@ body {
   filter: blur(200px);
   border-radius: 50%;
 }
+
+.gradient-border {
+  position: relative;
+  border-radius: 10px;
+  background: linear-gradient(
+    133.24deg,
+    rgba(255, 255, 255, 0.6) 0%,
+    #434345 15%,
+    #2f3031 50%,
+    rgba(67, 67, 69, 0.55) 72%,
+    rgba(255, 255, 255, 0.25) 100%
+  );
+}
+
+.btn-gradient {
+  position: relative;
+  border-radius: 100%;
+  padding: 2px;
+  background: linear-gradient(
+    133.24deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(47, 48, 49, 0.8) 30%,
+    rgba(106, 107, 108, 0.8) 65%,
+    rgba(255, 255, 255, 0.15) 100%
+  );
+}
