@@ -112,13 +112,13 @@ const FAQSection = () => {
             >
               <button
                 onClick={() => toggleItem(item.id)}
-                className="w-full text-left flex items-center justify-between"
+                className="w-full text-left flex items-start justify-between gap-2.5"
               >
                 <span className="text-g-100 font-medium text-base leading-6">
                   {item.question}
                 </span>
-                <div className="btn-gradient overflow-hidden">
-                  <div className=" p-2.5 bg-g-600 rounded-[calc(100%-2px)] text-g-200 flex-shrink-0">
+                <div className="btn-gradient overflow-hidden shrink-0">
+                  <div className=" p-2.5 bg-g-600 rounded-[calc(100%-2px)] whitespace-nowrap text-g-200">
                     {openItems.has(item.id) ? <MinusIcon /> : <PlusIcon />}
                   </div>
                 </div>
@@ -126,7 +126,7 @@ const FAQSection = () => {
 
               {openItems.has(item.id) && (
                 <div>
-                  <p className="text-g-200 pr-8 text-base leading-[150%]">
+                  <p className="text-g-200 text-base leading-[150%]">
                     {item.answer}
                   </p>
                 </div>

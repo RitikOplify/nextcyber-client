@@ -21,9 +21,9 @@ const Footer = () => {
 
   return (
     <footer className="w-full bg-[radial-gradient(69.34%_100%_at_50%_0%,rgba(2,91,207,0.32)_0%,rgba(7,8,10,0.4)_40%)] bg-[#07080A] border-t border-[#2F3031]">
-      <div className=" relative flex flex-col items-start pt-20 px-20 pb-0 gap-15 w-full max-w-[1440px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="md:col-span-1">
+      <div className=" relative flex flex-col items-start pt-20 px-5 sm:px-10 lg:px-20 pb-0 gap-15 w-full max-w-[1440px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-y-8 xl:gap-y-0 md:gap-x-8 justify-between w-full">
+          <div className="col-span-1">
             <Link href={"/"}>
               <Image
                 src="/logo.png"
@@ -34,7 +34,7 @@ const Footer = () => {
               />
             </Link>
 
-            <p className="text-g-200 text-sm mb-5 leading-4">
+            <p className="text-g-200 text-sm mb-5 leading-4 max-w-3xs">
               Where tech founders hire great developers really fast.
             </p>
             <div className="flex space-x-4">
@@ -63,56 +63,58 @@ const Footer = () => {
           </div>
 
           {/* Website Links */}
-          <div className="md:col-span-1">
-            <h3 className="text-g-100 font-medium mb-5 text-base leading-4 uppercase">
-              WEBSITE
-            </h3>
-            <ul className="space-y-3">
-              {[
-                "Freelancer",
-                "Candidate",
-                "Company",
-                "Mentorship",
-                "About Us",
-              ].map((link) => (
-                <li key={link}>
-                  <Link
-                    href=""
-                    className="text-g-200 hover:text-white transition-colors duration-200 text-sm  hover:underline"
-                  >
-                    {link}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="md:col-span-1">
-            <h3 className="text-g-100 font-medium mb-5 text-base leading-4 uppercase">
-              RESOURCES
-            </h3>
-            <ul className="space-y-3">
-              {["Privacy Policy", "Terms Of Use", "Blogs", "Events"].map(
-                (link) => (
+          <div className="grid grid-cols-2 col-span-2 gap-8">
+            <div>
+              <h3 className="text-g-100 font-medium mb-5 text-base leading-4 uppercase">
+                WEBSITE
+              </h3>
+              <ul className="space-y-3">
+                {[
+                  "Freelancer",
+                  "Candidate",
+                  "Company",
+                  "Mentorship",
+                  "About Us",
+                ].map((link) => (
                   <li key={link}>
                     <Link
                       href=""
-                      className="text-g-200 hover:text-white transition-colors duration-200 text-sm hover:underline"
+                      className="text-g-200 hover:text-white transition-colors duration-200 text-sm  hover:underline"
                     >
                       {link}
                     </Link>
                   </li>
-                )
-              )}
-            </ul>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-g-100 font-medium mb-5 text-base leading-4 uppercase">
+                RESOURCES
+              </h3>
+              <ul className="space-y-3">
+                {["Privacy Policy", "Terms Of Use", "Blogs", "Events"].map(
+                  (link) => (
+                    <li key={link}>
+                      <Link
+                        href=""
+                        className="text-g-200 hover:text-white transition-colors duration-200 text-sm hover:underline"
+                      >
+                        {link}
+                      </Link>
+                    </li>
+                  )
+                )}
+              </ul>
+            </div>
           </div>
 
-          <div className="md:col-span-1">
+          <div className="col-span-1">
             <h3 className="text-g-100 font-medium mb-5 text-base leading-4 uppercase">
               SIGN UP
             </h3>
-            <div className="flex items-center mb-6 text-g-200">
-              <MailIcon size={18} />
+            <div className="flex items-center mb-6 text-g-200 whitespace-nowrap">
+              <MailIcon size={18} className=" shrink-0" />
               <span className="ml-2 text-sm">
                 Email us for updates and offer
               </span>
@@ -145,7 +147,7 @@ const Footer = () => {
             <div className=" mb-4 md:mb-0">
               ©2025 NextCybr. All Rights Reserved.
             </div>
-            <div className="flex space-x-5">
+            <div className="flex space-x-2.5 sm:space-x-5">
               {[
                 { name: "Privacy Policy", url: "/privacy-policy" },
                 { name: "Terms & Conditions", url: "/terms-and-conditions" },
@@ -154,7 +156,7 @@ const Footer = () => {
                 <Link
                   key={link.url}
                   href={link.url}
-                  className="hover:text-white transition-colors duration-200  hover:underline"
+                  className="hover:text-white transition-colors duration-200 whitespace-nowrap hover:underline"
                 >
                   {link.name}
                 </Link>

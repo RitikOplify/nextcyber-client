@@ -59,7 +59,7 @@ const ClientReviewsSection = () => {
           <div>
             <h2 className="text-g-100 ">4.5/5 client review</h2>
           </div>
-          <div className="text-right text-accent-color-1">
+          <div className="md:text-right text-accent-color-1 mt-5 lg:mt-0">
             <h3>Thousands of Satisfied</h3>
             <h3>Clients and Jobseekers</h3>
           </div>

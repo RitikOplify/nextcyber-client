@@ -16,11 +16,11 @@ const NextCyberLanding = () => {
         </div>
 
         <div className="w-full max-w-2xl relative">
-          <div className="absolute top-1/2 -left-1/10 w-52 h-64 transform -translate-y-1/2 -translate-x-1/2 -rotate-6 -z-1">
+          <div className=" hidden lg:absolute top-1/2 -left-1/10 w-52 h-64 transform -translate-y-1/2 -translate-x-1/2 -rotate-6 -z-1">
             <div className="w-full h-full bg-g-600 rounded-2xl opacity-80"></div>
           </div>
 
-          <div className="absolute top-1/2 -right-1/10 w-52 h-64 transform -translate-y-1/2 translate-x-1/2 rotate-6 -z-1">
+          <div className="hidden lg:absolute top-1/2 -right-1/10 w-52 h-64 transform -translate-y-1/2 translate-x-1/2 rotate-6 -z-1">
             <div className="w-full h-full bg-g-600 rounded-2xl opacity-80"></div>
           </div>
 

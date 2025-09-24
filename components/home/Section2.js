@@ -24,7 +24,6 @@ const CybersecurityJobBoard = () => {
     "/greenhouse.svg",
   ];
 
-  // Job data
   const jobs = [
     {
       id: 1,
@@ -77,8 +76,8 @@ const CybersecurityJobBoard = () => {
   ];
 
   return (
-    <div className="bg-g-900 py-20 relative">
-      <div className="w-6xl mx-auto absolute top-0 flex h-4/5 left-1/2 -translate-x-1/2  items-center justify-center">
+    <div className="bg-g-900 py-20 relative overflow-hidden">
+      <div className="w-6xl mx-auto absolute top-0 flex h-11/12 sm:h-4/5 left-1/2 -translate-x-1/2  items-center justify-center">
         <div className="ellipse-22"></div>
         <div className="ellipse-21"></div>
         <div className="ellipse-23"></div>
@@ -91,13 +90,13 @@ const CybersecurityJobBoard = () => {
             </h2>
           </div>
 
-          <div className="relative overflow-hidden">
+          <div className="relative overflow-auto">
             <div className="flex w-full items-center justify-center gap-10">
               {companies.map((company, index) => (
                 <div key={`second-${index}`}>
                   <img
                     src={company}
-                    className=" h-20 w-35 object-contain"
+                    className="w-35 shrink-0 object-contain"
                     alt=""
                   />
                 </div>
@@ -197,7 +196,7 @@ const CybersecurityJobBoard = () => {
               <span className=" text-accent-color-1">NextGen CV</span>, AI
               transforms your profile into a living, evolving career map
             </p>
-            <div className=" pt-17.5 grid grid-cols-4 gap-5">
+            <div className=" pt-17.5 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               <div className=" flex flex-col items-center justify-center text-center">
                 <Image
                   src={"/build-once-grow-forever.png"}
