@@ -35,7 +35,7 @@ const NextCyberAuth = () => {
     <section className="bg-[#07080A] ">
       <div className="min-h-screen flex max-w-[1440px] mx-auto">
         {/* Left Panel - Form */}
-        <div className="w-1/2 flex items-center justify-center">
+        <div className=" w-full lg:w-1/2 flex items-center justify-center px-5 sm:px-10">
           <div className="w-full max-w-sm space-y-7.5">
             {/* Logo */}
 
@@ -232,8 +232,8 @@ const NextCyberAuth = () => {
         </div>
 
         {/* Right Panel - Testimonial */}
-        <div className="w-1/2 p-12 flex flex-col justify-center">
-          <div className="w-lg mx-auto space-y-10">
+        <div className="w-1/2 pr-10 lg:flex hidden flex-col justify-center items-start">
+          <div className="min-w-lg space-y-10">
             {/* Header */}
             <div className="space-y-6 text-start">
               <h2 className="text-2xl  font-bold text-[#69EDFE] leading-tight max-w-sm">
@@ -248,13 +248,13 @@ const NextCyberAuth = () => {
             </div>
 
             {/* Background content that shows behind card */}
-            <div className="relative bg-[#111214]  rounded-[10px]  overflow-hidden">
+            <div className="relative bg-[#111214] w-[93%] xl:w-full  rounded-[10px]  overflow-hidden">
               {/* Background text content */}
-              <div className="absolute inset-0 p-10 text-white blur-[0.8px] text-sm text-right leading-relaxed z-0 pt-19">
-                <p className=" pr-4 text-lg text-[#6A6B6C]">er Google</p>
+              <div className="absolute inset-0 p-10 text-white blur-[0.8px] text-right text-sm leading-relaxed z-0 pt-19">
+                <p className="text-lg text-[#6A6B6C]">HR Manager Google</p>
                 <div className=" pt-28">
-                  <p className=" pr-3.5">ad a reason</p>
-                  <p className=" pr-10.5">d in the</p>
+                  <p>ad a reason</p>
+                  <p>d in the</p>
                   <p>e engagement</p>
                 </div>
               </div>
