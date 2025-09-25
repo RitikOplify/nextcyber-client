@@ -69,7 +69,7 @@ const NextCyberLanding = () => {
               </p>
             </div>
 
-            <button className="w-full py-4 px-8 text-xl leading-6 bg-gradient-to-b from-accent-color-1 to-primary rounded-full text-white font-semibold hover:opacity-90 transition-all duration-300">
+            <button className="w-full py-2 sm:py-4 px-4 sm:px-8 text-base sm:text-xl leading-6 bg-gradient-to-b from-accent-color-1 to-primary rounded-full text-white font-semibold hover:opacity-90 transition-all duration-300">
               Create your profile
             </button>
           </div>

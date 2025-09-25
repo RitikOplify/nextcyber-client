@@ -1,7 +1,7 @@
-import NextCyberLanding from "@/components/home/Section1";
-import CybersecurityJobBoard from "@/components/home/Section2";
-import ClientReviewsSection from "@/components/home/Section3";
-import FAQSection from "@/components/home/Section4";
+import NextCyberLanding from "@/components/Home/Section1";
+import CybersecurityJobBoard from "@/components/Home/Section2";
+import ClientReviewsSection from "@/components/Home/Section3";
+import FAQSection from "@/components/Home/Section4";
 import React from "react";
 
 function HomePage() {

@@ -32,13 +32,10 @@ const NextCyberAuth = () => {
   };
 
   return (
-    <section className="bg-[#07080A] ">
+    <section className="bg-g-900 ">
       <div className="min-h-screen flex max-w-[1440px] mx-auto">
-        {/* Left Panel - Form */}
         <div className=" w-full lg:w-1/2 flex items-center justify-center px-5 sm:px-10">
           <div className="w-full max-w-sm space-y-7.5">
-            {/* Logo */}
-
             <Image
               src="/logo.png"
               className=" h-9 w-auto mb-7.5"
@@ -47,29 +44,27 @@ const NextCyberAuth = () => {
               alt="nextcybr-logo"
             />
 
-            {/* Form Header */}
             <div className="space-y-1 mb-7.5">
-              <h1 className="text-[#9C9C9D] text-3xl font-medium leading-tight">
+              <h1 className="text-g-200 text-3xl font-medium leading-tight">
                 {isLogin
                   ? "Sign In with your\nsocial account"
                   : "Create an account"}
               </h1>
               {!isLogin && (
-                <p className="text-[#6A6B6C] text-sm">
+                <p className="text-g-300 text-sm">
                   Please enter your details here.
                 </p>
               )}
             </div>
 
-            {/* Role Toggle Buttons (Sign Up only) */}
             {!isLogin && (
               <div className="flex gap-4 mb-10">
                 <button
                   onClick={() => setSelectedRole("recruiter")}
                   className={`flex-1 py-2 px-4 rounded-full font-medium text-sm flex items-center justify-center gap-2 transition-all ${
                     selectedRole === "recruiter"
-                      ? "bg-[#025BCF] text-[#E6E6E6]"
-                      : "bg-[#1B1C1E] text-[#9C9C9D]"
+                      ? "bg-primary text-g-50"
+                      : "bg-g-600 text-g-500"
                   }`}
                 >
                   <Briefcase className="w-5 h-5" />
@@ -79,8 +74,8 @@ const NextCyberAuth = () => {
                   onClick={() => setSelectedRole("candidate")}
                   className={`flex-1 py-2 px-4 rounded-full font-medium text-sm flex items-center justify-center gap-2 transition-all ${
                     selectedRole === "candidate"
-                      ? "bg-[#025BCF] text-[#E6E6E6]"
-                      : "bg-[#1B1C1E] text-[#9C9C9D]"
+                      ? "bg-primary text-g-50"
+                      : "bg-g-600 text-g-500"
                   }`}
                 >
                   <User className="w-5 h-5" />
@@ -234,7 +229,6 @@ const NextCyberAuth = () => {
         {/* Right Panel - Testimonial */}
         <div className="w-1/2 pr-10 lg:flex hidden flex-col justify-center items-start">
           <div className="min-w-lg space-y-10">
-            {/* Header */}
             <div className="space-y-6 text-start">
               <h2 className="text-2xl  font-bold text-[#69EDFE] leading-tight max-w-sm">
                 The World&apos;s ⚡ Leading Platform for Cyber Professionals
