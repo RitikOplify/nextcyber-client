@@ -15,9 +15,16 @@ import {
   Percent,
   BarChart3,
   FileBarChart,
-  Settings,
   ChevronDown,
   ChevronRight,
+  FileText,
+  GraduationCap,
+  Handshake,
+  Trophy,
+  Briefcase,
+  Building2,
+  HelpCircle,
+  Settings,
 } from "lucide-react";
 import Link from "next/link";
 import clsx from "clsx";
@@ -46,39 +53,40 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
     },
     {
       label: "My NextGen CV",
-      icon: Users,
+      icon: FileText,
       href: "",
     },
     {
       label: "Training & Certifications",
-      icon: Package,
+      icon: GraduationCap,
       href: "",
     },
     {
       label: "Mentorship",
-      icon: Award,
+      icon: Handshake,
       href: "",
     },
     {
       label: "Challenges",
-      icon: Percent,
+      icon: Trophy,
       href: "",
     },
     {
       label: "Jobs",
-      icon: BarChart3,
+      icon: Briefcase,
       href: "",
     },
     {
       label: "Companies",
-      icon: FileBarChart,
+      icon: Building2,
       href: "/companies",
     },
   ];
+
   const bottomNavItem = [
     {
       label: "Support & Help",
-      icon: Settings,
+      icon: HelpCircle,
       href: "",
     },
     {
