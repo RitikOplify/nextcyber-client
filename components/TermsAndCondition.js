@@ -1,152 +1,134 @@
-import Link from "next/link";
-
-const TermsAndConditions = () => {
+const TermsOfUse = () => {
   const termsData = [
     {
-      title: "1. Acceptance of Terms",
+      title: "1. Parties & Acceptance",
       content: [
-        "By accessing or using NextCybr, you confirm that you have read, understood, and agree to comply with these Terms & Conditions. If you do not agree, please do not use the platform.",
+        "These Terms are a binding agreement between you (“User”) and NextCybr (registered in New Zealand). Use of our Services constitutes acceptance of these Terms. If you do not agree, you may not use NextCybr.",
       ],
     },
     {
       title: "2. Eligibility",
-      content: [
-        "You must be at least 16 years old to use NextCybr. By registering, you confirm that you have the legal right to form a binding contract and are not prohibited by law from using the platform.",
-      ],
-    },
-    {
-      title: "3. Account Registration",
       list: [
-        "Provide accurate, current, and complete information during registration.",
-        "Keep your account credentials secure and confidential.",
-        "You are responsible for all activities performed under your account.",
-        "Notify NextCybr immediately if you suspect any unauthorized use of your account.",
+        "You must be at least 13 years old to use our Services.",
+        "Users under 18 must use the platform under parental or guardian supervision.",
       ],
     },
     {
-      title: "4. User Conduct",
+      title: "3. Account Registration & Responsibilities",
       list: [
-        "Do not post content that is illegal, offensive, defamatory, obscene, or infringes on intellectual property rights.",
-        "Do not harass, intimidate, or harm other users.",
-        "Do not impersonate another person or entity.",
-        "Do not upload viruses, malware, or spam.",
-        "Do not use automated scripts or bots to access or collect data from the platform.",
-        "Do not attempt to disrupt or bypass security features of the platform.",
+        "You agree to provide accurate, complete, and current information when registering.",
+        "You are responsible for maintaining the confidentiality of your account credentials and for all activities under your account.",
+        "You must notify us immediately of unauthorized use of your account.",
       ],
     },
     {
-      title: "5. Content Ownership and License",
-      content: [
-        "You retain ownership of content you post on NextCybr. By posting, you grant NextCybr a non-exclusive, worldwide, royalty-free license to display, distribute, and promote your content on the platform.",
-        "You confirm that your content does not violate any laws or third-party rights.",
-        "NextCybr may remove content that violates these Terms or applicable law without prior notice.",
-      ],
-    },
-    {
-      title: "6. Intellectual Property",
-      content: [
-        "All rights, titles, and interests in the platform (including software, logos, trademarks, and designs) are owned by NextCybr or its licensors.",
-        "You may not copy, modify, distribute, or create derivative works without prior written consent.",
-      ],
-    },
-    {
-      title: "7. Paid Services / Subscription (Optional)",
+      title: "4. User Roles & Permissions",
       list: [
-        "Some features may require paid subscriptions.",
-        "Payments are non-refundable except where required by law.",
-        "We may modify pricing, features, or terms for paid services at any time.",
-        "Use of paid features is subject to compliance with these Terms.",
+        "Students / Job Seekers: May use free or paid (Pro) plans.",
+        "Mentors: May register and set their own fees for mentorship sessions.",
+        "Organizations: Enter contract or subscription-based agreements to post jobs and access talent features.",
       ],
     },
     {
-      title: "8. Privacy",
-      content: [
-        "Your use of NextCybr is also governed by our Privacy Policy, which explains how we collect, use, and protect your data.",
+      title: "5. Payments, Subscriptions & Fees",
+      list: [
+        "Payments are processed through third-party payment gateways.",
+        "Free Plan: no charge for basic features.",
+        "Pro Plan for Students / Job Seekers: subscription-based; charges apply only if you upgrade.",
+        "Mentors may charge for sessions; NextCybr may take a commission as defined.",
+        "Organizations are charged per contract or subscription.",
       ],
     },
     {
-      title: "9. Disclaimers",
-      content: [
-        "NextCybr is provided 'as is' and 'as available'.",
-        "We do not guarantee that the platform will be uninterrupted, secure, or error-free.",
-        "We are not responsible for any user-generated content or third-party links.",
+      title: "6. Cancellations & Refunds",
+      list: [
+        "You may cancel your subscription at least 48 hours before renewal to avoid being charged again.",
+        "Refunds may be issued at our discretion in exceptional circumstances (e.g., technical failure, duplicate charge).",
       ],
     },
     {
-      title: "10. Limitation of Liability",
-      content: [
-        "To the fullest extent allowed by law, NextCybr is not liable for any direct, indirect, incidental, or consequential damages arising from your use of the platform.",
-        "You agree to use the platform at your own risk.",
+      title: "7. User Conduct",
+      content: ["You agree not to:"],
+      list: [
+        "Provide false, misleading, or fraudulent information.",
+        "Misuse the platform (spam, harassment, unauthorized access).",
+        "Copy or reuse any content except as permitted under license.",
+        "Reverse engineer or tamper with the Services.",
+        "Violate any applicable law or regulation.",
       ],
     },
     {
-      title: "11. Indemnification",
-      content: [
-        "You agree to indemnify and hold harmless NextCybr, its affiliates, employees, and agents from any claims, losses, or damages arising from your violation of these Terms or your use of the platform.",
+      title: "8. Limitation of Liability",
+      list: [
+        "To the maximum extent permitted by law, NextCybr is not liable for indirect, incidental, special, or consequential damages arising from your use of the Services.",
+        "We do not guarantee job offers, mentorship success, or training outcomes.",
+        "You are responsible for validating decisions; we provide tools and recommendations, not guarantees.",
       ],
     },
     {
-      title: "12. Termination",
-      content: [
-        "We may suspend or terminate your account if you violate these Terms or misuse the platform.",
-        "Upon termination, your rights to access the platform will end immediately.",
+      title: "9. Intellectual Property",
+      list: [
+        "All content, software, designs, and trademarks used by NextCybr are the property of NextCybr or our licensors.",
+        "You may use content only as permitted; all rights reserved.",
       ],
     },
     {
-      title: "13. Governing Law and Dispute Resolution",
-      content: [
-        "These Terms are governed by the laws of [Insert Your Country/State].",
-        "Any disputes will be resolved in the courts of [Insert Location].",
-        "You agree to resolve disputes with NextCybr in good faith before taking legal action.",
+      title: "10. AI & Recommendation Disclaimer",
+      list: [
+        "Our AI features (recommendations for jobs, certifications, mentors) are suggestions only and not guarantees. You should independently verify and assess any recommendation provided by the system.",
       ],
     },
     {
-      title: "14. Modifications to Terms",
-      content: [
-        "NextCybr may update these Terms from time to time.",
-        "Continued use of the platform constitutes acceptance of the updated Terms.",
-        "Significant changes will be communicated through the platform or email.",
+      title: "11. Governing Law & Dispute Resolution",
+      list: [
+        "These Terms are governed by the laws of New Zealand.",
+        "You submit to the non-exclusive jurisdiction of New Zealand courts.",
       ],
     },
     {
-      title: "15. Contact Information",
-      content: [
-        "For questions about these Terms, please contact:",
-        <>
-          <span className="font-semibold">Email:</span>{" "}
-          <Link href="mailto:support@nextcybr.com">support@nextcybr.com</Link>
-        </>,
-        <>
-          <span className="font-semibold">Address:</span> 448 GIDC Makarpura,
-          Vadodara – 390 010, Gujarat, India
-        </>,
+      title: "12. Modifications",
+      list: [
+        "We may amend these Terms and will post updates on our site with an effective date. Continued use indicates acceptance of revised terms.",
+      ],
+    },
+    {
+      title: "AI Transparency (Additional Clause)",
+      list: [
+        "NextCybr uses AI to provide recommendations (e.g., certifications, learning pathways, job matches, and mentorship suggestions).",
+        "These recommendations are based on the information you provide, public data, and patterns recognized by our algorithms.",
+        "AI suggestions are for informational purposes only and should not be considered guaranteed outcomes or professional advice.",
+        "Users are encouraged to validate recommendations and make their own career, hiring, or training decisions.",
       ],
     },
   ];
 
   return (
     <section className="w-full">
-      <div className="max-w-[1440px] mx-auto px-5 sm:px-10 flex flex-col items-start gap-5 py-15">
-        <h1 className="text-[32px] leading-[40px] sm:text-[48px] sm:leading-[60px] text-gray-100">
-          Terms & Conditions
+      <div className="max-w-[1440px] mx-auto px-5 sm:px-10 flex flex-col gap-5 py-15">
+        <h1 className="text-[32px] leading-[40px] sm:text-[48px] sm:leading-[60px] text-g-100">
+          NextCybr Terms of Use
         </h1>
-
+        <p className=" text-g-200 mb-5">
+          These Terms of Use (“Terms”) govern your access to and use of
+          NextCybr’s website, platform, and services (collectively, “Services”).
+          By using or accessing NextCybr, you agree to these Terms.
+        </p>
         <div className="space-y-10 text-base leading-relaxed text-text">
           {termsData.map((item, index) => (
             <div key={index}>
-              <h4 className="font-semibold text-xl text-heading text-gray-200">
+              <h4 className="font-semibold text-xl text-heading text-g-100">
                 {item.title}
               </h4>
 
               {item.list ? (
-                <ul className="list-disc pl-5 mt-5 space-y-1 text-gray-300">
+                <ul className="list-disc pl-5 mt-5 space-y-1 text-g-200">
                   {item.list.map((li, i) => (
                     <li key={i}>{li}</li>
                   ))}
                 </ul>
               ) : (
                 item.content?.map((p, i) => (
-                  <p key={i} className="mt-5 text-gray-300">
+                  <p key={i} className="mt-5 text-g-200">
                     {p}
                   </p>
                 ))
@@ -159,4 +141,4 @@ const TermsAndConditions = () => {
   );
 };
 
-export default TermsAndConditions;
+export default TermsOfUse;

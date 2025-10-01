@@ -3,119 +3,154 @@ import Link from "next/link";
 const PrivacyPolicy = () => {
   const privacyData = [
     {
-      title: "1. Introduction",
-      content: [
-        <>
-          This Privacy Policy explains how{" "}
-          <span className="font-semibold">NextCybr</span> (“we,” “our,” or “us”)
-          collects, uses, and protects information when you use our platform. By
-          using NextCybr, you agree to the terms herein.
-        </>,
-      ],
-    },
-    {
-      title: "2. Information We Collect",
+      title: "1. Definitions",
       list: [
         <>
-          <span className="font-semibold">Personal Information:</span>{" "}
-          Information you voluntarily provide, such as name, email, phone
-          number, work experience, education, and profile details.
+          <span className="font-semibold">Personal Data:</span> any information
+          relating to an identified or identifiable natural person, including
+          name, email, phone, CV contents, skills, certifications, and usage
+          data.
         </>,
         <>
-          <span className="font-semibold">Account Credentials:</span> Email,
-          password, or third-party login identifiers.
+          <span className="font-semibold">Processing:</span> any operation
+          performed on Personal Data (collection, use, storage, alteration,
+          transfer, deletion).
         </>,
         <>
-          <span className="font-semibold">Non-Personal Information:</span>{" "}
-          Automatically collected data such as IP address, browser type, device
-          type, referring URL, pages visited, and cookies.
+          <span className="font-semibold">Third Party:</span> any entity other
+          than you or NextCybr.
         </>,
         <>
-          <span className="font-semibold">User Interactions:</span> Information
-          about connections, messages, posts, and activities performed within
-          the platform.
+          <span className="font-semibold">User:</span> any individual using the
+          NextCybr platform (students, mentors, organizations, and training
+          providers).
         </>,
       ],
     },
     {
-      title: "3. How We Use Your Information",
-      list: [
-        "To provide and improve platform features and user experience.",
-        "To personalize content, suggestions, and job or connection recommendations.",
-        "To communicate with you regarding updates, notifications, or support requests.",
-        "For analytics and research to improve platform functionality.",
-        "To prevent fraud, abuse, or illegal activity and to enforce our Terms & Conditions.",
-      ],
-    },
-    {
-      title: "4. Cookies & Tracking Technologies",
+      title: "2. Data Collection & Use",
       content: [
-        "We use cookies, web beacons, and similar technologies to enhance user experience, monitor platform usage, and deliver personalized content. You can disable cookies through your browser settings, but some features may be affected.",
+        "We collect and process your Personal Data for the following purposes:",
       ],
-    },
-    {
-      title: "5. How We Share Your Information",
       list: [
         <>
-          <span className="font-semibold">With Other Users:</span> Your public
-          profile information is visible to other users and connections.
+          <span className="font-semibold">
+            Account registration and verification:
+          </span>{" "}
+          Name, email, password, role, profile data —{" "}
+          <i>Performance of contract / consent</i>.
         </>,
-        "With trusted service providers who assist us with hosting, analytics, email, or technical support under strict confidentiality obligations.",
-        "When legally required or to protect our rights, safety of users, or in response to law enforcement requests.",
-        "In connection with business transfers, mergers, or acquisitions (with safeguards to protect personal data).",
+        <>
+          <span className="font-semibold">
+            Building and maintaining NextGen CV:
+          </span>{" "}
+          Education, work experience, skills, certifications, goals —{" "}
+          <i>Performance of contract</i>.
+        </>,
+        <>
+          <span className="font-semibold">AI-driven recommendations:</span>{" "}
+          Profile data, activity, CV content —{" "}
+          <i>Legitimate interest / performance of contract</i>.
+        </>,
+        <>
+          <span className="font-semibold">Job matching & recruitment:</span>{" "}
+          Profile visibility, skills & certifications shared with organizations
+          — <i>Your consent / contract</i>.
+        </>,
+        <>
+          <span className="font-semibold">Payment processing:</span> Payment
+          card or bank data (via third-party gateway) —{" "}
+          <i>Performance of contract</i>.
+        </>,
+        <>
+          <span className="font-semibold">
+            Analytics, cookies, site improvement:
+          </span>{" "}
+          Usage data, IP, device info, cookie preferences —{" "}
+          <i>Legitimate interest / consent</i>.
+        </>,
+        <>
+          <span className="font-semibold">Support and communications:</span>{" "}
+          Contact details, support logs —{" "}
+          <i>Legitimate interest / performance of contract</i>.
+        </>,
       ],
     },
     {
-      title: "6. Data Retention",
+      title: "3. Cookies & Tracking",
       content: [
-        "We retain your personal information as long as your account is active or as needed to provide services, comply with legal obligations, resolve disputes, or enforce agreements.",
+        "We use cookies and similar technologies for site functionality, analytics, and personalized user experience. You will be presented with options to accept, decline, or configure cookie preferences. Please note that disabling or declining certain cookies may impair functionality (e.g., AI suggestions, session persistence).",
       ],
     },
     {
-      title: "7. Data Security",
-      content: [
-        "We implement reasonable technical and organizational measures to protect your data, including encryption and secure storage. However, no online platform is completely secure, and we cannot guarantee absolute security.",
-      ],
-    },
-    {
-      title: "8. Your Rights",
+      title: "4. Data Sharing & Disclosure",
       list: [
-        "Access, update, or correct personal information stored on your account.",
-        "Request deletion of your personal data, subject to legal obligations.",
-        "Opt-out of marketing communications by changing your preferences.",
-        "For users in India, EU, UK, or California, exercise rights under applicable privacy laws (e.g., GDPR, CCPA, DPDP).",
+        "With organizations / recruiters when you apply or make your profile visible.",
+        "With training providers you engage with (for certification delivery).",
+        "With third-party service providers (e.g., hosting, analytics, payment processors) bound by confidentiality.",
+        "When required by law, regulation, court order, or government request.",
+        "In connection with a merger, acquisition, or sale of all or part of NextCybr’s business (with notice).",
+        "We will not sell your Personal Data to third parties.",
       ],
     },
     {
-      title: "9. Children’s Privacy",
-      content: [
-        "NextCybr is not intended for individuals under 16. We do not knowingly collect personal information from children.",
+      title: "5. Data Storage & Security",
+      list: [
+        "Personal Data is stored on secure, industry-standard infrastructure.",
+        "We employ encryption, access controls, firewalls, and other safeguards.",
+        "While we strive to use commercially appropriate means to protect your data, no method of transmission or storage is 100% secure.",
       ],
     },
     {
-      title: "10. Third-Party Links & Integrations",
-      content: [
-        "Our platform may contain links to third-party websites or services. We are not responsible for the privacy practices of these third parties. We encourage you to read their privacy policies.",
+      title: "6. Retention & Deletion",
+      list: [
+        "We retain Personal Data as long as necessary to fulfill the purposes in this Policy, comply with legal obligations, and enforce our agreements.",
+        "You may request deletion of your data (subject to legal/contractual obligations).",
       ],
     },
     {
-      title: "11. Policy Updates",
+      title: "7. Your Rights",
       content: [
-        "We may revise this Privacy Policy to reflect changes in our practices or for legal, operational, or regulatory reasons. Continued use of NextCybr after changes implies acceptance of the updated policy. We recommend reviewing this policy periodically.",
+        "Depending on your jurisdiction and local law, you may have the following rights:",
       ],
-    },
-    {
-      title: "12. Contact Us",
-      content: [
-        "For questions about this Privacy Policy or to exercise your data rights, please contact us at:",
+      list: [
+        "Access and correction of your Personal Data.",
+        "Deletion or erasure (the “right to be forgotten”) where legally applicable.",
+        "Restrict or object to certain processing (e.g. profiling).",
+        "Withdraw consent (where processing is based on consent).",
+        "Data portability (requesting your data in machine-readable form).",
         <>
-          <span className="font-semibold">Email:</span>{" "}
-          <Link href="mailto:support@nextcybr.com">support@nextcybr.com</Link>
+          To exercise your rights, contact us at:{" "}
+          <Link href="mailto:[your legal / data email address]">
+            [your legal / data email address]
+          </Link>
         </>,
-        <>
-          <span className="font-semibold">Address:</span> 448 GIDC Makarpura,
-          Vadodara – 390 010, Gujarat, India
-        </>,
+      ],
+    },
+    {
+      title: "8. AI Transparency",
+      list: [
+        "We use AI to generate recommendations (certifications, training paths, job matches, mentor suggestions) based on your data. These outputs are advisory and not guarantees. You should not rely solely on AI for career, hiring, or training decisions; human discretion and validation remain paramount.",
+      ],
+    },
+    {
+      title: "9. Children & Minors",
+      list: [
+        "You must be at least 13 years old to use NextCybr. If you are under 18, you may only use the platform under parental or guardian supervision.",
+      ],
+    },
+    {
+      title: "10. Changes to This Policy",
+      list: [
+        "We may update this Privacy Policy periodically. We will post changes on our site with a revised “Effective Date.” Your continued use of NextCybr constitutes acceptance of those changes.",
+      ],
+    },
+    {
+      title: "Use of AI (additional note)",
+      list: [
+        "We process user data to provide AI-powered recommendations.",
+        "AI outputs are generated dynamically and may evolve as your data and activity on the platform change.",
+        "We do not sell or share individual AI-generated insights with third parties, except when you choose to apply for jobs or share your profile with organizations.",
       ],
     },
   ];
@@ -123,25 +158,31 @@ const PrivacyPolicy = () => {
   return (
     <section className="w-full">
       <div className="max-w-[1440px] mx-auto px-5 sm:px-10 flex flex-col gap-5 py-15">
-        <h1 className="text-[32px] leading-[40px] sm:text-[48px] sm:leading-[60px] text-gray-100">
-          Privacy Policy
+        <h1 className="text-[32px] leading-[40px] sm:text-[48px] sm:leading-[60px] text-g-100">
+          NextCybr Privacy Policy
         </h1>
+        <p className="text-g-200 mb-5">
+          NextCybr (“we,” “us,” “our”) is committed to protecting your privacy
+          and ensuring transparency in how we collect, use, share, and store
+          personal data. This Privacy Policy describes these practices and your
+          rights.
+        </p>
         <div className="space-y-10 text-base leading-relaxed text-text">
           {privacyData.map((item, index) => (
             <div key={index}>
-              <h4 className="font-semibold text-xl text-heading text-gray-200">
+              <h4 className="font-semibold text-xl text-heading text-g-100">
                 {item.title}
               </h4>
 
               {item.list ? (
-                <ul className="list-disc pl-5 mt-5 space-y-1 text-gray-300">
+                <ul className="list-disc pl-5 mt-5 space-y-1 text-g-200">
                   {item.list.map((li, i) => (
                     <li key={i}>{li}</li>
                   ))}
                 </ul>
               ) : (
                 item.content?.map((p, i) => (
-                  <p key={i} className="mt-5 text-gray-300">
+                  <p key={i} className="mt-5 text-g-200">
                     {p}
                   </p>
                 ))

@@ -12,7 +12,9 @@ function Wrapper({ children }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const { user, isLoading } = useSelector((state) => state.auth);
-  const authPages = ["/auth", "/"];
+  const authPages = ["/auth", "/", "/privacy-policy", "/terms-and-conditions"];
+  const NavPages = ["/", "/privacy-policy", "/terms-and-conditions"];
+  const isNavPage = NavPages.includes(pathname);
   const isAuthPage = authPages.includes(pathname);
   useEffect(() => {
     if (user === null && !isAuthPage) {
@@ -40,7 +42,7 @@ function Wrapper({ children }) {
     );
   }
 
-  if (pathname === "/") {
+  if (isNavPage) {
     return (
       <>
         <Nav />
