@@ -87,17 +87,21 @@ function ProtectedLayout({ children }) {
           </div>
           <div className=" hidden text-[13px] lg:flex items-center font-normal justify-between text-text-secondary py-3 px-5 border-b border-g-500">
             <div className="flex items-center">
-              <Link
-                href="/"
-                className="text-text-secondary hover:text-text transition-colors"
-              >
-                Dashboard
-              </Link>
+              {pathname !== "/dashboard" && (
+                <Link
+                  href="/dashboard"
+                  className="text-text-secondary hover:text-text transition-colors"
+                >
+                  Dashboard
+                </Link>
+              )}
               {breadcrumbs.map((crumb, index) => (
                 <Fragment key={crumb.href}>
-                  <span className="mx-1 text-text">
-                    <ChevronRight size={14} />
-                  </span>
+                  {pathname !== "/dashboard" && (
+                    <span className="mx-1 text-text">
+                      <ChevronRight size={14} />
+                    </span>
+                  )}
                   {index === breadcrumbs.length - 1 ? (
                     <span className="text-heading capitalize">
                       {crumb.label.replaceAll("-", " ")}
