@@ -127,7 +127,7 @@ function ProtectedLayout({ children }) {
           </div>
         </div>
         <section>
-          <div className="p-5 bg-background max-h-[calc(100vh-60.67px)] overflow-auto">
+          <div className="p-5 bg-background max-h-[calc(100vh-60.84px)] flex-1 overflow-auto">
             {children}
           </div>
         </section>
