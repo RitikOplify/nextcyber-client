@@ -64,7 +64,7 @@ function CompanyDetailPage() {
     },
   ];
   return (
-    <div>
+    <>
       <div className=" rounded-lg overflow-hidden">
         <div className="relative w-full h-[200px]">
           <Image
@@ -189,7 +189,7 @@ function CompanyDetailPage() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

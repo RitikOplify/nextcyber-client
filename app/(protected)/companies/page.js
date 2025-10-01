@@ -11,14 +11,14 @@ function CompaniesPage() {
       </h1>
       <div className="pt-5 pb-7.5  flex justify-center">
         <div className=" overflow-hidden  whitespace-nowrap">
-          <div className="px-5 border border-g-600 bg-g-700 rounded-lg md:w-[480px] ">
+          <div className="px-5 border border-g-600 bg-g-700 rounded-lg md:w-[480px] mx-auto ">
             <input
               type="text"
               placeholder="Search for jobs, companies..."
               className="py-4 outline-none"
             />
           </div>
-          <div className=" pt-5 flex gap-5 overflow-x-auto scrollbar pb-1 sm:pb-0">
+          <div className=" pt-5 flex gap-5 overflow-x-auto scrollbar pb-1 ">
             <div className=" px-4 py-2 gap-2 flex items-center rounded-lg bg-g-600 border border-g-500 text-g-200 w-fit">
               <MapPinHouse size={20} />
               <span>Location</span>

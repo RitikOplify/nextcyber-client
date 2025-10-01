@@ -1,0 +1,230 @@
+"use client";
+import FAQSection from "@/components/home/Section4";
+import {
+  Infinity,
+  Rocket,
+  Atom,
+  CheckCircle2,
+  ArrowBigDownIcon,
+  Cross,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
+import { useState } from "react";
+
+const plans = [
+  {
+    name: "Basic",
+    price: "Free",
+    description: "Essential features for startups individuals",
+    button: "Try Now",
+    icon: <Atom size={32} />,
+    features: [
+      "AI profile (basic) & dynamic CV",
+      "Upload projects, labs & GitHub",
+      "Job board access (standard filters)",
+      "1 job alert email/week",
+      "Community access & events",
+      "Save up to 5 roles",
+    ],
+  },
+  {
+    name: "Pro",
+    price: "$99",
+    period: "/month",
+    description: "Comprehensive suite for large-scale operations",
+    button: "Subscribe Now",
+    mostPopular: true,
+    icon: <Rocket size={32} />,
+
+    features: [
+      "AI profile (basic) & dynamic CV",
+      "Upload projects, labs & GitHub",
+      "Job board access (standard filters)",
+      "1 job alert email/week",
+      "Community access & events",
+      "Save up to 5 roles",
+    ],
+  },
+  {
+    name: "Enterprise",
+    price: "$199",
+    period: "/month",
+    description: "Tailored solutions for enterprise needs",
+    button: "Subscribe Now",
+    icon: <Infinity size={32} />,
+    features: [
+      "AI profile (basic) & dynamic CV",
+      "Upload projects, labs & GitHub",
+      "Job board access (standard filters)",
+      "1 job alert email/week",
+      "Community access & events",
+      "Save up to 5 roles",
+    ],
+  },
+];
+
+export default function Pricing() {
+  const [openItems, setOpenItems] = useState(new Set([]));
+
+  const faqItems = [
+    {
+      id: 0,
+      question: "Do I need Pro to apply for jobs?",
+      answer:
+        "No, you don’t need Pro to apply for jobs. However, Pro may unlock additional features that can help you stand out to employers.",
+    },
+    {
+      id: 1,
+      question: "Can I cancel anytime?",
+      answer:
+        "Yes, you can cancel your subscription at any time. Once canceled, you’ll retain access until the end of your billing cycle.",
+    },
+    {
+      id: 2,
+      question: "Is there a student discount?",
+      answer:
+        "Yes, we offer student discounts. You’ll need to verify your student status to claim the discount.",
+    },
+    {
+      id: 3,
+      question: "What’s included in the interview prep kit?",
+      answer:
+        "The interview prep kit includes practice questions, mock interview guidance, and curated resources to help you prepare effectively.",
+    },
+    {
+      id: 4,
+      question: "How does mentor pricing work?",
+      answer:
+        "Mentor pricing depends on the mentor’s experience and session length. Rates are clearly displayed before booking.",
+    },
+    {
+      id: 5,
+      question: "Do you offer campus or cohort pricing?",
+      answer:
+        "Yes, we provide special pricing for campuses and cohorts. Please reach out to our support team for customized packages.",
+    },
+  ];
+
+  const toggleItem = (id) => {
+    const newOpenItems = new Set(openItems);
+    if (newOpenItems.has(id)) {
+      newOpenItems.delete(id);
+    } else {
+      newOpenItems.add(id);
+    }
+    setOpenItems(newOpenItems);
+  };
+
+  return (
+    <section className="bg-g-900">
+      <div className="text-center max-w-xl mx-auto">
+        <h2 className="text-5xl font-semibold leading-14 pt-5">
+          We’ve got a pricing plan that’s perfect for you
+        </h2>
+        <p className="text-g-200 leading-6 text-base mt-11">
+          Choose the perfect plan for your business needs
+        </p>
+        <p className="text-accent-color-1 leading-6 font-medium mt-6">
+          Save 15% on yearly plan!
+        </p>
+        <div className="inline-flex mt-2.5 rounded-full bg-g-700 p-2 space-x-2 border border-g-500">
+          <button className="px-4 py-2 text-xs leading-4 font-semibold rounded-full bg-g-500 text-g-200">
+            Yearly
+          </button>
+          <button className="px-4 py-2 text-xs leading-4 font-semibold rounded-full bg-g-700 text-g-200">
+            Monthly
+          </button>
+        </div>
+      </div>
+
+      {/* Pricing Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 max-w-5xl mx-auto mt-5">
+        {plans.map((plan, index) => (
+          <div key={index}>
+            <div className=" border border-g-500 rounded-[20px] p-5">
+              {plan.mostPopular && (
+                <span className="absolute top-3 right-3 text-xs bg-green-500 text-black px-2 py-1 rounded-full">
+                  Most Popular
+                </span>
+              )}
+              <div className="mb-5">{plan.icon}</div>
+              <h3 className="text-base text-g-100 leading-6 font-semibold">
+                {plan.name}
+              </h3>
+              <p className="text-g-200 text-sm mt-2 leading-4 max-w-4/5">
+                {plan.description}
+              </p>
+
+              <div className="mt-7.5">
+                <span className="text-4xl font-semibold leading-11 tracking-[-1%] text-g-100">
+                  {plan.price}
+                </span>
+                <span className="text-g-200 text-xs leading-4 font-medium ml-2">
+                  {plan.period}
+                </span>
+              </div>
+
+              <button
+                className={`w-full mt-10 bg-g-600 text-g-200 leading-4 text-sm py-2 px-4 font-medium rounded-full border border-g-500`}
+              >
+                {plan.button}
+              </button>
+            </div>
+
+            <ul className="mt-10 space-y-2 px-5 text-g-200 text-xs leading-4 font-medium">
+              {plan.features.map((feature, i) => (
+                <li key={i} className="flex items-center gap-2">
+                  <CheckCircle2 size={16} className="text-dark-blue" />{" "}
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <div className=" py-25">
+        <div className=" max-w-[1440px] mx-auto px-5 sm:px-10">
+          <h2 className="text-g-100 text-4xl leading-11 text-center font-semibold tracking-[-1%] mb-10">
+            Frequently Asked Questions
+          </h2>
+
+          <div className="flex flex-col gap-2.5 mx-auto max-w-3xl">
+            {faqItems.map((item) => (
+              <div
+                key={item.id}
+                className="border-b border-g-600 bg-[#FFFFFF0D] rounded-lg flex flex-col gap-6 overflow-hidden py-4 px-5"
+              >
+                <button
+                  onClick={() => toggleItem(item.id)}
+                  className="w-full text-left flex items-start justify-between gap-2.5"
+                >
+                  <span className="text-g-200 font-medium text-base leading-6">
+                    {item.question}
+                  </span>
+
+                  <div className="  text-g-200">
+                    {openItems.has(item.id) ? (
+                      <ChevronUp size={18} />
+                    ) : (
+                      <ChevronDown size={18} />
+                    )}
+                  </div>
+                </button>
+
+                {openItems.has(item.id) && (
+                  <div>
+                    <p className="text-g-200 text-base leading-[150%]">
+                      {item.answer}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

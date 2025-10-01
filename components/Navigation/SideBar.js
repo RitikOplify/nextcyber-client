@@ -6,15 +6,6 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   LayoutDashboard,
-  Users,
-  Package,
-  Award,
-  FolderTree,
-  Folder,
-  FolderOpen,
-  Percent,
-  BarChart3,
-  FileBarChart,
   ChevronDown,
   ChevronRight,
   FileText,
@@ -49,7 +40,7 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
     {
       label: "Dashboard",
       icon: LayoutDashboard,
-      href: "/",
+      href: "/dashboard",
     },
     {
       label: "My NextGen CV",
@@ -74,7 +65,7 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
     {
       label: "Jobs",
       icon: Briefcase,
-      href: "",
+      href: "/jobs",
     },
     {
       label: "Companies",
@@ -180,7 +171,7 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
             } items-center py-4 pr-2.5 w-full border-b border-g-500 sticky top-0 bg-g-800 z-30`}
           >
             {!isCollapsed && (
-              <Link href={"/"}>
+              <Link href={"/dashboard"}>
                 <Image
                   src="/logo.png"
                   className=" h-7 w-auto pl-6"
@@ -233,7 +224,7 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
           />
           <div className="relative z-50 bg-g-800 flex flex-col w-60">
             <div className="flex justify-between items-center bg-g-800 pl-6 pr-2.5 h-[60.67px] w-full sticky top-0 border-b border-g-500">
-              <Link href={"/"}>
+              <Link href={"/dashboard"}>
                 <Image
                   src="/logo.png"
                   className=" h-7 w-auto"

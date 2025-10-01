@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Wrapper from "@/wrapper/Wrapper";
+import ReduxWrapper from "@/wrapper/ReduxWrapper";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -20,7 +21,9 @@ export default function RootLayout({ children }) {
         className={`${inter.variable} antialiased`}
         suppressHydrationWarning={true}
       >
-        <Wrapper>{children}</Wrapper>
+        <ReduxWrapper>
+          <Wrapper>{children}</Wrapper>
+        </ReduxWrapper>
       </body>
     </html>
   );
