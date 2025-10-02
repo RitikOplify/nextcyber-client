@@ -49,63 +49,114 @@ export default function ProfileTabs() {
   const [activeTab, setActiveTab] = useState("Skills & Experience");
 
   return (
-    <div className="bg-g-600 rounded-[10px] p-5">
-      {/* Tabs */}
-      <div className="flex space-x-6 mb-5 overflow-x-auto scrollbar pb-1.5">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`text-base leading-6 font-semibold text-g-100 whitespace-nowrap ${
-              activeTab === tab ? "border-b-2 border-primary" : ""
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
+    <div className="bg-gradient-to-r from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden">
+      <div className="bg-g-600 rounded-lg p-5">
+        {/* Tabs */}
+        <div className="flex space-x-6 mb-5 overflow-x-auto scrollbar pb-1.5">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`text-base leading-6 font-semibold text-g-100 whitespace-nowrap ${
+                activeTab === tab ? "border-b-2 border-primary" : ""
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
 
-      {/* Skills & Experience */}
-      {activeTab === "Skills & Experience" && (
-        <div className="space-y-6">
-          {/* Skills */}
+        {/* Skills & Experience */}
+        {activeTab === "Skills & Experience" && (
+          <div className="space-y-6">
+            {/* Skills */}
+            <div>
+              <h3 className="text-base leading-6 font-semibold text-g-100 mb-2.5">
+                Skills
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {skills.map((skill, i) => (
+                  <span
+                    key={i}
+                    className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Certifications */}
+            <div className=" mt-7.5">
+              <h3 className="text-base leading-6 font-semibold text-g-100 mb-2.5">
+                Certifications
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {certifications.map((cert, i) => (
+                  <span
+                    key={i}
+                    className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500"
+                  >
+                    {cert}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Experience */}
+            <div>
+              <h3 className="text-base leading-6 font-semibold text-g-100 mb-2.5">
+                Experience
+              </h3>
+
+              <div className="relative">
+                {/* Vertical Line */}
+                <div className="absolute left-[6px] top-0 h-full border border-dashed border-g-400"></div>
+
+                <div className="space-y-7.5">
+                  {experiences.map((exp, i) => (
+                    <div
+                      key={i}
+                      className="flex items-start gap-1 py-3  relative"
+                    >
+                      {/* Timeline Dot */}
+                      <div className="relative z-10 bg-g-400 p-0.5 rounded-full">
+                        <span className="w-2.5 h-2.5 bg-blue-500 rounded-full block"></span>
+                      </div>
+
+                      {/* Content */}
+                      <div className="pl-3 space-y-[3px]">
+                        <p className="text-sm font-normal text-g-200 leading-4">
+                          {exp.period}
+                        </p>
+                        <h4 className="text-primary font-semibold text-base leading-6">
+                          {exp.title}
+                        </h4>
+                        <p className="text-g-100 text-sm font-medium leading-4">
+                          {exp.company}
+                        </p>
+                        <p className="text-g-300 text-sm leading-4 font-normal">
+                          {exp.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Button */}
+            <button className="mt-4 px-2 py-1 text-xs leading-4 font-medium rounded-full bg-g-500 text-g-200">
+              explore experience
+            </button>
+          </div>
+        )}
+
+        {/* Education */}
+        {activeTab === "Education" && (
           <div>
             <h3 className="text-base leading-6 font-semibold text-g-100 mb-2.5">
-              Skills
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {skills.map((skill, i) => (
-                <span
-                  key={i}
-                  className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500"
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Certifications */}
-          <div className=" mt-7.5">
-            <h3 className="text-base leading-6 font-semibold text-g-100 mb-2.5">
-              Certifications
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {certifications.map((cert, i) => (
-                <span
-                  key={i}
-                  className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500"
-                >
-                  {cert}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Experience */}
-          <div>
-            <h3 className="text-base leading-6 font-semibold text-g-100 mb-2.5">
-              Experience
+              Education
             </h3>
 
             <div className="relative">
@@ -113,7 +164,7 @@ export default function ProfileTabs() {
               <div className="absolute left-[6px] top-0 h-full border border-dashed border-g-400"></div>
 
               <div className="space-y-7.5">
-                {experiences.map((exp, i) => (
+                {education.map((exp, i) => (
                   <div
                     key={i}
                     className="flex items-start gap-1 py-3  relative"
@@ -129,10 +180,10 @@ export default function ProfileTabs() {
                         {exp.period}
                       </p>
                       <h4 className="text-primary font-semibold text-base leading-6">
-                        {exp.title}
+                        {exp.Level}
                       </h4>
                       <p className="text-g-100 text-sm font-medium leading-4">
-                        {exp.company}
+                        {exp.Institute}
                       </p>
                       <p className="text-g-300 text-sm leading-4 font-normal">
                         {exp.description}
@@ -143,72 +194,26 @@ export default function ProfileTabs() {
               </div>
             </div>
           </div>
+        )}
 
-          {/* Button */}
-          <button className="mt-4 px-2 py-1 text-xs leading-4 font-medium rounded-full bg-g-500 text-g-200">
-            explore experience
-          </button>
-        </div>
-      )}
-
-      {/* Education */}
-      {activeTab === "Education" && (
-        <div>
-          <h3 className="text-base leading-6 font-semibold text-g-100 mb-2.5">
-            Education
-          </h3>
-
-          <div className="relative">
-            {/* Vertical Line */}
-            <div className="absolute left-[6px] top-0 h-full border border-dashed border-g-400"></div>
-
-            <div className="space-y-7.5">
-              {education.map((exp, i) => (
-                <div key={i} className="flex items-start gap-1 py-3  relative">
-                  {/* Timeline Dot */}
-                  <div className="relative z-10 bg-g-400 p-0.5 rounded-full">
-                    <span className="w-2.5 h-2.5 bg-blue-500 rounded-full block"></span>
-                  </div>
-
-                  {/* Content */}
-                  <div className="pl-3 space-y-[3px]">
-                    <p className="text-sm font-normal text-g-200 leading-4">
-                      {exp.period}
-                    </p>
-                    <h4 className="text-primary font-semibold text-base leading-6">
-                      {exp.Level}
-                    </h4>
-                    <p className="text-g-100 text-sm font-medium leading-4">
-                      {exp.Institute}
-                    </p>
-                    <p className="text-g-300 text-sm leading-4 font-normal">
-                      {exp.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* About Me */}
-      {activeTab === "About Me" && (
-        <p className="text-g-300 text-sm leading-4 font-normal">
-          I am a passionate and detail-oriented Cybersecurity enthusiast with a
-          strong foundation in network security, vulnerability assessment, and
-          risk management. With hands-on experience in identifying system
-          vulnerabilities, monitoring security alerts, and conducting incident
-          analysis, I strive to safeguard digital assets from evolving cyber
-          threats. My academic background combined with practical exposure to
-          tools, frameworks, and industry best practices has equipped me with
-          strong problem-solving skills, analytical thinking, and a proactive
-          approach to security challenges. I am eager to contribute to creating
-          secure, resilient, and reliable systems while continuously expanding
-          my knowledge in areas such as ethical hacking, penetration testing,
-          and cloud security.
-        </p>
-      )}
+        {/* About Me */}
+        {activeTab === "About Me" && (
+          <p className="text-g-300 text-sm leading-4 font-normal">
+            I am a passionate and detail-oriented Cybersecurity enthusiast with
+            a strong foundation in network security, vulnerability assessment,
+            and risk management. With hands-on experience in identifying system
+            vulnerabilities, monitoring security alerts, and conducting incident
+            analysis, I strive to safeguard digital assets from evolving cyber
+            threats. My academic background combined with practical exposure to
+            tools, frameworks, and industry best practices has equipped me with
+            strong problem-solving skills, analytical thinking, and a proactive
+            approach to security challenges. I am eager to contribute to
+            creating secure, resilient, and reliable systems while continuously
+            expanding my knowledge in areas such as ethical hacking, penetration
+            testing, and cloud security.
+          </p>
+        )}
+      </div>
     </div>
   );
 }

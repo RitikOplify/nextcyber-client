@@ -9,6 +9,8 @@ import {
   Cross,
   ChevronDown,
   ChevronUp,
+  Minus,
+  Plus,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -18,7 +20,7 @@ const plans = [
     price: "Free",
     description: "Essential features for startups individuals",
     button: "Try Now",
-    icon: <Atom size={32} />,
+    icon: <Atom size={32} className=" text-light-yellow" />,
     features: [
       "AI profile (basic) & dynamic CV",
       "Upload projects, labs & GitHub",
@@ -35,7 +37,7 @@ const plans = [
     description: "Comprehensive suite for large-scale operations",
     button: "Subscribe Now",
     mostPopular: true,
-    icon: <Rocket size={32} />,
+    icon: <Rocket size={32} className=" text-light-green" />,
 
     features: [
       "AI profile (basic) & dynamic CV",
@@ -52,7 +54,7 @@ const plans = [
     period: "/month",
     description: "Tailored solutions for enterprise needs",
     button: "Subscribe Now",
-    icon: <Infinity size={32} />,
+    icon: <Infinity size={32} className=" text-light-blue" />,
     features: [
       "AI profile (basic) & dynamic CV",
       "Upload projects, labs & GitHub",
@@ -143,12 +145,14 @@ export default function Pricing() {
         {plans.map((plan, index) => (
           <div key={index}>
             <div className=" border border-g-500 rounded-[20px] p-5">
-              {plan.mostPopular && (
-                <span className="absolute top-3 right-3 text-xs bg-green-500 text-black px-2 py-1 rounded-full">
-                  Most Popular
-                </span>
-              )}
-              <div className="mb-5">{plan.icon}</div>
+              <div className="mb-5 flex items-center justify-between">
+                {plan.icon}
+                {plan.mostPopular && (
+                  <span className=" bg-g-600 border border-g-500 text-g-200 text-xs leading-4 font-medium px-2 py-1 rounded-full">
+                    Most Popular
+                  </span>
+                )}
+              </div>
               <h3 className="text-base text-g-100 leading-6 font-semibold">
                 {plan.name}
               </h3>
@@ -166,7 +170,7 @@ export default function Pricing() {
               </div>
 
               <button
-                className={`w-full mt-10 bg-g-600 text-g-200 leading-4 text-sm py-2 px-4 font-medium rounded-full border border-g-500`}
+                className={`w-full mt-10 bg-g-600 text-g-200 hover:text-white cursor-pointer transition-colors hover:bg-gradient-to-b hover:from-accent-color-1 hover:to-primary leading-4 text-sm py-2 px-4 font-medium rounded-full border border-g-500`}
               >
                 {plan.button}
               </button>
@@ -204,12 +208,14 @@ export default function Pricing() {
                     {item.question}
                   </span>
 
-                  <div className="  text-g-200">
-                    {openItems.has(item.id) ? (
-                      <ChevronUp size={18} />
-                    ) : (
-                      <ChevronDown size={18} />
-                    )}
+                  <div className="btn-gradient overflow-hidden shrink-0">
+                    <div className=" p-2.5 bg-g-600 rounded-[calc(100%-2px)] whitespace-nowrap text-g-200">
+                      {openItems.has(item.id) ? (
+                        <Minus size={16} />
+                      ) : (
+                        <Plus size={16} />
+                      )}
+                    </div>
                   </div>
                 </button>
 

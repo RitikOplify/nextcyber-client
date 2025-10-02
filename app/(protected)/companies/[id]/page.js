@@ -95,7 +95,7 @@ function CompanyDetailPage() {
             </p>
             <div className=" flex items-center gap-20">
               <div className=" flex gap-2 items-center text-g-200">
-                <User size={20} />
+                <Users size={20} />
                 <span>5000+</span>
               </div>
               <div className=" flex gap-2 items-center text-g-200">
@@ -188,6 +188,11 @@ function CompanyDetailPage() {
             ))}
           </div>
         </div>
+      </div>
+      <div className=" text-center">
+        <button className=" text-g-200 leading-6 text-base font-medium bg-g-600 border border-g-500 px-6 py-3 mt-10 rounded-full">
+          View more jobs
+        </button>
       </div>
     </>
   );

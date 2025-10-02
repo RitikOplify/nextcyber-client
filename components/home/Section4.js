@@ -1,4 +1,5 @@
 "use client";
+import { Minus, Plus } from "lucide-react";
 import React, { useState } from "react";
 
 const FAQSection = () => {
@@ -57,38 +58,6 @@ const FAQSection = () => {
     setOpenItems(newOpenItems);
   };
 
-  const PlusIcon = () => (
-    <svg
-      className="w-4 h-4"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-      />
-    </svg>
-  );
-
-  const MinusIcon = () => (
-    <svg
-      className="w-4 h-4"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M18 12H6"
-      />
-    </svg>
-  );
-
   return (
     <div className="bg-g-900 py-20 ">
       <div className=" max-w-[1440px] mx-auto px-5 sm:px-10">
@@ -119,7 +88,11 @@ const FAQSection = () => {
                 </span>
                 <div className="btn-gradient overflow-hidden shrink-0">
                   <div className=" p-2.5 bg-g-600 rounded-[calc(100%-2px)] whitespace-nowrap text-g-200">
-                    {openItems.has(item.id) ? <MinusIcon /> : <PlusIcon />}
+                    {openItems.has(item.id) ? (
+                      <Minus size={16} />
+                    ) : (
+                      <Plus size={16} />
+                    )}
                   </div>
                 </div>
               </button>
@@ -134,7 +107,7 @@ const FAQSection = () => {
             </div>
           ))}
         </div>
-      </div>zz
+      </div>
     </div>
   );
 };
