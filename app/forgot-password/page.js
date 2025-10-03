@@ -5,7 +5,7 @@ import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
 
-function page() {
+function ForgotPassword() {
   const {
     register,
     handleSubmit,
@@ -136,4 +136,4 @@ function page() {
   );
 }
 
-export default page;
+export default ForgotPassword;
