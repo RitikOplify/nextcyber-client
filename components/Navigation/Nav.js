@@ -38,7 +38,10 @@ function Nav() {
         >
           Login
         </Link>
-        <Link href={"/auth"} className="px-4 py-2 sm:px-6 sm:py-3 bg-primary rounded-full ">
+        <Link
+          href={"/auth"}
+          className="px-4 py-2 sm:px-6 sm:py-3 bg-primary rounded-full "
+        >
           Sign up
         </Link>
       </div>

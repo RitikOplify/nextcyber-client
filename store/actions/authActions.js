@@ -1,39 +1,65 @@
 import { setUser, clearUser, setLoading } from "../slices/authSlice.js";
 import toast from "react-hot-toast";
-import { signIn, getCurrentUser, signOut } from "@/api/authApi.js";
+import { signIn, getCurrentUser, signOut, signUp } from "@/api/authApi.js";
 
 const getErrorMessage = (error) =>
   error?.response?.data?.message ||
   error?.message ||
   "Something went wrong. Please try again.";
 
-export const asyncSigninUser = (user, setIsLoading) => async (dispatch) => {
-  if (typeof setIsLoading === "function") setIsLoading(true);
-  try {
-    await toast.promise(signIn(user), {
-      loading: "Signing in...",
-      success: (response) => {
-        const { data } = response;
-        dispatch(setUser(data.admin));
-        return data.message || "Signed in successfully!";
-      },
-      error: (err) => {
-        return (
-          err?.response?.data?.message || err?.message || "Sign in failed!"
-        );
-      },
-    });
-  } catch {
-  } finally {
-    if (typeof setIsLoading === "function") setIsLoading(false);
-  }
-};
+export const asyncSignupUser =
+  (user, setIsLoading, router) => async (dispatch) => {
+    if (typeof setIsLoading === "function") setIsLoading(true);
+    try {
+      await toast.promise(signUp(user), {
+        loading: "Signing in...",
+        success: (response) => {
+          const { data } = response;
+          dispatch(setUser(data.user));
+          router.push("/dashboard");
+          return data.message || "Signed in successfully!";
+        },
+        error: (err) => {
+          return (
+            err?.response?.data?.message || err?.message || "Sign in failed!"
+          );
+        },
+      });
+    } catch {
+    } finally {
+      if (typeof setIsLoading === "function") setIsLoading(false);
+    }
+  };
+
+export const asyncSigninUser =
+  (user, setIsLoading, router) => async (dispatch) => {
+    if (typeof setIsLoading === "function") setIsLoading(true);
+    try {
+      await toast.promise(signIn(user), {
+        loading: "Signing up...",
+        success: (response) => {
+          const { data } = response;
+          dispatch(setUser(data.user));
+          router.push("/dashboard");
+          return data.message || "Signed up successfully!";
+        },
+        error: (err) => {
+          return (
+            err?.response?.data?.message || err?.message || "Sign up failed!"
+          );
+        },
+      });
+    } catch {
+    } finally {
+      if (typeof setIsLoading === "function") setIsLoading(false);
+    }
+  };
 
 export const asyncCurrentUser = () => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const { data } = await getCurrentUser();
-    dispatch(setUser(data.admin));
+    dispatch(setUser(data.user));
   } catch (error) {
     dispatch(clearUser());
   } finally {

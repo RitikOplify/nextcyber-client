@@ -5,14 +5,19 @@ import Footer from "@/components/Footer";
 import { usePathname, useRouter } from "next/navigation";
 import { asyncCurrentUser } from "@/store/actions/authActions";
 import { useDispatch, useSelector } from "react-redux";
-import { Loader2 } from "lucide-react";
 
 function Wrapper({ children }) {
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useDispatch();
   const { user, isLoading } = useSelector((state) => state.auth);
-  const authPages = ["/auth", "/", "/privacy-policy", "/terms-and-conditions"];
+  const authPages = [
+    "/auth",
+    "/",
+    "/privacy-policy",
+    "/terms-and-conditions",
+    "/forgot-password",
+  ];
   const NavPages = ["/", "/privacy-policy", "/terms-and-conditions"];
   const isNavPage = NavPages.includes(pathname);
   const isAuthPage = authPages.includes(pathname);
@@ -35,11 +40,7 @@ function Wrapper({ children }) {
   }, [user, isLoading, router]);
 
   if (!isAuthPage && (isLoading || user === null)) {
-    return (
-      <div className="h-screen flex justify-center items-center">
-        <Loader2 className=" animate-spin" />
-      </div>
-    );
+    return <>{children}</>;
   }
 
   if (isNavPage) {

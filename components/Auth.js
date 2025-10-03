@@ -1,17 +1,61 @@
 "use client";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Eye, EyeOff, ArrowRight, Star, Briefcase, User } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  ArrowRight,
+  Star,
+  Briefcase,
+  User,
+  Loader2,
+  Loader,
+} from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaLinkedin } from "react-icons/fa6";
+import { useDispatch } from "react-redux";
+import { asyncSigninUser, asyncSignupUser } from "@/store/actions/authActions";
+import Link from "next/link";
+
+const hasUpper = (s) => /[A-Z]/.test(s);
+const hasLower = (s) => /[a-z]/.test(s);
+const hasDigit = (s) => /[0-9]/.test(s);
+const hasSpecial = (s) => /[!@#$%^&*(),.?":{}|<>]/.test(s);
+
+const COMMON_PASSWORDS = [
+  "password",
+  "12345678",
+  "qwerty",
+  "letmein",
+  "admin",
+  "welcome",
+  "iloveyou",
+];
+
+const isCommonPassword = (s) => COMMON_PASSWORDS.includes(s.toLowerCase());
+
+const hasRepeatedChars = (s) => /(.)\1\1\1/.test(s); // 4 or more repeated chars
+
+const hasSequentialChars = (s) => {
+  const sequences = "abcdefghijklmnopqrstuvwxyz0123456789";
+  const lower = s.toLowerCase();
+  for (let i = 0; i < lower.length - 3; i++) {
+    const sub = lower.slice(i, i + 4);
+    if (sequences.includes(sub)) return true;
+    if (sequences.split("").reverse().join("").includes(sub)) return true;
+  }
+  return false;
+};
 
 const NextCyberAuth = () => {
+  const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedRole, setSelectedRole] = useState("recruiter");
+  const [selectedRole, setSelectedRole] = useState("candidate");
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -21,8 +65,16 @@ const NextCyberAuth = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
-    router.push("/");
+    const user = {
+      ...data,
+      role: selectedRole,
+    };
+
+    if (isLogin) {
+      dispatch(asyncSigninUser(user, setLoading, router));
+    } else {
+      dispatch(asyncSignupUser(user, setLoading, router));
+    }
   };
 
   const toggleMode = () => {
@@ -31,8 +83,28 @@ const NextCyberAuth = () => {
     setShowPassword(false);
   };
 
+  const validatePassword = (password) => {
+    if (password.length < 8)
+      return "Password must be at least 8 characters long.";
+    if (password.length > 100) return "Password is too long.";
+    if (!hasUpper(password))
+      return "Password must include at least one uppercase letter.";
+    if (!hasLower(password))
+      return "Password must include at least one lowercase letter.";
+    if (!hasDigit(password))
+      return "Password must include at least one number.";
+    if (!hasSpecial(password))
+      return "Password must include at least one special character.";
+    if (isCommonPassword(password)) return "Password is too common.";
+    if (hasRepeatedChars(password))
+      return "Password must not contain 4 or more repeated characters.";
+    if (hasSequentialChars(password))
+      return "Password must not contain sequential characters like '1234' or 'abcd'.";
+    return true; // valid
+  };
+
   return (
-    <section className="bg-g-900 ">
+    <section className="bg-g-900 py-20 sm:py-0">
       <div className="min-h-screen flex max-w-[1440px] mx-auto">
         <div className=" w-full lg:w-1/2 flex items-center justify-center px-5 sm:px-10">
           <div className="w-full max-w-sm space-y-7.5">
@@ -57,8 +129,12 @@ const NextCyberAuth = () => {
               )}
             </div>
 
-            {!isLogin && (
-              <div className="flex gap-4 mb-10">
+            {
+              <div
+                className={`flex gap-4 ${
+                  selectedRole == "candidate" ? "mb-5" : "mb-10"
+                }`}
+              >
                 <button
                   onClick={() => setSelectedRole("recruiter")}
                   className={`flex-1 py-2 px-4 rounded-full font-medium text-sm flex items-center justify-center gap-2 transition-all ${
@@ -82,10 +158,10 @@ const NextCyberAuth = () => {
                   Candidate
                 </button>
               </div>
-            )}
+            }
 
             {/* Social Login Buttons (Login only) */}
-            {isLogin && (
+            {selectedRole == "candidate" && (
               <div className="space-y-7.5 mb-7.5">
                 <div className="flex gap-4">
                   <button className="flex-1 bg-[#1B1C1E] text-[#9C9C9D] py-2 px-4 border border-[#2F3031] rounded-full font-medium text-sm flex items-center justify-center gap-2 transition-colors">
@@ -100,7 +176,7 @@ const NextCyberAuth = () => {
 
                 <div className="text-start">
                   <p className="text-[#9C9C9D] text-sm">
-                    Or Sign In with Email
+                    Or {isLogin ? "Sign In" : "Sign Up"} with Email
                   </p>
                 </div>
               </div>
@@ -143,7 +219,6 @@ const NextCyberAuth = () => {
                   </div>
                 </>
               )}
-
               <div>
                 <input
                   {...register("email", {
@@ -163,42 +238,49 @@ const NextCyberAuth = () => {
                   </p>
                 )}
               </div>
-
-              {isLogin && (
-                <div className="relative">
-                  <input
-                    {...register("password", {
-                      required: "Password is required",
-                    })}
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                    className="w-full bg-[#111214] border border-[#1B1C1E] rounded-lg px-5 py-4 text-white outline-none text-sm"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-300"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </button>
-                  {errors.password && (
-                    <p className="mt-1 text-xs text-red-400">
-                      {errors.password.message}
-                    </p>
+              <div className="relative">
+                <input
+                  {...register("password", { validate: validatePassword })}
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  className="w-full bg-[#111214] border border-[#1B1C1E] rounded-lg px-5 py-4 text-white outline-none text-sm"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
                   )}
-                </div>
-              )}
+                </button>
+                {errors.password && (
+                  <p className="mt-1 text-xs text-red-400">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+              <div className=" text-end text-g-200 font-medium text-xs leading-4 cursor-pointer">
+                <Link
+                  href={"/forgot-password"}
+                  className=" border-b border-dotted"
+                >
+                  Forgot password?
+                </Link>
+              </div>
             </div>
 
             {/* Continue Button */}
             <button
               onClick={handleSubmit(onSubmit)}
-              className="w-full bg-[#025BCF] text-white py-3 px-6 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors mt-6"
+              disabled={loading}
+              className="w-full disabled:bg-primary/50 disabled:text-g-200 bg-primary text-white py-3 px-6 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors mt-6"
             >
+              {loading && (
+                <Loader2 className=" animate-spin text-g-200" size={18} />
+              )}
               <span>Continue</span>
               <ArrowRight className="h-4 w-4" />
             </button>

@@ -21,10 +21,13 @@ import Link from "next/link";
 import clsx from "clsx";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
+import { useDispatch } from "react-redux";
+import { asyncSignOutUser } from "@/store/actions/authActions";
 
 export default function Sidebar({ isMobileOpen, toggleMobile }) {
   const pathname = usePathname();
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [openGroups, setOpenGroups] = useState({});
@@ -88,7 +91,7 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
   ];
 
   const handleLogout = async () => {
-    router.push("/");
+    dispatch(asyncSignOutUser());
   };
 
   const SidebarNavLinks = ({ items, collapsed }) => (
