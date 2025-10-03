@@ -18,9 +18,14 @@ function Wrapper({ children }) {
     "/terms-and-conditions",
     "/forgot-password",
   ];
+  const dynamicAuthPages = ["/reset-password/"];
   const NavPages = ["/", "/privacy-policy", "/terms-and-conditions"];
   const isNavPage = NavPages.includes(pathname);
-  const isAuthPage = authPages.includes(pathname);
+
+  const isAuthPage =
+    authPages.includes(pathname) ||
+    dynamicAuthPages.some((route) => pathname.startsWith(route));
+
   useEffect(() => {
     if (user === null && !isAuthPage) {
       dispatch(asyncCurrentUser());

@@ -1,14 +1,44 @@
 "use client";
-import { ChevronLeft, Loader2, Star } from "lucide-react";
+import { resetPassword } from "@/api/authApi";
+import { ChevronLeft, Eye, EyeOff, Loader2, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
-import axios from "@/utils/axios";
+import { useRouter } from "next/navigation";
+import React, { use, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { forgotPassword } from "@/api/authApi";
+const hasUpper = (s) => /[A-Z]/.test(s);
+const hasLower = (s) => /[a-z]/.test(s);
+const hasDigit = (s) => /[0-9]/.test(s);
+const hasSpecial = (s) => /[!@#$%^&*(),.?":{}|<>]/.test(s);
 
-function ForgotPassword() {
+const COMMON_PASSWORDS = [
+  "password",
+  "12345678",
+  "qwerty",
+  "letmein",
+  "admin",
+  "welcome",
+  "iloveyou",
+];
+
+const isCommonPassword = (s) => COMMON_PASSWORDS.includes(s.toLowerCase());
+
+const hasRepeatedChars = (s) => /(.)\1\1\1/.test(s); // 4 or more repeated chars
+
+const hasSequentialChars = (s) => {
+  const sequences = "abcdefghijklmnopqrstuvwxyz0123456789";
+  const lower = s.toLowerCase();
+  for (let i = 0; i < lower.length - 3; i++) {
+    const sub = lower.slice(i, i + 4);
+    if (sequences.includes(sub)) return true;
+    if (sequences.split("").reverse().join("").includes(sub)) return true;
+  }
+  return false;
+};
+
+function ResetPassword({ params }) {
+  const { token } = use(params);
   const {
     register,
     handleSubmit,
@@ -17,18 +47,41 @@ function ForgotPassword() {
   } = useForm();
 
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (formData) => {
     setLoading(true);
     try {
-      const { data } = await forgotPassword(formData);
+      const { data } = await resetPassword(token, formData);
       reset();
       toast.success(data.message);
       setLoading(false);
+      router.push("/auth");
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
       setLoading(false);
     }
+  };
+
+  const validatePassword = (password) => {
+    if (password.length < 8)
+      return "Password must be at least 8 characters long.";
+    if (password.length > 100) return "Password is too long.";
+    if (!hasUpper(password))
+      return "Password must include at least one uppercase letter.";
+    if (!hasLower(password))
+      return "Password must include at least one lowercase letter.";
+    if (!hasDigit(password))
+      return "Password must include at least one number.";
+    if (!hasSpecial(password))
+      return "Password must include at least one special character.";
+    if (isCommonPassword(password)) return "Password is too common.";
+    if (hasRepeatedChars(password))
+      return "Password must not contain 4 or more repeated characters.";
+    if (hasSequentialChars(password))
+      return "Password must not contain sequential characters like '1234' or 'abcd'.";
+    return true; // valid
   };
 
   return (
@@ -44,28 +97,35 @@ function ForgotPassword() {
               alt="nextcybr-logo"
             />
             <h1 className="text-g-200 text-3xl font-medium leading-tight">
-              Forgot Password
+              Reset Password
             </h1>
             <p className="text-g-300 text-sm mt-4">
-              Please enter the email address associated with your account and We
-              will email you a link to reset your password.
+              Please enter a new password for your account. Make sure it meets
+              the security requirements.
             </p>
 
-            <input
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^\S+@\S+$/i,
-                  message: "Invalid email address",
-                },
-              })}
-              type="email"
-              placeholder={"Email"}
-              className="w-full bg-[#111214] mt-7.5 border border-[#1B1C1E] rounded-lg px-5 py-4 text-white outline-none text-sm"
-            />
-            {errors.email && (
+            <div className="relative mt-7.5">
+              <input
+                {...register("password", { validate: validatePassword })}
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                className="w-full bg-[#111214] border border-[#1B1C1E] rounded-lg px-5 py-4 text-white outline-none text-sm"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-300"
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
+            </div>
+            {errors.password && (
               <p className="mt-1 text-xs text-red-400">
-                {errors.email.message}
+                {errors.password.message}
               </p>
             )}
 
@@ -77,7 +137,7 @@ function ForgotPassword() {
               {loading && (
                 <Loader2 className=" animate-spin text-g-200" size={18} />
               )}
-              {loading ? "Sending Mail..." : " Reset password"}
+              {loading ? "Changing Password..." : "Change password"}
             </button>
 
             <div className=" flex justify-center mt-7.5">
@@ -158,4 +218,4 @@ function ForgotPassword() {
   );
 }
 
-export default ForgotPassword;
+export default ResetPassword;
