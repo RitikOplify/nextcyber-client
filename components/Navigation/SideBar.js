@@ -5,28 +5,36 @@ import {
   X,
   PanelLeftClose,
   PanelLeftOpen,
-  LayoutDashboard,
   ChevronDown,
   ChevronRight,
+  HelpCircle,
+  Settings,
+  LayoutDashboard,
   FileText,
   GraduationCap,
   Handshake,
   Trophy,
   Briefcase,
   Building2,
-  HelpCircle,
-  Settings,
+  User,
+  Users,
+  MessageCircleMore,
+  CreditCard,
+  Star,
+  Bell,
+  Gem,
 } from "lucide-react";
+
 import Link from "next/link";
 import clsx from "clsx";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { asyncSignOutUser } from "@/store/actions/authActions";
 
 export default function Sidebar({ isMobileOpen, toggleMobile }) {
+  const { user } = useSelector((state) => state.auth);
   const pathname = usePathname();
-  const router = useRouter();
   const dispatch = useDispatch();
 
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -39,43 +47,99 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
     }));
   };
 
-  const navItems = [
-    {
-      label: "Dashboard",
-      icon: LayoutDashboard,
-      href: "/dashboard",
-    },
-    {
-      label: "My NextGen CV",
-      icon: FileText,
-      href: "",
-    },
-    {
-      label: "Training & Certifications",
-      icon: GraduationCap,
-      href: "",
-    },
-    {
-      label: "Mentorship",
-      icon: Handshake,
-      href: "",
-    },
-    {
-      label: "Challenges",
-      icon: Trophy,
-      href: "",
-    },
-    {
-      label: "Jobs",
-      icon: Briefcase,
-      href: "/jobs",
-    },
-    {
-      label: "Companies",
-      icon: Building2,
-      href: "/companies",
-    },
-  ];
+  const navItems =
+    user?.role === "candidate"
+      ? [
+          {
+            label: "Dashboard",
+            icon: LayoutDashboard,
+            href: "/dashboard",
+          },
+          {
+            label: "My NextGen CV",
+            icon: FileText,
+            href: "/cv",
+          },
+          {
+            label: "Training & Certifications",
+            icon: GraduationCap,
+            href: "/training",
+          },
+          {
+            label: "Mentorship",
+            icon: Handshake,
+            href: "/mentorship",
+          },
+          {
+            label: "Challenges",
+            icon: Trophy,
+            href: "/challenges",
+          },
+          {
+            label: "Jobs",
+            icon: Briefcase,
+            href: "/jobs",
+          },
+          {
+            label: "Companies",
+            icon: Building2,
+            href: "/companies",
+          },
+          {
+            label: "Plans & Subscription",
+            icon: Gem,
+            href: "/plans",
+          },
+        ]
+      : user?.role === "recruiter"
+      ? [
+          {
+            label: "Dashboard",
+            icon: LayoutDashboard,
+            href: "/dashboard",
+          },
+          {
+            label: "My Profile",
+            icon: User,
+            href: "/profile",
+          },
+          {
+            label: "Job Postings",
+            icon: Briefcase,
+            href: "/job-postings",
+          },
+          {
+            label: "Candidate Search",
+            icon: Users,
+            href: "/candidates",
+          },
+          {
+            label: "Short Listings",
+            icon: Star,
+            href: "/shortlistings",
+          },
+          {
+            label: "Messaging",
+            icon: MessageCircleMore,
+            href: "/messages",
+          },
+          {
+            label: "Notifications",
+            icon: Bell,
+            href: "/messages",
+          },
+          {
+            label: "Payment & Finances",
+            icon: CreditCard,
+            href: "/payments",
+          },
+          {
+            label: "Plans & Subscription",
+            icon: Gem,
+            href: "/plans",
+          },
+        ]
+      : [];
 
   const bottomNavItem = [
     {

@@ -1,5 +1,5 @@
 "use client";
-import FAQSection from "@/components/home/Section4";
+import { asyncGetPlans } from "@/store/actions/planAction";
 import {
   Infinity,
   Rocket,
@@ -11,63 +11,26 @@ import {
   ChevronUp,
   Minus,
   Plus,
+  Loader2,
 } from "lucide-react";
-import { useState } from "react";
-
-const plans = [
-  {
-    name: "Basic",
-    price: "Free",
-    description: "Essential features for startups individuals",
-    button: "Try Now",
-    icon: <Atom size={32} className=" text-light-yellow" />,
-    features: [
-      "AI profile (basic) & dynamic CV",
-      "Upload projects, labs & GitHub",
-      "Job board access (standard filters)",
-      "1 job alert email/week",
-      "Community access & events",
-      "Save up to 5 roles",
-    ],
-  },
-  {
-    name: "Pro",
-    price: "$99",
-    period: "/month",
-    description: "Comprehensive suite for large-scale operations",
-    button: "Subscribe Now",
-    mostPopular: true,
-    icon: <Rocket size={32} className=" text-light-green" />,
-
-    features: [
-      "AI profile (basic) & dynamic CV",
-      "Upload projects, labs & GitHub",
-      "Job board access (standard filters)",
-      "1 job alert email/week",
-      "Community access & events",
-      "Save up to 5 roles",
-    ],
-  },
-  {
-    name: "Enterprise",
-    price: "$199",
-    period: "/month",
-    description: "Tailored solutions for enterprise needs",
-    button: "Subscribe Now",
-    icon: <Infinity size={32} className=" text-light-blue" />,
-    features: [
-      "AI profile (basic) & dynamic CV",
-      "Upload projects, labs & GitHub",
-      "Job board access (standard filters)",
-      "1 job alert email/week",
-      "Community access & events",
-      "Save up to 5 roles",
-    ],
-  },
-];
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Pricing() {
   const [openItems, setOpenItems] = useState(new Set([]));
+  const { user } = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const { plans } = useSelector((state) => state.plans);
+
+  useEffect(() => {
+    if (user) {
+      if (plans.length == 0) {
+        dispatch(asyncGetPlans({ user: user?.role }, setLoading));
+      }
+    }
+  }, [user]);
 
   const faqItems = [
     {
@@ -118,6 +81,14 @@ export default function Pricing() {
     setOpenItems(newOpenItems);
   };
 
+  if (loading) {
+    return (
+      <div className=" h-[calc(100vh-60.67px)] flex justify-center items-center">
+        <Loader2 className=" animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <section className="bg-g-900">
       <div className="text-center max-w-xl mx-auto">
@@ -132,10 +103,10 @@ export default function Pricing() {
         </p>
         <div className="inline-flex mt-2.5 rounded-full bg-g-700 p-2 space-x-2 border border-g-500">
           <button className="px-4 py-2 text-xs leading-4 font-semibold rounded-full bg-g-500 text-g-200">
-            Yearly
+            Monthly
           </button>
           <button className="px-4 py-2 text-xs leading-4 font-semibold rounded-full bg-g-700 text-g-200">
-            Monthly
+            Yearly
           </button>
         </div>
       </div>
@@ -143,13 +114,19 @@ export default function Pricing() {
       {/* Pricing Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 max-w-5xl mx-auto mt-5">
         {plans.map((plan, index) => (
-          <div key={index}>
+          <div key={plan.id}>
             <div className=" border border-g-500 rounded-[20px] p-5">
               <div className="mb-5 flex items-center justify-between">
-                {plan.icon}
-                {plan.mostPopular && (
+                {plan.name == "Basic" ? (
+                  <Atom size={32} className=" text-light-yellow" />
+                ) : plan.name == "Pro" ? (
+                  <Rocket size={32} className=" text-light-green" />
+                ) : (
+                  <Infinity size={32} className=" text-light-blue" />
+                )}
+                {plan.tag && (
                   <span className=" bg-g-600 border border-g-500 text-g-200 text-xs leading-4 font-medium px-2 py-1 rounded-full">
-                    Most Popular
+                    {plan.tag}
                   </span>
                 )}
               </div>
@@ -162,17 +139,19 @@ export default function Pricing() {
 
               <div className="mt-7.5">
                 <span className="text-4xl font-semibold leading-11 tracking-[-1%] text-g-100">
-                  {plan.price}
+                  {plan.price == 0 ? "Free" : plan.price}
                 </span>
                 <span className="text-g-200 text-xs leading-4 font-medium ml-2">
-                  {plan.period}
+                  {plan.price !== 0
+                    ? `/${plan.billingCycle === "MONTHLY" ? "month" : "year"}`
+                    : ""}
                 </span>
               </div>
 
               <button
                 className={`w-full mt-10 bg-g-600 text-g-200 hover:text-white cursor-pointer transition-colors hover:bg-gradient-to-b hover:from-accent-color-1 hover:to-primary leading-4 text-sm py-2 px-4 font-medium rounded-full border border-g-500`}
               >
-                {plan.button}
+                {plan.ctaText}
               </button>
             </div>
 
@@ -180,7 +159,7 @@ export default function Pricing() {
               {plan.features.map((feature, i) => (
                 <li key={i} className="flex items-center gap-2">
                   <CheckCircle2 size={16} className="text-dark-blue" />{" "}
-                  {feature}
+                  {feature.text}
                 </li>
               ))}
             </ul>

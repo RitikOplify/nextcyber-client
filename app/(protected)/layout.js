@@ -1,13 +1,16 @@
 "use client";
 import Sidebar from "@/components/Navigation/SideBar";
-import { Bell, ChevronRight, Menu } from "lucide-react";
+import { asyncCurrentUser } from "@/store/actions/authActions";
+import { Bell, ChevronRight, Loader2, Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 function ProtectedLayout({ children }) {
   const pathname = usePathname();
-
+  const dispatch = useDispatch();
+  const { user, isLoading } = useSelector((state) => state.auth);
   const labelMap = {
     dashboard: "Dashboard",
     products: "Products",
@@ -57,6 +60,20 @@ function ProtectedLayout({ children }) {
 
     breadcrumbs.push({ href, label });
     hrefIndex++;
+  }
+
+  useEffect(() => {
+    if (user === null) {
+      dispatch(asyncCurrentUser());
+    }
+  }, [dispatch, user]);
+
+  if (isLoading || !user) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <Loader2 className=" animate-spin" />
+      </div>
+    );
   }
 
   return (
