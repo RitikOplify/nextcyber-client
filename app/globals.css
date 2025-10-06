@@ -123,3 +123,7 @@ body {
     rgba(255, 255, 255, 0.15) 100%
   );
 }
+
+.d-border {
+  border: 1px solid red;
+}

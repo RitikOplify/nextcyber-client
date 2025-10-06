@@ -106,7 +106,7 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
           {
             label: "Job Postings",
             icon: Briefcase,
-            href: "/job-postings",
+            href: "/add-new-job",
           },
           {
             label: "Candidate Search",

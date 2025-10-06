@@ -79,7 +79,7 @@ function JobsPage() {
   const [activeTab, setActiveTab] = useState("Browse Jobs");
 
   return (
-    <div className="max-w-[1440px] mx-auto ">
+    <div className="max-w-[1440px] mx-auto">
       <div className="flex p-2 border border-g-500 bg-g-700 mx-auto w-fit mb-7.5 gap-1 rounded-full">
         <button
           onClick={() => setActiveTab("Browse Jobs")}
@@ -119,7 +119,7 @@ function JobsPage() {
                   <span>Contract Type</span>
                 </div>
                 <div className=" px-4 py-2 gap-2 flex items-center rounded-lg bg-g-600 border border-g-500 text-g-200 w-fit">
-                  <Receipt  size={20} />
+                  <Receipt size={20} />
                   <span>Salary</span>
                 </div>
                 <div className=" px-4 py-2 gap-2 flex items-center rounded-lg bg-g-600 border border-g-500 text-g-200 w-fit">
