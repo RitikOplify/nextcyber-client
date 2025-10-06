@@ -5,7 +5,7 @@ import React from "react";
 
 function Nav() {
   return (
-    <nav className=" sticky top-0 left-0 flex w-full mx-auto bg-g-800 items-center justify-between px-5 sm:px-10 lg:px-20 py-3 z-30">
+    <nav className="sticky top-0 left-0 flex w-full mx-auto bg-g-800 items-center justify-between px-5 sm:px-10 lg:px-20 py-3 z-30">
       <Link href={"/"}>
         <Image
           src="/logo.png"
