@@ -44,6 +44,14 @@ function Wrapper({ children }) {
     }
   }, [user, isLoading, router]);
 
+  useEffect(() => {
+    if (!isLoading && user) {
+      if (user.role == "candidate" && !user.onboarding) {
+        router.replace(`/onboarding/${user.id}`);
+      }
+    }
+  }, [user, isLoading, router]);
+
   if (!isAuthPage && (isLoading || user === null)) {
     return <>{children}</>;
   }

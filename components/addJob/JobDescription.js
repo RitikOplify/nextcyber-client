@@ -35,9 +35,11 @@ export default function JobDescription({ form, attachments, setAttachments }) {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm mb-1">Job Description</label>
-        <div className="border border-gray-700 rounded bg-gray-900">
-          <div className="px-3 py-2 flex gap-2 border-b border-gray-800">
+        <label className="block mb-4 text-base leading-6 font-medium text-g-200">
+          Job Description
+        </label>
+        <div className="border px-4 py-5 border-g-600 rounded-lg bg-g-700">
+          <div className=" flex gap-2 border-b pb-5 border-g-600">
             <button type="button" title="Bold">
               <Bold size={16} />
             </button>
@@ -77,37 +79,9 @@ export default function JobDescription({ form, attachments, setAttachments }) {
             {...register("jobDescription", {
               maxLength: { value: 4000, message: "Too long" },
             })}
-            placeholder="Enter job description..."
-            className="w-full p-4 h-48 bg-transparent text-gray-100 border-0 outline-none"
+            placeholder="Enter Text Here..."
+            className="w-full pt-5 h-48 bg-transparent text-gray-100 border-0 outline-none"
           />
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm mb-2">Attachments</label>
-        <div className="flex items-center gap-3">
-          <label className="cursor-pointer inline-flex items-center px-4 py-2 rounded bg-gray-800 border border-gray-700">
-            <Upload size={16} />
-            <input type="file" className="hidden" onChange={handleFile} />
-            <span className="ml-2 text-sm">Upload</span>
-          </label>
-
-          <div className="flex gap-2 flex-wrap">
-            {attachments.map((f, i) => (
-              <div
-                key={i}
-                className="px-3 py-1 bg-gray-800 rounded flex items-center gap-2 border border-gray-700"
-              >
-                <span className="text-sm truncate max-w-[160px]">{f.name}</span>
-                <button
-                  onClick={() => remove(i)}
-                  className="p-1 rounded hover:bg-gray-700"
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </div>

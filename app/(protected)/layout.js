@@ -3,13 +3,14 @@ import Sidebar from "@/components/Navigation/SideBar";
 import { asyncCurrentUser } from "@/store/actions/authActions";
 import { Bell, ChevronRight, Loader2, Menu } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 function ProtectedLayout({ children }) {
   const pathname = usePathname();
   const dispatch = useDispatch();
+  const router = useRouter();
   const { user, isLoading } = useSelector((state) => state.auth);
   const labelMap = {
     dashboard: "Dashboard",
@@ -67,6 +68,14 @@ function ProtectedLayout({ children }) {
       dispatch(asyncCurrentUser());
     }
   }, [dispatch, user]);
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      if (user.role === "candidate" && !user.onboarding) {
+        router.replace(`/onboarding/${user.id}`);
+      }
+    }
+  }, [user, isLoading, router]);
 
   if (isLoading || !user) {
     return (
