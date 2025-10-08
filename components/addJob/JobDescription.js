@@ -17,7 +17,7 @@ import {
   X,
 } from "lucide-react";
 
-export default function JobDescription({ form, attachments, setAttachments }) {
+export default function JobDescription({ form }) {
   const { register } = form;
 
   const handleFile = (e) => {
@@ -27,10 +27,8 @@ export default function JobDescription({ form, attachments, setAttachments }) {
       alert("File must be < 10MB");
       return;
     }
-    setAttachments((p) => [...p, f]);
   };
 
-  const remove = (idx) => setAttachments((p) => p.filter((_, i) => i !== idx));
 
   return (
     <div className="space-y-6">

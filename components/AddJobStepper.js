@@ -9,6 +9,8 @@ import Compensation from "./addJob/Compensation";
 import JobDescription from "./addJob/JobDescription";
 import WorkReq from "./addJob/WorkReq";
 import CandidatePreference from "./addJob/CandidatePref";
+import toast from "react-hot-toast";
+import instance from "@/utils/axios";
 // import your step components
 
 // import { asyncCreateJob } from "@/store/actions/jobAction"; // wire your redux action
@@ -25,7 +27,7 @@ export default function AddJobStepper() {
       contractType: [],
       remotePolicy: "on-site",
       languages: [],
-      qualifications: [],
+      qualification: [],
       genderPreference: "any",
       skills: [],
       certifications: [],
@@ -36,12 +38,12 @@ export default function AddJobStepper() {
       responsibilities: "",
       requirements: "",
       jobDescription: "",
-      attachments: [],
     },
   });
 
   const [activeStep, setActiveStep] = useState(0);
-  const [attachments, setAttachments] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -81,6 +83,7 @@ export default function AddJobStepper() {
   };
 
   const handleFinalSubmit = async (e) => {
+    setLoading(true);
     e?.preventDefault?.();
     const allValid = await form.trigger();
     const currentValid = await validateCurrentStep();
@@ -98,21 +101,76 @@ export default function AddJobStepper() {
     }
 
     const values = form.getValues();
+    console.log(values);
     const fd = new FormData();
     Object.entries(values).forEach(([k, v]) => {
       if (Array.isArray(v)) v.forEach((it) => fd.append(`${k}[]`, it));
       else if (v !== undefined && v !== null) fd.append(k, v);
     });
-    attachments.forEach((file) => fd.append("attachments[]", file));
+
+    // api payload
+
+    // Map form values properly with enum conversions
+    const payload = {
+      title: values.jobTitle, // String
+      description: values.jobDescription, // String
+      minExperience: Number(values.minExperience),
+      maxExperience: Number(values.maxExperience),
+
+      // Enums (convert to uppercase and underscores)
+      contractType: values.contractType?.[0]
+        ?.toUpperCase()
+        .replace(/\s+/g, "_"), // e.g., "Freelance" → "FREELANCE"
+      remotePolicy: values.remotePolicy?.toUpperCase().replace(/\s+/g, "_"), // e.g., "On site" → "ONSITE"
+      qualification: values.qualification?.[0]
+        ?.toUpperCase()
+        .replace(/\s+/g, "_"), // e.g., "High School" → "HIGH_SCHOOL"
+      genderPreference: (values.genderPreference || values.gender || "ANY")
+        .toUpperCase()
+        .replace(/\s+/g, "_"), // e.g., "any" → "ANY"
+
+      // Arrays and optional fields
+      languageRequired: values.languages || [],
+      minSalary: values.salaryFrom ? Number(values.salaryFrom) : null,
+      maxSalary: values.salaryTo ? Number(values.salaryTo) : null,
+      currency: values.currency || null,
+      showSalary: Boolean(values.showSalary),
+      skills: values.skills || [],
+      certifications: values.certifications || [],
+      location: values.jobLocation,
+      additionalBenefits: values.additionalBenefits || [],
+      active: true, // Default true
+    };
+    const toastCtn = toast.loading("Please Wait...");
+    try {
+      const { data } = await instance.post("/job/create-job", payload);
+
+      console.log("✅ Job created successfully:", data);
+      toast.dismiss(toastCtn);
+      toast.success("Job created successfully!");
+      // optional: can be used for redirecting or state updates
+      if (data.success) {
+        router.push("/jobs");
+      }
+    } catch (error) {
+      console.error(
+        "❌ Error creating job:",
+        error.response?.data || error.message
+      );
+      toast.error(error.response?.data?.message || "Failed to create job");
+      toast.dismiss(toastCtn);
+    } finally {
+      setLoading(false);
+    }
 
     // dispatch(asyncCreateJob(fd, router)); // wire this
-    console.log("FormData prepared for submission (debug):");
+    // console.log("FormData prepared for submission (debug):", fd);
     // print for debug (not actual values of files in console)
-    for (const pair of fd.entries()) console.log(pair[0], pair[1]);
+    // for (const pair of fd.entries()) console.log(pair[0], pair[1]);
   };
 
   const renderStep = () => {
-    const props = { form, attachments, setAttachments };
+    const props = { form };
     switch (steps[activeStep].key) {
       case "jobDetails":
         return <JobDetails {...props} />;
@@ -204,7 +262,7 @@ export default function AddJobStepper() {
                     type="button"
                     onClick={() => {
                       form.reset();
-                      setAttachments([]);
+
                       setActiveStep(0);
                     }}
                     className="px-4 py-2 border rounded bg-gray-800"
@@ -214,8 +272,9 @@ export default function AddJobStepper() {
                   <button
                     type="submit"
                     className="px-4 py-2 rounded bg-blue-600"
+                    disabled={loading}
                   >
-                    Post Job
+                    {loading ? "Loading..." : "Post Job"}
                   </button>
                 </>
               ) : (

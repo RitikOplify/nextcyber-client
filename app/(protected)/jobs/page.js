@@ -1,5 +1,6 @@
 "use client";
 import JobTable from "@/components/Jobs/MyJob";
+import instance from "@/utils/axios";
 import {
   Bookmark,
   Briefcase,
@@ -13,6 +14,7 @@ import {
   GraduationCap,
   MapPin,
   MapPinHouse,
+  Plus,
   Receipt,
   Signature,
   Star,
@@ -22,7 +24,8 @@ import {
   Zap,
 } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 
 function JobsPage() {
@@ -77,27 +80,56 @@ function JobsPage() {
     },
   ];
   const [activeTab, setActiveTab] = useState("Browse Jobs");
+  const [apiJobs, setJobs] = useState([]);
+
+  const fetchAllJobs = async () => {
+    try {
+      const { data } = await instance.get("/job/get-all-jobs");
+      console.log("✅ Jobs fetched successfully:", data);
+      setJobs(data.jobPosts); // usually an array of job posts
+    } catch (error) {
+      console.error(
+        "❌ Error fetching jobs:",
+        error.response?.data || error.message
+      );
+      throw error.response?.data || { message: "Failed to fetch jobs" };
+    }
+  };
+
+  useEffect(() => {
+    fetchAllJobs();
+  }, []);
 
   return (
     <div className="max-w-[1440px] mx-auto">
-      <div className="flex p-2 border border-g-500 bg-g-700 mx-auto w-fit mb-7.5 gap-1 rounded-full">
-        <button
-          onClick={() => setActiveTab("Browse Jobs")}
-          className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap ${
-            activeTab === "Browse Jobs" ? " bg-g-500 rounded-full" : ""
-          }`}
+      <div className="relative">
+        <div className="flex p-2 border border-g-500 bg-g-700 mx-auto w-fit mb-7.5 gap-1 rounded-full">
+          <button
+            onClick={() => setActiveTab("Browse Jobs")}
+            className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap ${
+              activeTab === "Browse Jobs" ? " bg-g-500 rounded-full" : ""
+            }`}
+          >
+            Browse Jobs
+          </button>
+          <button
+            onClick={() => setActiveTab("My Jobs")}
+            className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap ${
+              activeTab === "My Jobs" ? " bg-g-500 rounded-full" : ""
+            }`}
+          >
+            My Jobs
+          </button>
+        </div>
+        <Link
+          href={"/add-new-job"}
+          className=" px-4 py-2 gap-2 flex items-center rounded-lg bg-g-600 border cursor-pointer absolute right-0 top-0 border-g-500 text-g-200 w-fit"
         >
-          Browse Jobs
-        </button>
-        <button
-          onClick={() => setActiveTab("My Jobs")}
-          className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap ${
-            activeTab === "My Jobs" ? " bg-g-500 rounded-full" : ""
-          }`}
-        >
-          My Jobs
-        </button>
+          <Plus size={20} />
+          <span>Post New Job</span>
+        </Link>
       </div>
+
       {activeTab === "Browse Jobs" && (
         <>
           <div className="flex justify-center pb-5 w-full ">
@@ -138,70 +170,137 @@ function JobsPage() {
           </h3>
           <div className=" flex gap-5">
             <div className=" flex-1 sm:flex-0 flex flex-col gap-5">
-              {jobs.map((job) => (
-                <div
-                  key={job.id}
-                  className="bg-g-600 rounded-[10px] p-5 border border-g-500"
-                >
-                  {/* Badges */}
-                  <div className="flex justify-between items-center mb-6">
-                    <div className="flex gap-2">
-                      {job.featured && (
+              {apiJobs.length > 0 &&
+                apiJobs.map((job) => (
+                  <div
+                    key={job.id}
+                    className="bg-g-600 rounded-[10px] p-5 border border-g-500"
+                  >
+                    {/* Badges */}
+                    <div className="flex justify-between items-center mb-6">
+                      <div className="flex gap-2">
                         <span className="inline-flex text-xs leading-4 font-semibold items-center gap-1.5 p-1 rounded bg-light-blue text-primary">
                           <Star size={12} />
                           Featured
                         </span>
-                      )}
-                      {job.urgent && (
+
                         <span className="inline-flex text-xs leading-4 font-semibold items-center gap-1.5 p-1 rounded  bg-light-blue text-primary">
                           <Zap size={12} />
                           Urgent
                         </span>
-                      )}
+                      </div>
+                      <div className="bg-g-500 p-1.5 rounded">
+                        <Bookmark size={16} className=" text-g-300" />
+                      </div>
                     </div>
-                    <div className="bg-g-500 p-1.5 rounded">
-                      <Bookmark size={16} className=" text-g-300" />
+
+                    {/* Job Title */}
+                    <h3 className="text-sm leading-4 font-semibold text-g-200">
+                      {job.title}
+                    </h3>
+                    <p className="text-[#9C9C9D] text-sm">{job.location}</p>
+
+                    {/* Job Details */}
+                    <div className="mt-6 mb-2 flex items-center whitespace-nowrap gap-3 text-g-300 text-xs leading-4">
+                      <div className="flex items-center gap-1.5  ">
+                        <Clock size={16} />
+                        <span>{job.contractType}</span>
+                      </div>
+                      <div className="flex items-center gap-2  ">
+                        <Users size={16} />
+                        <span>
+                          {job.minExperience}-{job.maxExperience}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2  ">
+                        <DollarSign size={16} />
+                        <span>{job.maxSalary}</span>
+                      </div>
+                    </div>
+
+                    {/* Posted Date */}
+                    <p className="text-g-300 text-xs">
+                      Posted on {job.createdAt}
+                    </p>
+
+                    {/* Company and Apply Button */}
+                    <div className="flex items-center justify-between mt-11 pt-5.5 border-t border-g-500">
+                      <div className="flex items-center gap-2 text-[#9C9C9D]">
+                        {/* Google Logo Placeholder */}
+                        <FcGoogle />
+                        Google
+                      </div>
+                      <button className=" text-g-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 border border-g-500">
+                        Apply Now
+                      </button>
                     </div>
                   </div>
-
-                  {/* Job Title */}
-                  <h3 className="text-sm leading-4 font-semibold text-g-200">
-                    {job.title}
-                  </h3>
-                  <p className="text-[#9C9C9D] text-sm">{job.location}</p>
-
-                  {/* Job Details */}
-                  <div className="mt-6 mb-2 flex items-center whitespace-nowrap gap-3 text-g-300 text-xs leading-4">
-                    <div className="flex items-center gap-1.5  ">
-                      <Clock size={16} />
-                      <span>{job.type}</span>
+                ))}
+              {apiJobs.length > 0 &&
+                jobs.map((job) => (
+                  <div
+                    key={job.id}
+                    className="bg-g-600 rounded-[10px] p-5 border border-g-500"
+                  >
+                    {/* Badges */}
+                    <div className="flex justify-between items-center mb-6">
+                      <div className="flex gap-2">
+                        {job.featured && (
+                          <span className="inline-flex text-xs leading-4 font-semibold items-center gap-1.5 p-1 rounded bg-light-blue text-primary">
+                            <Star size={12} />
+                            Featured
+                          </span>
+                        )}
+                        {job.urgent && (
+                          <span className="inline-flex text-xs leading-4 font-semibold items-center gap-1.5 p-1 rounded  bg-light-blue text-primary">
+                            <Zap size={12} />
+                            Urgent
+                          </span>
+                        )}
+                      </div>
+                      <div className="bg-g-500 p-1.5 rounded">
+                        <Bookmark size={16} className=" text-g-300" />
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2  ">
-                      <Users size={16} />
-                      <span>{job.experience}</span>
+
+                    {/* Job Title */}
+                    <h3 className="text-sm leading-4 font-semibold text-g-200">
+                      {job.title}
+                    </h3>
+                    <p className="text-[#9C9C9D] text-sm">{job.location}</p>
+
+                    {/* Job Details */}
+                    <div className="mt-6 mb-2 flex items-center whitespace-nowrap gap-3 text-g-300 text-xs leading-4">
+                      <div className="flex items-center gap-1.5  ">
+                        <Clock size={16} />
+                        <span>{job.type}</span>
+                      </div>
+                      <div className="flex items-center gap-2  ">
+                        <Users size={16} />
+                        <span>{job.experience}</span>
+                      </div>
+                      <div className="flex items-center gap-2  ">
+                        <DollarSign size={16} />
+                        <span>{job.salary}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2  ">
-                      <DollarSign size={16} />
-                      <span>{job.salary}</span>
+
+                    {/* Posted Date */}
+                    <p className="text-g-300 text-xs">Posted on {job.posted}</p>
+
+                    {/* Company and Apply Button */}
+                    <div className="flex items-center justify-between mt-11 pt-5.5 border-t border-g-500">
+                      <div className="flex items-center gap-2 text-[#9C9C9D]">
+                        {/* Google Logo Placeholder */}
+                        <FcGoogle />
+                        Google
+                      </div>
+                      <button className=" text-g-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 border border-g-500">
+                        Apply Now
+                      </button>
                     </div>
                   </div>
-
-                  {/* Posted Date */}
-                  <p className="text-g-300 text-xs">Posted on {job.posted}</p>
-
-                  {/* Company and Apply Button */}
-                  <div className="flex items-center justify-between mt-11 pt-5.5 border-t border-g-500">
-                    <div className="flex items-center gap-2 text-[#9C9C9D]">
-                      {/* Google Logo Placeholder */}
-                      <FcGoogle />
-                      Google
-                    </div>
-                    <button className=" text-g-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 border border-g-500">
-                      Apply Now
-                    </button>
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
             <div className=" hidden sm:block bg-g-800 py-10 px-5 flex-1 h-fit rounded-[10px] border border-g-500">
               <div className=" border-b border-dashed border-g-400">
