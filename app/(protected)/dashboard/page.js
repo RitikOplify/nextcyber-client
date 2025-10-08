@@ -72,7 +72,7 @@ function DashboardPage() {
                 height={100}
                 width={100}
                 alt="user-profile"
-                className="rounded-full"
+                className="rounded-full object-cover"
               />
             </div>
           </div>
