@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const tabs = ["Skills & Experience", "Education", "About Me"];
 
@@ -46,6 +47,7 @@ const education = [
 ];
 
 export default function ProfileTabs() {
+  const { user } = useSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState("Skills & Experience");
 
   return (
@@ -75,7 +77,7 @@ export default function ProfileTabs() {
                 Skills
               </h3>
               <div className="flex flex-wrap gap-2">
-                {skills.map((skill, i) => (
+                {user.skills.map((skill, i) => (
                   <span
                     key={i}
                     className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500"
@@ -92,7 +94,7 @@ export default function ProfileTabs() {
                 Certifications
               </h3>
               <div className="flex flex-wrap gap-2">
-                {certifications.map((cert, i) => (
+                {user.certificates.map((cert, i) => (
                   <span
                     key={i}
                     className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500"

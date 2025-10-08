@@ -10,7 +10,7 @@ function Step1({ goNext }) {
     "/greenhouse.svg",
   ];
   return (
-    <div className="flex flex-col justify-center gap-20 py-20 flex-1  items-center">
+    <div className="flex flex-col justify-center min-h-full gap-20 p-20  items-center">
       <div className=" text-center">
         <h1 className=" text-g-200 text-2xl leading-8">👋 Welcome, Pradeep</h1>
         <h2 className="text-g-100 text-2xl leading-8 font-medium mt-3">

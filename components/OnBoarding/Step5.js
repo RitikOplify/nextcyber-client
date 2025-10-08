@@ -2,7 +2,7 @@ import React from "react";
 
 const Step5 = () => {
   return (
-    <div className="flex flex-col pt-20 gap-20 flex-1  justify-center">
+    <div className="flex flex-col pt-20 gap-20 px-20 min-h-[calc(100vh-204px)] justify-center">
       <div>
         <div className=" flex items-center justify-between mb-3">
           <h2 className="text-g-100 text-base font-medium leading-6 ">

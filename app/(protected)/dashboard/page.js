@@ -1,12 +1,8 @@
+"use client";
 import {
   ArrowDownToLine,
-  Dice1,
-  Download,
-  Globe,
   Info,
-  Share,
   Share2,
-  User,
   UserPlus,
   BriefcaseBusiness,
   UserStar,
@@ -16,10 +12,12 @@ import {
 import Image from "next/image";
 import React from "react";
 import { FaLinkedin } from "react-icons/fa6";
-import { GraduationCap, Users, Briefcase, BadgeCheck } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
 import Link from "next/link";
 import ProfileTabs from "@/components/Dashboard/Tabs";
+import { useSelector } from "react-redux";
 function DashboardPage() {
+  const { user } = useSelector((state) => state.auth);
   const achievements = [
     { title: "Introduction to Cybersecurity", completedDate: "2024-05-18" },
     { title: "Top Learner", completedDate: "2024-05-18" },
@@ -70,7 +68,7 @@ function DashboardPage() {
             />
             <div className="absolute  z-10 -bottom-17 pl-5">
               <Image
-                src={"/user-profile.png"}
+                src={user.profilePicture.url}
                 height={100}
                 width={100}
                 alt="user-profile"
@@ -83,7 +81,7 @@ function DashboardPage() {
             <div className="pl-30 flex justify-between items-start">
               <div>
                 <h2 className=" leading-6 font-semibold text-g-100 gap-2 flex items-center">
-                  Ernst & Young
+                  {`${user.firstName} ${user.lastName}`}
                   <button className="text-g-200">
                     <FaLinkedin />
                   </button>

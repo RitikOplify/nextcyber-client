@@ -1,6 +1,4 @@
 "use client";
-import Footer from "@/components/Footer";
-import Nav from "@/components/Navigation/Nav";
 import OnBoarding from "@/components/OnBoarding";
 import { asyncCurrentUser } from "@/store/actions/authActions";
 import { Loader2 } from "lucide-react";
@@ -50,9 +48,7 @@ function StudentOnboardingPage({ params }) {
 
   return (
     <>
-      <Nav />
       <OnBoarding id={id} />
-      <Footer />
     </>
   );
 }

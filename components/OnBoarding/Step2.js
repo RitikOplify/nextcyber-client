@@ -1,7 +1,15 @@
 "use client";
-import { useState } from "react";
+import { useFormContext } from "react-hook-form";
 
-export default function Step2({ hearFrom, setHearFrom }) {
+export default function Step2() {
+  const {
+    register,
+    formState: { errors },
+    watch,
+  } = useFormContext();
+
+  const hearFrom = watch("hearFrom");
+
   const options = [
     "LinkedIn",
     "Organization",
@@ -14,7 +22,7 @@ export default function Step2({ hearFrom, setHearFrom }) {
   ];
 
   return (
-    <div className="bg-g-900 flex flex-col justify-center gap-20 pt-20 flex-1 items-center ">
+    <div className="bg-g-900 flex flex-col min-h-[calc(100vh-204px)] justify-center gap-20 pt-20 items-center ">
       <div className="max-w-xl">
         <h2 className="text-4xl font-medium leading-11 tracking-[-1%] text-g-100 mb-[55px] text-center">
           How did you hear about us?
@@ -32,10 +40,10 @@ export default function Step2({ hearFrom, setHearFrom }) {
             >
               <input
                 type="radio"
-                name="hearAboutUs"
                 value={option}
-                checked={hearFrom === option}
-                onChange={() => setHearFrom(option)}
+                {...register("hearFrom", {
+                  required: "Please Select One These!",
+                })}
                 className="hidden"
               />
               <span
@@ -53,6 +61,9 @@ export default function Step2({ hearFrom, setHearFrom }) {
             </label>
           ))}
         </div>
+        {errors.hearFrom && (
+          <p className="text-red-500 text-sm mt-2">{errors.hearFrom.message}</p>
+        )}
       </div>
     </div>
   );
