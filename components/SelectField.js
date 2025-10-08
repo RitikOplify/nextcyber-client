@@ -156,15 +156,15 @@ const SelectField = ({
   placeholder = "Select an option",
   defaultValue = multiple ? [] : "",
   rules = {},
-  onChange, // External onChange callback
-  value: externalValue, // Controlled value from parent
-  error, // External error message
+  onChange,
+  value: externalValue,
+  error,
 }) => {
-  // Try to get form context - will be undefined if not used within FormProvider
+  // Always call hooks unconditionally at the top level
   let formContext;
   try {
     formContext = useFormContext();
-  } catch {
+  } catch (e) {
     formContext = null;
   }
 
@@ -173,8 +173,8 @@ const SelectField = ({
   const [internalValue, setInternalValue] = useState(defaultValue);
   const dropdownRef = useRef(null);
 
-  // Determine if we're using React Hook Form or standalone
-  const isUsingRHF = formContext && name;
+  // Determine if we're using React Hook Form
+  const isUsingRHF = formContext && formContext.control && name;
 
   // Filtered options based on search
   const filteredOptions = options.filter((opt) =>
@@ -210,21 +210,12 @@ const SelectField = ({
       setOpen(false);
     }
 
-    // Update internal state
     setInternalValue(newValue);
 
-    // Call the onChange callback
     if (onChangeCallback) {
       onChangeCallback(newValue);
     }
   };
-
-  const pillClass = (isActive) =>
-    `px-2 py-1 rounded-full border transition text-xs leading-4 font-medium ${
-      isActive
-        ? "bg-primary text-white border-primary "
-        : "bg-g-600 text-g-200  border-g-500 hover:bg-g-700"
-    }`;
 
   // Standalone component (without React Hook Form)
   const renderStandalone = () => {
@@ -375,7 +366,7 @@ const SelectField = ({
                             setOpen(false);
                           }
                           rhfOnChange(newValue);
-                          if (onChange) onChange(newValue); // Call external onChange too
+                          if (onChange) onChange(newValue);
                         }}
                         className={`px-4 py-2 cursor-pointer text-g-200 hover:text-white ${
                           multiple
@@ -408,7 +399,6 @@ const SelectField = ({
     );
   }
 
-  // Return standalone version
   return renderStandalone();
 };
 
