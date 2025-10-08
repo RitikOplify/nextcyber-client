@@ -68,7 +68,7 @@ function DashboardPage() {
             />
             <div className="absolute  z-10 -bottom-17 pl-5">
               <Image
-                src={user.profilePicture.url}
+                src={user?.profilePicture?.url || "/user-profile.png"}
                 height={100}
                 width={100}
                 alt="user-profile"

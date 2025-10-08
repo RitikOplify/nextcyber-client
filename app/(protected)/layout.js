@@ -109,7 +109,7 @@ function ProtectedLayout({ children }) {
 
               <div className="w-9 h-9 bg-g-500 rounded-full flex items-center justify-center">
                 <Image
-                  src={user.profilePicture.url}
+                  src={user?.profilePicture?.url || "/user-profile.png"}
                   height={36}
                   width={36}
                   alt="profile"
@@ -159,7 +159,7 @@ function ProtectedLayout({ children }) {
 
               <div className="w-9 h-9 bg-g-500 rounded-full flex items-center justify-center">
                 <Image
-                  src={user.profilePicture.url}
+                  src={user?.profilePicture?.url || "/user-profile.png"}
                   height={36}
                   width={36}
                   alt="profile"
