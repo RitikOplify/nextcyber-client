@@ -2,6 +2,7 @@
 import Sidebar from "@/components/Navigation/SideBar";
 import { asyncCurrentUser } from "@/store/actions/authActions";
 import { Bell, ChevronRight, Loader2, Menu } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { Fragment, useEffect, useState } from "react";
@@ -107,7 +108,13 @@ function ProtectedLayout({ children }) {
               </button>
 
               <div className="w-9 h-9 bg-g-500 rounded-full flex items-center justify-center">
-                <span className="text-sm font-medium text-text">{"R"}</span>
+                <Image
+                  src={user.profilePicture.url}
+                  height={36}
+                  width={36}
+                  alt="profile"
+                  className=" rounded-full"
+                />
               </div>
             </div>
           </div>
@@ -151,7 +158,13 @@ function ProtectedLayout({ children }) {
               </button>
 
               <div className="w-9 h-9 bg-g-500 rounded-full flex items-center justify-center">
-                <span className="text-sm font-medium text-text">{"R"}</span>
+                <Image
+                  src={user.profilePicture.url}
+                  height={36}
+                  width={36}
+                  alt="profile"
+                  className=" rounded-full"
+                />
               </div>
             </div>
           </div>
