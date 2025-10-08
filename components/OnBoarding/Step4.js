@@ -2,7 +2,7 @@ import React from "react";
 
 const Step4 = () => {
   return (
-    <div className="flex flex-col pt-20 min-h-[calc(100vh-204px)] px-20 gap-20  justify-between">
+    <div className="flex flex-col pt-20 min-h-[calc(100vh-204px)] px-20 gap-20">
       <div>
         <div className=" flex items-center justify-between mb-3">
           <h2 className="text-g-100 text-base font-medium leading-6 ">
@@ -18,7 +18,7 @@ const Step4 = () => {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col justify-center">
+      <div className="flex flex-col justify-center">
         <h1 className="text-5xl font-medium leading-[56px] mb-7.5 tracking-[-2%] text-transparent bg-clip-text bg-gradient-to-r from-accent-color-1 to-primary">
           <span className="block">Personalized roadmap to</span>
           <span>stand out instantly</span>

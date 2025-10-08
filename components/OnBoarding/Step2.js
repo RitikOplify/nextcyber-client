@@ -22,7 +22,7 @@ export default function Step2() {
   ];
 
   return (
-    <div className="bg-g-900 flex flex-col min-h-[calc(100vh-204px)] justify-center gap-20 pt-20 items-center ">
+    <div className="bg-g-900 flex flex-col min-h-[calc(100vh-204px)] justify-start gap-20 pt-20 items-start px-20">
       <div className="max-w-xl">
         <h2 className="text-4xl font-medium leading-11 tracking-[-1%] text-g-100 mb-[55px] text-center">
           How did you hear about us?

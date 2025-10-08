@@ -216,7 +216,7 @@ const Step6 = ({ files, setFiles }) => {
     }`;
 
   return (
-    <div className="w-full mx-auto bg-g-900 px-20 pt-20 space-y-10">
+    <div className="w-full mx-auto bg-g-900 px-20 pt-20 space-y-10 min-h-[calc(100vh-204px)]">
       <div className="flex flex-col items-start gap-4">
         <label className="text-sm font-medium text-g-200 leading-5">
           Profile Picture

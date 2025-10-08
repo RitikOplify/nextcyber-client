@@ -148,7 +148,7 @@ const Step7 = () => {
     }`;
 
   return (
-    <div className="w-full mx-auto bg-g-900 px-20 pt-20 space-y-10">
+    <div className="w-full mx-auto bg-g-900 px-20 pt-20 space-y-10 min-h-[calc(100vh-204px)]">
       <div>
         <label className="block mb-2 text-sm font-medium text-g-200 leading-5">
           Contract Type

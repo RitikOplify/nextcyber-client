@@ -157,7 +157,7 @@ function OnBoarding({ id }) {
   };
 
   return (
-    <div className="max-w-[1440px] mx-auto bg-g-900 h-screen overflow-hidden gap-20">
+    <div className="bg-g-900 h-screen overflow-hidden gap-20">
       <div className="flex">
         <div className=" w-1/3 h-screen bg-primary"></div>
         <FormProvider {...methods}>

@@ -51,7 +51,7 @@ export default function ProfileTabs() {
   const [activeTab, setActiveTab] = useState("Skills & Experience");
 
   return (
-    <div className="bg-gradient-to-r from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden">
+    <div className="bg-gradient-to-b from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden">
       <div className="bg-g-600 rounded-lg p-5">
         {/* Tabs */}
         <div className="flex space-x-6 mb-5 overflow-x-auto scrollbar pb-1.5">
@@ -148,7 +148,7 @@ export default function ProfileTabs() {
             </div>
 
             {/* Button */}
-            <button className="mt-4 px-2 py-1 text-xs leading-4 font-medium rounded-full bg-g-500 text-g-200">
+            <button className="mt-4 px-2 py-1 text-xs leading-4 cursor-pointer font-medium rounded-full bg-g-500 text-g-200">
               explore experience
             </button>
           </div>
