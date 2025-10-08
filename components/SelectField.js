@@ -160,13 +160,8 @@ const SelectField = ({
   value: externalValue,
   error,
 }) => {
-  // Always call hooks unconditionally at the top level
-  let formContext;
-  try {
-    formContext = useFormContext();
-  } catch (e) {
-    formContext = null;
-  }
+  // Always call the hook unconditionally - no try-catch
+  const formContext = useFormContext();
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
