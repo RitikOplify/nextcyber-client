@@ -126,7 +126,7 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
           {
             label: "Notifications",
             icon: Bell,
-            href: "/messages",
+            href: "/notifications",
           },
           {
             label: "Payment & Finances",
