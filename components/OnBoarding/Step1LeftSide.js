@@ -12,9 +12,23 @@ function Step1LeftSide() {
         alt="top-half-circle-shades"
         className="mx-auto"
       />
-      <div className="">
-        <div>
-          <Star size={32} fill="#D9A61C" />
+      <div>
+        <div className=" flex flex-col items-center">
+          <div className="flex gap-1">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                size={32}
+                className="fill-dark-yellow text-dark-yellow"
+              />
+            ))}
+          </div>
+          <p className=" mt-4 max-w-sm text-2xl text-center leading-8 font-medium text-white">
+            Trusted by thousands of job seekers!
+          </p>
+        </div>
+        <div className=" mt-15">
+
         </div>
       </div>
       <Image
