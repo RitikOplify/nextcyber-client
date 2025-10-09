@@ -12,16 +12,16 @@ export const asyncSignupUser =
     if (typeof setIsLoading === "function") setIsLoading(true);
     try {
       await toast.promise(signUp(user), {
-        loading: "Signing in...",
+        loading: "Signing up...",
         success: (response) => {
           const { data } = response;
           dispatch(setUser(data.user));
           router.push("/dashboard");
-          return data.message || "Signed in successfully!";
+          return data.message || "Signed up successfully!";
         },
         error: (err) => {
           return (
-            err?.response?.data?.message || err?.message || "Sign in failed!"
+            err?.response?.data?.message || err?.message || "Sign up failed!"
           );
         },
       });
@@ -36,16 +36,16 @@ export const asyncSigninUser =
     if (typeof setIsLoading === "function") setIsLoading(true);
     try {
       await toast.promise(signIn(user), {
-        loading: "Signing up...",
+        loading: "Signing in...",
         success: (response) => {
           const { data } = response;
           dispatch(setUser(data.user));
           router.push("/dashboard");
-          return data.message || "Signed up successfully!";
+          return data.message || "Signed in successfully!";
         },
         error: (err) => {
           return (
-            err?.response?.data?.message || err?.message || "Sign up failed!"
+            err?.response?.data?.message || err?.message || "Sign in failed!"
           );
         },
       });

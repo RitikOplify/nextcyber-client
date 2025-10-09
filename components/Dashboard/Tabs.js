@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const tabs = ["Skills & Experience", "Education", "About Me"];
 
@@ -46,10 +47,11 @@ const education = [
 ];
 
 export default function ProfileTabs() {
+  const { user } = useSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState("Skills & Experience");
 
   return (
-    <div className="bg-gradient-to-r from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden">
+    <div className="bg-gradient-to-b from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden">
       <div className="bg-g-600 rounded-lg p-5">
         {/* Tabs */}
         <div className="flex space-x-6 mb-5 overflow-x-auto scrollbar pb-1.5">
@@ -75,14 +77,16 @@ export default function ProfileTabs() {
                 Skills
               </h3>
               <div className="flex flex-wrap gap-2">
-                {skills.map((skill, i) => (
-                  <span
-                    key={i}
-                    className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500"
-                  >
-                    {skill}
-                  </span>
-                ))}
+                {(user.skills?.length ? user.skills : skills).map(
+                  (skill, i) => (
+                    <span
+                      key={i}
+                      className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500"
+                    >
+                      {skill}
+                    </span>
+                  )
+                )}
               </div>
             </div>
 
@@ -92,7 +96,10 @@ export default function ProfileTabs() {
                 Certifications
               </h3>
               <div className="flex flex-wrap gap-2">
-                {certifications.map((cert, i) => (
+                {(user?.certificates?.length
+                  ? user.certificates
+                  : certifications
+                ).map((cert, i) => (
                   <span
                     key={i}
                     className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500"
@@ -146,7 +153,7 @@ export default function ProfileTabs() {
             </div>
 
             {/* Button */}
-            <button className="mt-4 px-2 py-1 text-xs leading-4 font-medium rounded-full bg-g-500 text-g-200">
+            <button className="mt-4 px-2 py-1 text-xs leading-4 cursor-pointer font-medium rounded-full bg-g-500 text-g-200">
               explore experience
             </button>
           </div>

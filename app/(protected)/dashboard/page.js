@@ -1,12 +1,8 @@
+"use client";
 import {
   ArrowDownToLine,
-  Dice1,
-  Download,
-  Globe,
   Info,
-  Share,
   Share2,
-  User,
   UserPlus,
   BriefcaseBusiness,
   UserStar,
@@ -16,10 +12,12 @@ import {
 import Image from "next/image";
 import React from "react";
 import { FaLinkedin } from "react-icons/fa6";
-import { GraduationCap, Users, Briefcase, BadgeCheck } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
 import Link from "next/link";
 import ProfileTabs from "@/components/Dashboard/Tabs";
+import { useSelector } from "react-redux";
 function DashboardPage() {
+  const { user } = useSelector((state) => state.auth);
   const achievements = [
     { title: "Introduction to Cybersecurity", completedDate: "2024-05-18" },
     { title: "Top Learner", completedDate: "2024-05-18" },
@@ -70,11 +68,11 @@ function DashboardPage() {
             />
             <div className="absolute  z-10 -bottom-17 pl-5">
               <Image
-                src={"/user-profile.png"}
+                src={user?.profilePicture?.url || "/user-profile.png"}
                 height={100}
                 width={100}
                 alt="user-profile"
-                className="rounded-full"
+                className="rounded-full object-cover"
               />
             </div>
           </div>
@@ -83,7 +81,7 @@ function DashboardPage() {
             <div className="pl-30 flex justify-between items-start">
               <div>
                 <h2 className=" leading-6 font-semibold text-g-100 gap-2 flex items-center">
-                  Ernst & Young
+                  {`${user.firstName} ${user.lastName}`}
                   <button className="text-g-200">
                     <FaLinkedin />
                   </button>
@@ -94,28 +92,28 @@ function DashboardPage() {
               </div>
 
               <div className=" hidden  md:flex lg:hidden xl:flex items-center gap-2">
-                <button className=" py-1 px-2 bg-g-600 border border-g-500 text-g-200 rounded-full flex items-center gap-2">
+                <button className=" py-1 px-2 bg-g-600 border cursor-pointer border-g-500 text-g-200 rounded-full flex items-center gap-2">
                   <ArrowDownToLine size={20} />
                   <span className="">Download CV</span>
                 </button>
-                <button className=" py-1 px-2 bg-g-600 border border-g-500 text-g-200 rounded-full flex items-center gap-2">
+                <button className=" py-1 px-2 bg-g-600 border cursor-pointer border-g-500 text-g-200 rounded-full flex items-center gap-2">
                   <Share2 size={20} />
                   <span>Share Profile</span>
                 </button>
               </div>
             </div>
             <div className=" flex items-center justify-between gap-2 sm:pl-30 w-full">
-              <div className=" w-fit py-1 px-2 bg-g-600 border border-g-500 text-g-200 rounded-full">
+              <div className=" w-fit py-1 px-2 bg-g-600 border cursor-pointer border-g-500 text-g-200 rounded-full">
                 view profile
               </div>
               <div className=" flex items-center gap-2 md:hidden lg:flex xl:hidden">
-                <button className=" py-1 px-2 bg-g-600 border border-g-500 text-g-200 rounded-full flex items-center gap-2">
+                <button className=" py-1 px-2 bg-g-600 border border-g-500 cursor-pointer text-g-200 rounded-full flex items-center gap-2">
                   <ArrowDownToLine size={20} />
                   <span className=" hidden sm:flex lg:hidden xl:flex">
                     Download CV
                   </span>
                 </button>
-                <button className=" py-1 px-2 bg-g-600 border border-g-500 text-g-200 rounded-full flex items-center gap-2">
+                <button className=" py-1 px-2 bg-g-600 border border-g-500 cursor-pointer text-g-200 rounded-full flex items-center gap-2">
                   <Share2 size={20} />
                   <span className=" hidden sm:flex lg:hidden xl:flex">
                     Share Profile
@@ -130,36 +128,38 @@ function DashboardPage() {
             {stats.map((item, i) => (
               <div
                 key={i}
-                className="bg-gradient-to-r from-g-500 to-g-600 border-2 border-g-500 rounded-lg pb-4 p-2.5 flex flex-col justify-between"
+                className="bg-gradient-to-b rounded-[10px] from-g-500 to-g-600 p-0.5"
               >
-                {/* Header */}
-                <div className="flex items-start justify-between">
-                  <div className=" leading-[150%] w-1/2 font-semibold text-g-200">
-                    {item.label}
+                <div className="bg-g-600 rounded-lg pb-4 p-2.5 flex flex-col justify-between">
+                  {/* Header */}
+                  <div className="flex items-start justify-between">
+                    <div className=" leading-[150%] w-1/2 font-semibold text-g-200">
+                      {item.label}
+                    </div>
+                    <div className="p-1.5 bg-primary text-white rounded ">
+                      <item.icon className="w-5 h-5 " />
+                    </div>
                   </div>
-                  <div className="p-1.5 bg-primary text-white rounded ">
-                    <item.icon className="w-5 h-5 " />
-                  </div>
-                </div>
 
-                {/* Value */}
-                <div className="mt-4 flex justify-between items-end">
-                  <div className=" text-4xl leading-11 font-semibold text-dark-green">
-                    {item.value}
+                  {/* Value */}
+                  <div className="mt-4 flex justify-between items-end">
+                    <div className=" text-4xl leading-11 font-semibold text-dark-green">
+                      {item.value}
+                    </div>
+                    <Link
+                      href={item.href}
+                      className="mb-1 text-xs leading-4 border-b border-dashed text-g-200"
+                    >
+                      {item.link}
+                    </Link>
                   </div>
-                  <Link
-                    href={item.href}
-                    className="mb-1 text-xs leading-4 border-b border-dashed text-g-200"
-                  >
-                    {item.link}
-                  </Link>
                 </div>
               </div>
             ))}
           </div>
         </div>
         <ProfileTabs />
-        <div className="bg-gradient-to-r from-g-500 to-g-600 p-0.5 mt-5 rounded-[10px] overflow-hidden">
+        <div className="bg-gradient-to-b from-g-500 to-g-600 p-0.5 mt-5 rounded-[10px] overflow-hidden">
           <div className=" p-5 bg-g-600 rounded-lg">
             <h4 className=" flex text-g-100 font-semibold text-base leading-4 items-center gap-2">
               AI Powered Suggestions
@@ -207,7 +207,7 @@ function DashboardPage() {
             {achievements.map((ach, idx) => (
               <div
                 key={idx}
-                className=" bg-gradient-to-r from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden"
+                className=" bg-gradient-to-b from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden"
               >
                 <div className="bg-g-600 rounded-lg h-full pb-4 p-2.5 flex flex-col justify-between">
                   <div className="text-sm text-g-200 font-medium  leading-4 mb-4">
@@ -226,7 +226,7 @@ function DashboardPage() {
             Active Engagement
           </h4>
           <div className=" mt-2.5 grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="bg-gradient-to-r from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden">
+            <div className="bg-gradient-to-b from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden">
               <div className="bg-g-600 rounded-lg pb-4 p-2.5 flex flex-col justify-between">
                 <div className="text-sm text-g-200 font-medium  leading-4 mb-4">
                   Introduction to Red Teaming

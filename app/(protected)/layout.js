@@ -2,14 +2,16 @@
 import Sidebar from "@/components/Navigation/SideBar";
 import { asyncCurrentUser } from "@/store/actions/authActions";
 import { Bell, ChevronRight, Loader2, Menu } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 function ProtectedLayout({ children }) {
   const pathname = usePathname();
   const dispatch = useDispatch();
+  const router = useRouter();
   const { user, isLoading } = useSelector((state) => state.auth);
   const labelMap = {
     dashboard: "Dashboard",
@@ -68,6 +70,14 @@ function ProtectedLayout({ children }) {
     }
   }, [dispatch, user]);
 
+  useEffect(() => {
+    if (!isLoading && user) {
+      if (user.role === "candidate" && !user.onboarding) {
+        router.replace(`/onboarding/${user.id}`);
+      }
+    }
+  }, [user, isLoading, router]);
+
   if (isLoading || !user) {
     return (
       <div className="h-screen flex justify-center items-center">
@@ -98,7 +108,13 @@ function ProtectedLayout({ children }) {
               </button>
 
               <div className="w-9 h-9 bg-g-500 rounded-full flex items-center justify-center">
-                <span className="text-sm font-medium text-text">{"R"}</span>
+                <Image
+                  src={user?.profilePicture?.url || "/user-profile.png"}
+                  height={36}
+                  width={36}
+                  alt="profile"
+                  className=" rounded-full"
+                />
               </div>
             </div>
           </div>
@@ -142,7 +158,13 @@ function ProtectedLayout({ children }) {
               </button>
 
               <div className="w-9 h-9 bg-g-500 rounded-full flex items-center justify-center">
-                <span className="text-sm font-medium text-text">{"R"}</span>
+                <Image
+                  src={user?.profilePicture?.url || "/user-profile.png"}
+                  height={36}
+                  width={36}
+                  alt="profile"
+                  className=" rounded-full"
+                />
               </div>
             </div>
           </div>

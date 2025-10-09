@@ -1,6 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Search, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import instance from "@/utils/axios";
 
 const jobs = Array.from({ length: 105 }).map((_, i) => ({
   id: i + 1,
