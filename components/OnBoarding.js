@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "@/store/slices/authSlice";
 import { Loader2 } from "lucide-react";
 import { useForm, FormProvider } from "react-hook-form";
-import Step1LeftSide from "./OnBoarding/Step1LeftSide";
+import StepLeftSide from "./OnBoarding/StepLeftSide";
 
 function OnBoarding({ id }) {
   const router = useRouter();
@@ -161,7 +161,7 @@ function OnBoarding({ id }) {
     <div className="bg-g-900 h-screen overflow-hidden gap-20">
       <div className="flex">
         <div className=" w-1/3 h-screen bg-primary">
-          <Step1LeftSide />
+          <StepLeftSide STEP={steps[activeStep].name} />
         </div>
         <FormProvider {...methods}>
           <form
