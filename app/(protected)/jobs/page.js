@@ -109,8 +109,6 @@ function JobsPage() {
     });
   };
 
-
-
   return (
     <div className="max-w-[1440px] mx-auto">
       <div className="relative">
@@ -212,10 +210,12 @@ function JobsPage() {
                     <p className="text-[#9C9C9D] text-sm">{job.location}</p>
 
                     {/* Job Details */}
-                    <div className="mt-6 mb-2 flex items-center whitespace-nowrap gap-3 text-g-300 text-xs leading-4">
+                    <div className="mt-6 mb-2 flex items-center capitalize whitespace-nowrap gap-3 text-g-300 text-xs leading-4">
                       <div className="flex items-center gap-1.5  ">
                         <Clock size={16} />
-                        <span>{job.contractType}</span>
+                        <span>
+                          {job.contractType.split("_").join(" ").toLowerCase()}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2  ">
                         <Users size={16} />
