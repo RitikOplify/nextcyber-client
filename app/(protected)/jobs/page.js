@@ -100,6 +100,17 @@ function JobsPage() {
     fetchAllJobs();
   }, []);
 
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    return date.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short", // or "long" for full month name
+      year: "numeric",
+    });
+  };
+
+
+
   return (
     <div className="max-w-[1440px] mx-auto">
       <div className="relative">
@@ -220,7 +231,7 @@ function JobsPage() {
 
                     {/* Posted Date */}
                     <p className="text-g-300 text-xs">
-                      Posted on {job.createdAt}
+                      Posted on {formatDate(job.createdAt)}
                     </p>
 
                     {/* Company and Apply Button */}
