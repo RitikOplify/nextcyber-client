@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "@/store/slices/authSlice";
 import { Loader2 } from "lucide-react";
 import { useForm, FormProvider } from "react-hook-form";
+import Step1LeftSide from "./OnBoarding/Step1LeftSide";
 
 function OnBoarding({ id }) {
   const router = useRouter();
@@ -159,7 +160,9 @@ function OnBoarding({ id }) {
   return (
     <div className="bg-g-900 h-screen overflow-hidden gap-20">
       <div className="flex">
-        <div className=" w-1/3 h-screen bg-primary"></div>
+        <div className=" w-1/3 h-screen bg-primary">
+          <Step1LeftSide />
+        </div>
         <FormProvider {...methods}>
           <form
             onSubmit={methods.handleSubmit(handleFinalSubmit)}
