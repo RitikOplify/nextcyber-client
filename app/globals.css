@@ -68,6 +68,54 @@ body {
   background: transparent;
 }
 
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Scroll left */
+.scroll-left {
+  display: flex;
+  gap: 1.25rem; /* gap-5 */
+  white-space: nowrap;
+  overflow: hidden;
+  animation: scrollLeft 25s linear infinite;
+  width: max-content;
+}
+
+/* Scroll right */
+.scroll-right {
+  display: flex;
+  gap: 1.25rem; /* gap-5 */
+  white-space: nowrap;
+  overflow: hidden;
+  animation: scrollRight 25s linear infinite;
+  width: max-content;
+}
+
+/* Keyframes */
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scrollRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
 .ellipse-21 {
   position: absolute;
   width: 444px;
