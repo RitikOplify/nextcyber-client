@@ -1,6 +1,8 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 const Step4 = () => {
+  const { user } = useSelector((state) => state.auth);
   return (
     <div className="flex flex-col pt-20 min-h-[calc(100vh-204px)] px-20 gap-20">
       <div>
@@ -20,8 +22,16 @@ const Step4 = () => {
 
       <div className="flex flex-col justify-center">
         <h1 className="text-5xl font-medium leading-[56px] mb-7.5 tracking-[-2%] text-transparent bg-clip-text bg-gradient-to-r from-accent-color-1 to-primary">
-          <span className="block">Personalized roadmap to</span>
-          <span>stand out instantly</span>
+          <span className="block">
+            {user.role == "candidate"
+              ? "Personalized roadmap to"
+              : "Keep track of and oversee all your"}
+          </span>
+          <span>
+            {user.role == "candidate"
+              ? "stand out instantly"
+              : "job seekers instantly"}
+          </span>
         </h1>
 
         <p className="text-g-200 text-xl leading-6 max-w-3xl">

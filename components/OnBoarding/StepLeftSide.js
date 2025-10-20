@@ -1,9 +1,10 @@
 import { Star } from "lucide-react";
 import Image from "next/image";
 import React from "react";
+import { useSelector } from "react-redux";
 
 function Step1LeftSide({ STEP }) {
-  console.log(STEP);
+  const { user } = useSelector((state) => state.auth);
 
   const team = [
     {
@@ -28,12 +29,15 @@ function Step1LeftSide({ STEP }) {
   return (
     <div
       className={`h-full w-full flex flex-col ${
-        STEP == "STEP1" || STEP == "STEP2"
+        STEP == "STEP1" || STEP == "STEP2" || STEP == "STEP6" || STEP == "STEP7"
           ? "justify-between"
           : " justify-center items-center"
       }`}
     >
-      {STEP == "STEP1" || STEP == "STEP2" ? (
+      {STEP == "STEP1" ||
+      STEP == "STEP2" ||
+      STEP == "STEP6" ||
+      STEP == "STEP7" ? (
         <>
           <Image
             src={"/onboarding/top-half-circle-shades.svg"}
@@ -140,13 +144,39 @@ function Step1LeftSide({ STEP }) {
             <Image
               src={
                 STEP == "STEP3"
-                  ? "/onboarding/ai-powered-resumes.svg"
+                  ? user.role == "candidate"
+                    ? "/onboarding/ai-powered-resumes.svg"
+                    : "/onboarding/recruiter-step-3.svg"
                   : STEP == "STEP4"
-                  ? "/onboarding/personalized-roadmap.svg"
-                  : STEP == "STEP5" && "/onboarding/showcase-wins.svg"
+                  ? user.role == "candidate"
+                    ? "/onboarding/personalized-roadmap.svg"
+                    : "/onboarding/recruiter-step-4.svg"
+                  : STEP == "STEP5" && user.role == "candidate"
+                  ? "/onboarding/showcase-wins.svg"
+                  : "/onboarding/recruiter-step-5.svg"
               }
-              height={STEP == "STEP3" ? 574 : STEP == "STEP4" ? 429.32 : 434}
-              width={STEP == "STEP3" ? 262 : STEP == "STEP4" ? 416.1 : 405}
+              height={
+                STEP == "STEP3"
+                  ? user.role == "candidate"
+                    ? 574
+                    : 422.23
+                  : STEP == "STEP4"
+                  ? user.role == "candidate"
+                    ? 429.32
+                    : 425
+                  : 434
+              }
+              width={
+                STEP == "STEP3"
+                  ? user.role == "candidate"
+                    ? 262
+                    : 348
+                  : STEP == "STEP4"
+                  ? user.role == "candidate"
+                    ? 416.1
+                    : 359
+                  : 405
+              }
               alt={`${STEP}-image`}
             />
           )}

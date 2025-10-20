@@ -16,6 +16,7 @@ import { BadgeCheck } from "lucide-react";
 import Link from "next/link";
 import ProfileTabs from "@/components/Dashboard/Tabs";
 import { useSelector } from "react-redux";
+import JobsTable from "@/components/Dashboard/JobsTable";
 function DashboardPage() {
   const { user } = useSelector((state) => state.auth);
   const achievements = [
@@ -158,104 +159,112 @@ function DashboardPage() {
             ))}
           </div>
         </div>
-        <ProfileTabs />
-        <div className="bg-gradient-to-b from-g-500 to-g-600 p-0.5 mt-5 rounded-[10px] overflow-hidden">
-          <div className=" p-5 bg-g-600 rounded-lg">
-            <h4 className=" flex text-g-100 font-semibold text-base leading-4 items-center gap-2">
-              AI Powered Suggestions
-              <Info size={14} />
-            </h4>
-            <div>
-              <h3 className="text-sm mt-5 leading-6 font-semibold text-g-100 mb-2.5">
-                Skills
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500">
-                  Azure
-                </span>
-                <span className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500">
-                  Security Auditing
-                </span>
-                <span className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500">
-                  Penetration Testing
-                </span>
-              </div>
-            </div>
-
-            {/* Certifications */}
-            <div className=" mt-7.5">
-              <h3 className="text-sm leading-6 font-semibold text-g-100 mb-2.5">
-                Certifications
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500">
-                  CompTIA+
-                </span>
-                <span className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500">
-                  Certified Ethical Hacker (CEH)
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="py-5">
-          <h4 className="text-g-100 font-semibold text-base leading-4">
-            Milestones Showcase
-          </h4>
-          <div className=" mt-2.5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
-            {achievements.map((ach, idx) => (
-              <div
-                key={idx}
-                className=" bg-gradient-to-b from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden"
-              >
-                <div className="bg-g-600 rounded-lg h-full pb-4 p-2.5 flex flex-col justify-between">
-                  <div className="text-sm text-g-200 font-medium  leading-4 mb-4">
-                    {ach.title}
+        {user.role == "candidate" && (
+          <>
+            <ProfileTabs />
+            <div className="bg-gradient-to-b from-g-500 to-g-600 p-0.5 mt-5 rounded-[10px] overflow-hidden">
+              <div className=" p-5 bg-g-600 rounded-lg">
+                <h4 className=" flex text-g-100 font-semibold text-base leading-4 items-center gap-2">
+                  AI Powered Suggestions
+                  <Info size={14} />
+                </h4>
+                <div>
+                  <h3 className="text-sm mt-5 leading-6 font-semibold text-g-100 mb-2.5">
+                    Skills
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500">
+                      Azure
+                    </span>
+                    <span className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500">
+                      Security Auditing
+                    </span>
+                    <span className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500">
+                      Penetration Testing
+                    </span>
                   </div>
-                  <div className="text-xs leading-4 text-g-200">
-                    completed: {ach.completedDate}
+                </div>
+
+                {/* Certifications */}
+                <div className=" mt-7.5">
+                  <h3 className="text-sm leading-6 font-semibold text-g-100 mb-2.5">
+                    Certifications
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500">
+                      CompTIA+
+                    </span>
+                    <span className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500">
+                      Certified Ethical Hacker (CEH)
+                    </span>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-        <div className="py-5">
-          <h4 className="text-g-100 font-semibold text-base leading-4">
-            Active Engagement
-          </h4>
-          <div className=" mt-2.5 grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="bg-gradient-to-b from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden">
-              <div className="bg-g-600 rounded-lg pb-4 p-2.5 flex flex-col justify-between">
-                <div className="text-sm text-g-200 font-medium  leading-4 mb-4">
-                  Introduction to Red Teaming
+            </div>
+            <div className="py-5">
+              <h4 className="text-g-100 font-semibold text-base leading-4">
+                Milestones Showcase
+              </h4>
+              <div className=" mt-2.5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+                {achievements.map((ach, idx) => (
+                  <div
+                    key={idx}
+                    className=" bg-gradient-to-b from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden"
+                  >
+                    <div className="bg-g-600 rounded-lg h-full pb-4 p-2.5 flex flex-col justify-between">
+                      <div className="text-sm text-g-200 font-medium  leading-4 mb-4">
+                        {ach.title}
+                      </div>
+                      <div className="text-xs leading-4 text-g-200">
+                        completed: {ach.completedDate}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="py-5">
+              <h4 className="text-g-100 font-semibold text-base leading-4">
+                Active Engagement
+              </h4>
+              <div className=" mt-2.5 grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="bg-gradient-to-b from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden">
+                  <div className="bg-g-600 rounded-lg pb-4 p-2.5 flex flex-col justify-between">
+                    <div className="text-sm text-g-200 font-medium  leading-4 mb-4">
+                      Introduction to Red Teaming
+                    </div>
+                    <div className="text-xs leading-4 text-g-200">
+                      3/5 modules completed
+                    </div>
+                    <div className="mt-1.5 relative">
+                      <div className=" w-full h-4 bg-g-400"></div>
+                      <div className=" w-[60%] h-4 bg-primary absolute bottom-0"></div>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-xs leading-4 text-g-200">
-                  3/5 modules completed
-                </div>
-                <div className="mt-1.5 relative">
-                  <div className=" w-full h-4 bg-g-400"></div>
-                  <div className=" w-[60%] h-4 bg-primary absolute bottom-0"></div>
+                <div className="bg-gradient-to-r from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden">
+                  <div className="bg-g-600 rounded-lg pb-4 p-2.5 flex flex-col justify-between">
+                    <div className="text-sm text-g-200 font-medium  leading-4 mb-4">
+                      Next AI Resume Tip
+                    </div>
+                    <div className="text-xs leading-4 text-g-200">
+                      3/5 modules completed
+                    </div>
+                    <div className="mt-1.5 relative">
+                      <div className=" w-full h-4 bg-g-400"></div>
+                      <div className=" w-[60%] h-4 bg-primary absolute bottom-0"></div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="bg-gradient-to-r from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden">
-              <div className="bg-g-600 rounded-lg pb-4 p-2.5 flex flex-col justify-between">
-                <div className="text-sm text-g-200 font-medium  leading-4 mb-4">
-                  Next AI Resume Tip
-                </div>
-                <div className="text-xs leading-4 text-g-200">
-                  3/5 modules completed
-                </div>
-                <div className="mt-1.5 relative">
-                  <div className=" w-full h-4 bg-g-400"></div>
-                  <div className=" w-[60%] h-4 bg-primary absolute bottom-0"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          </>
+        )}
+        {user.role == "recruiter" && (
+          <>
+            <JobsTable />
+          </>
+        )}
       </div>
       <div className="pl-5 hidden lg:block">
         <div className=" px-2.5 pt-2.5 pb-4 bg-g-600 rounded-lg">

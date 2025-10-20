@@ -1,6 +1,8 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
-const OnboardingSlide = () => {
+const Step3 = () => {
+  const { user } = useSelector((state) => state.auth);
   return (
     <div className="flex flex-col pt-20 gap-20 px-20 min-h-[calc(100vh-204px)]">
       <div>
@@ -20,8 +22,16 @@ const OnboardingSlide = () => {
 
       <div className="flex flex-col justify-center">
         <h1 className="text-5xl font-medium leading-[56px] mb-7.5 tracking-[-2%] text-transparent bg-clip-text bg-gradient-to-r from-accent-color-1 to-primary">
-          <span className="block">AI powered resumes that</span>
-          <span>lands you job</span>
+          <span className="block">
+            {user.role == "candidate"
+              ? "AI powered resumes that"
+              : "Hire Job Seekers that matches"}
+          </span>
+          <span>
+            {user.role == "candidate"
+              ? "lands you job"
+              : "your profile with AI help"}
+          </span>
         </h1>
 
         <p className="text-g-200 text-xl leading-6 max-w-3xl">
@@ -33,4 +43,4 @@ const OnboardingSlide = () => {
   );
 };
 
-export default OnboardingSlide;
+export default Step3;

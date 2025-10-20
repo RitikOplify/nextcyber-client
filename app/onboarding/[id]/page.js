@@ -6,8 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { use, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-function StudentOnboardingPage({ params }) {
-  const { id } = use(params);
+function StudentOnboardingPage() {
   const router = useRouter();
   const dispatch = useDispatch();
   const { user, isLoading } = useSelector((state) => state.auth);
@@ -22,7 +21,7 @@ function StudentOnboardingPage({ params }) {
   // Redirect if user is not a candidate or already onboarded
   useEffect(() => {
     if (!isLoading && user) {
-      if (user.role !== "candidate" || user.onboarding) {
+      if (user.onboarding) {
         router.replace("/dashboard");
       }
     }
@@ -38,7 +37,7 @@ function StudentOnboardingPage({ params }) {
   }
 
   // Extra safety: while redirecting, also show loader
-  if (user.role !== "candidate" || user.onboarding) {
+  if (user.onboarding) {
     return (
       <div className="h-screen flex justify-center items-center">
         <Loader2 className="animate-spin" />
@@ -48,7 +47,7 @@ function StudentOnboardingPage({ params }) {
 
   return (
     <>
-      <OnBoarding id={id} />
+      <OnBoarding />
     </>
   );
 }

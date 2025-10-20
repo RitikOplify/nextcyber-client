@@ -157,6 +157,8 @@ export default function AddJobStepper() {
         "❌ Error creating job:",
         error.response?.data || error.message
       );
+      console.log(error);
+
       toast.error(error.response?.data?.message || "Failed to create job");
       toast.dismiss(toastCtn);
     } finally {

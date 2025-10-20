@@ -46,7 +46,7 @@ function Wrapper({ children }) {
 
   useEffect(() => {
     if (!isLoading && user) {
-      if (user.role == "candidate" && !user.onboarding) {
+      if (!user.onboarding) {
         router.replace(`/onboarding/${user.id}`);
       }
     }

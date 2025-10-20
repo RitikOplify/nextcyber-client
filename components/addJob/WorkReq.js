@@ -101,7 +101,7 @@ export default function WorkReq({ form }) {
           Remote Policy
         </label>
         <div className="flex gap-5 flex-wrap">
-          {["On site", "Hybrid", "Remote"].map((r) => (
+          {["ONSITE", "HYBRID", "REMOTE"].map((r) => (
             <button
               key={r}
               type="button"
