@@ -48,7 +48,7 @@ export default function JobApplyModel({ isOpen, onClose, id }) {
         </h2>
 
         <p className="text-center text-base text-text text-g-900">
-          Please confirm that you'd like to apply for this job.
+          Please confirm that you&apos;d like to apply for this job.
         </p>
 
         <div className="flex justify-end gap-3">
