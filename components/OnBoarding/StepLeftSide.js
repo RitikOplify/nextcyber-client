@@ -29,15 +29,12 @@ function Step1LeftSide({ STEP }) {
   return (
     <div
       className={`h-full w-full flex flex-col ${
-        STEP == "STEP1" || STEP == "STEP2" || STEP == "STEP6" || STEP == "STEP7"
+        STEP == "STEP1" || STEP == "STEP2" || STEP == "STEP6"
           ? "justify-between"
           : " justify-center items-center"
       }`}
     >
-      {STEP == "STEP1" ||
-      STEP == "STEP2" ||
-      STEP == "STEP6" ||
-      STEP == "STEP7" ? (
+      {STEP == "STEP1" || STEP == "STEP2" || STEP == "STEP6" ? (
         <>
           <Image
             src={"/onboarding/top-half-circle-shades.svg"}
@@ -140,7 +137,10 @@ function Step1LeftSide({ STEP }) {
         </>
       ) : (
         <>
-          {(STEP == "STEP3" || STEP == "STEP4" || STEP == "STEP5") && (
+          {(STEP == "STEP3" ||
+            STEP == "STEP4" ||
+            STEP == "STEP5" ||
+            STEP == "STEP7") && (
             <Image
               src={
                 STEP == "STEP3"
@@ -151,9 +151,11 @@ function Step1LeftSide({ STEP }) {
                   ? user.role == "candidate"
                     ? "/onboarding/personalized-roadmap.svg"
                     : "/onboarding/recruiter-step-4.svg"
-                  : STEP == "STEP5" && user.role == "candidate"
-                  ? "/onboarding/showcase-wins.svg"
-                  : "/onboarding/recruiter-step-5.svg"
+                  : STEP == "STEP5"
+                  ? user.role == "candidate"
+                    ? "/onboarding/showcase-wins.svg"
+                    : "/onboarding/recruiter-step-5.svg"
+                  : STEP == "STEP7" && "/onboarding/jobseeker-step-2.svg"
               }
               height={
                 STEP == "STEP3"
