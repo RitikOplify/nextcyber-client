@@ -55,6 +55,38 @@ function DashboardPage() {
       icon: FileBadge2,
     },
   ];
+
+  const recruiterStats = [
+    {
+      label: "Active Jobs",
+      value: 12,
+      link: "view jobs",
+      href: "#",
+      icon: Medal,
+    },
+    {
+      label: "New Applications",
+      value: 4,
+      link: "view applicants",
+      href: "#",
+      icon: UserStar,
+    },
+    {
+      label: "Pending Approval",
+      value: 8,
+      link: "take action",
+      href: "#",
+      icon: BriefcaseBusiness,
+    },
+    {
+      label: "Candidates Hired",
+      value: 15,
+      link: "view list",
+      href: "#",
+      icon: FileBadge2,
+    },
+  ];
+
   return (
     <div className=" flex">
       <div className=" flex-1 lg:border-r lg:pr-5 border-g-600 overflow-x-hidden">
@@ -93,10 +125,12 @@ function DashboardPage() {
               </div>
 
               <div className=" hidden  md:flex lg:hidden xl:flex items-center gap-2">
-                <button className=" py-1 px-2 bg-g-600 border cursor-pointer border-g-500 text-g-200 rounded-full flex items-center gap-2">
-                  <ArrowDownToLine size={20} />
-                  <span className="">Download CV</span>
-                </button>
+                {user.role == "candidate" && (
+                  <button className=" py-1 px-2 bg-g-600 border cursor-pointer border-g-500 text-g-200 rounded-full flex items-center gap-2">
+                    <ArrowDownToLine size={20} />
+                    <span className="">Download CV</span>
+                  </button>
+                )}
                 <button className=" py-1 px-2 bg-g-600 border cursor-pointer border-g-500 text-g-200 rounded-full flex items-center gap-2">
                   <Share2 size={20} />
                   <span>Share Profile</span>
@@ -126,37 +160,39 @@ function DashboardPage() {
         </div>
         <div className=" my-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-            {stats.map((item, i) => (
-              <div
-                key={i}
-                className="bg-gradient-to-b rounded-[10px] from-g-500 to-g-600 p-0.5"
-              >
-                <div className="bg-g-600 rounded-lg pb-4 p-2.5 flex flex-col justify-between">
-                  {/* Header */}
-                  <div className="flex items-start justify-between">
-                    <div className=" leading-[150%] w-1/2 font-semibold text-g-200">
-                      {item.label}
+            {(user.role == "candidate" ? stats : recruiterStats).map(
+              (item, i) => (
+                <div
+                  key={i}
+                  className="bg-gradient-to-b rounded-[10px] from-g-500 to-g-600 p-0.5"
+                >
+                  <div className="bg-g-600 rounded-lg pb-4 p-2.5 flex flex-col justify-between">
+                    {/* Header */}
+                    <div className="flex items-start justify-between">
+                      <div className=" leading-[150%] w-1/2 font-semibold text-g-200">
+                        {item.label}
+                      </div>
+                      <div className="p-1.5 bg-primary text-white rounded ">
+                        <item.icon className="w-5 h-5 " />
+                      </div>
                     </div>
-                    <div className="p-1.5 bg-primary text-white rounded ">
-                      <item.icon className="w-5 h-5 " />
-                    </div>
-                  </div>
 
-                  {/* Value */}
-                  <div className="mt-4 flex justify-between items-end">
-                    <div className=" text-4xl leading-11 font-semibold text-dark-green">
-                      {item.value}
+                    {/* Value */}
+                    <div className="mt-4 flex justify-between items-end">
+                      <div className=" text-4xl leading-11 font-semibold text-dark-green">
+                        {item.value}
+                      </div>
+                      <Link
+                        href={item.href}
+                        className="mb-1 text-xs leading-4 border-b border-dashed text-g-200"
+                      >
+                        {item.link}
+                      </Link>
                     </div>
-                    <Link
-                      href={item.href}
-                      className="mb-1 text-xs leading-4 border-b border-dashed text-g-200"
-                    >
-                      {item.link}
-                    </Link>
                   </div>
                 </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
         </div>
         {user.role == "candidate" && (
@@ -285,73 +321,124 @@ function DashboardPage() {
           </div>
         </div>
 
-        <div className=" p-2.5 pb-4 bg-gradient-to-b from-g-600 to-[#434345] mt-3.5 rounded-lg border border-g-500">
-          <h6 className="font-semibold leading-6 text-g-100">
-            Mentor Suggestions
-          </h6>
-          <div className=" flex flex-col gap-4 mt-4">
-            <div className=" flex gap-2 items-center">
-              <Image
-                src={"/avatar.jpeg"}
-                height={40}
-                width={40}
-                alt="mentor-avatar"
-                className=" rounded-full h-10 w-10 object-cover"
-              />
-              <div>
-                <h3 className=" text-sm font-semibold leading-4 text-g-100">
-                  Steve Smith
-                </h3>
-                <p className=" text-g-200 font-normal leading-4 text-xs">
-                  Penetration Testing
-                </p>
+        {user.role == "recruiter" && (
+          <div className=" p-2.5 pb-4 bg-gradient-to-b from-g-600 to-[#434345] mt-3.5 rounded-lg border border-g-500">
+            <h6 className="font-semibold leading-6 text-g-100 max-w-3xs">
+              AI Job Seeker Profile Suggestions
+            </h6>
+            <div className=" flex flex-col gap-4 mt-4">
+              <div className=" flex gap-2 items-center">
+                <Image
+                  src={"/avatar.jpeg"}
+                  height={40}
+                  width={40}
+                  alt="mentor-avatar"
+                  className=" rounded-full h-10 w-10 object-cover"
+                />
+                <div>
+                  <h3 className=" text-sm font-semibold leading-4 text-g-100">
+                    Steve Smith
+                  </h3>
+                  <p className=" text-g-200 font-normal leading-4 text-xs">
+                    Penetration Testing
+                  </p>
+                </div>
+              </div>
+              <div className=" flex gap-2 items-center">
+                <Image
+                  src={"/avatar.jpeg"}
+                  height={40}
+                  width={40}
+                  alt="mentor-avatar"
+                  className=" rounded-full h-10 w-10 object-cover"
+                />
+                <div>
+                  <h3 className=" text-sm font-semibold leading-4 text-g-100">
+                    Nathan Astle
+                  </h3>
+                  <p className=" text-g-200 font-normal leading-4 text-xs">
+                    Penetration Testing
+                  </p>
+                </div>
+              </div>
+              <button className=" text-white text-sm leading-4 bg-primary px-4 py-2 rounded-lg flex items-center gap-2 justify-center">
+                <UserPlus size={20} />
+                Connect with Job Seeker
+              </button>
+            </div>
+          </div>
+        )}
+
+        {user.role == "candidate" && (
+          <>
+            <div className=" p-2.5 pb-4 bg-gradient-to-b from-g-600 to-[#434345] mt-3.5 rounded-lg border border-g-500">
+              <h6 className="font-semibold leading-6 text-g-100">
+                Mentor Suggestions
+              </h6>
+              <div className=" flex flex-col gap-4 mt-4">
+                <div className=" flex gap-2 items-center">
+                  <Image
+                    src={"/avatar.jpeg"}
+                    height={40}
+                    width={40}
+                    alt="mentor-avatar"
+                    className=" rounded-full h-10 w-10 object-cover"
+                  />
+                  <div>
+                    <h3 className=" text-sm font-semibold leading-4 text-g-100">
+                      Steve Smith
+                    </h3>
+                    <p className=" text-g-200 font-normal leading-4 text-xs">
+                      Penetration Testing
+                    </p>
+                  </div>
+                </div>
+                <div className=" flex gap-2 items-center">
+                  <Image
+                    src={"/avatar.jpeg"}
+                    height={40}
+                    width={40}
+                    alt="mentor-avatar"
+                    className=" rounded-full h-10 w-10 object-cover"
+                  />
+                  <div>
+                    <h3 className=" text-sm font-semibold leading-4 text-g-100">
+                      Nathan Astle
+                    </h3>
+                    <p className=" text-g-200 font-normal leading-4 text-xs">
+                      Penetration Testing
+                    </p>
+                  </div>
+                </div>
+                <button className=" text-white text-sm leading-4 bg-primary px-4 py-2 rounded-lg flex items-center gap-2 justify-center">
+                  <UserPlus size={20} />
+                  Connect with Mentors
+                </button>
               </div>
             </div>
-            <div className=" flex gap-2 items-center">
-              <Image
-                src={"/avatar.jpeg"}
-                height={40}
-                width={40}
-                alt="mentor-avatar"
-                className=" rounded-full h-10 w-10 object-cover"
-              />
-              <div>
-                <h3 className=" text-sm font-semibold leading-4 text-g-100">
-                  Nathan Astle
-                </h3>
-                <p className=" text-g-200 font-normal leading-4 text-xs">
-                  Penetration Testing
-                </p>
+
+            <div className=" p-2.5 pb-4 bg-gradient-to-b from-g-600 to-[#434345] mt-3.5 rounded-lg border border-g-500">
+              <div className=" h-40 relative w-full">
+                <Image
+                  src={"/certification-image.png"}
+                  className="object-cover"
+                  fill
+                  priority
+                  alt="certification-image"
+                />
+                <h4 className=" absolute top-2.5 bg-white py-1.5 px-2 text-g-300 text-xs font-medium leading-4">
+                  Certification
+                </h4>
               </div>
+              <h5 className=" mt-7.5 text-sm font-medium leading-4 text-white max-w-3xs">
+                Certified Information Systems Security Professional (CISSP)
+              </h5>
+              <button className=" text-white text-sm leading-4 mt-5 w-full bg-primary px-4 py-2 rounded-lg">
+                Enroll Now
+              </button>
             </div>
-            <button className=" text-white text-sm leading-4 bg-primary px-4 py-2 rounded-lg flex items-center gap-2 justify-center">
-              <UserPlus size={20} />
-              Connect with Mentors
-            </button>
-          </div>
-        </div>
-
-        <div className=" p-2.5 pb-4 bg-gradient-to-b from-g-600 to-[#434345] mt-3.5 rounded-lg border border-g-500">
-          <div className=" h-40 relative w-full">
-            <Image
-              src={"/certification-image.png"}
-              className="object-cover"
-              fill
-              priority
-              alt="certification-image"
-            />
-            <h4 className=" absolute top-2.5 bg-white py-1.5 px-2 text-g-300 text-xs font-medium leading-4">
-              Certification
-            </h4>
-          </div>
-          <h5 className=" mt-7.5 text-sm font-medium leading-4 text-white max-w-3xs">
-            Certified Information Systems Security Professional (CISSP)
-          </h5>
-          <button className=" text-white text-sm leading-4 mt-5 w-full bg-primary px-4 py-2 rounded-lg">
-            Enroll Now
-          </button>
-        </div>
-
+          </>
+        )}
         <div className=" p-2.5 pb-4 bg-g-600 mt-3.5 rounded-lg border border-g-500">
           <h4 className=" text-g-100 font-semibold leading-6 text-base">
             Notifications
