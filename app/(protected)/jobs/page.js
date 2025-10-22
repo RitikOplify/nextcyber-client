@@ -141,13 +141,15 @@ function JobsPage() {
               My Jobs
             </button>
           </div>
-          <Link
-            href={"/add-new-job"}
-            className=" px-4 py-2 gap-2 flex items-center rounded-lg bg-g-600 border cursor-pointer absolute right-0 top-0 border-g-500 text-g-200 w-fit"
-          >
-            <Plus size={20} />
-            <span>Post New Job</span>
-          </Link>
+          {user.role == "recruiter" && (
+            <Link
+              href={"/add-new-job"}
+              className=" px-4 py-2 gap-2 flex items-center rounded-lg bg-g-600 border cursor-pointer absolute right-0 top-0 border-g-500 text-g-200 w-fit"
+            >
+              <Plus size={20} />
+              <span>Post New Job</span>
+            </Link>
+          )}
         </div>
 
         {activeTab === "Browse Jobs" && (
@@ -257,6 +259,7 @@ function JobsPage() {
                         </div>
                         <button
                           title="Apply Job"
+                          disabled={user.role == "recruiter"}
                           className=" text-g-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 border border-g-500"
                           onClick={() => {
                             applyJob(job.id);

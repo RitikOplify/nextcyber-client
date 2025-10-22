@@ -117,7 +117,11 @@ function RecruiterOnBoarding() {
       router.push("/dashboard");
     } catch (error) {
       console.log(error);
-      toast.error("Request Failed. Please Try Again!");
+      toast.error(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Something went wrong. Please try again."
+      );
     } finally {
       setLoading(false);
     }

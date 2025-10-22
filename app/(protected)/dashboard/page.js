@@ -17,6 +17,7 @@ import Link from "next/link";
 import ProfileTabs from "@/components/Dashboard/Tabs";
 import { useSelector } from "react-redux";
 import JobsTable from "@/components/Dashboard/JobsTable";
+import RecruitmentPipeline from "@/components/Dashboard/RecruitmentPipeline";
 function DashboardPage() {
   const { user } = useSelector((state) => state.auth);
   const achievements = [
@@ -105,7 +106,7 @@ function DashboardPage() {
                 height={100}
                 width={100}
                 alt="user-profile"
-                className="rounded-full object-cover"
+                className="rounded-full object-cover h-25 w-25"
               />
             </div>
           </div>
@@ -299,6 +300,7 @@ function DashboardPage() {
         {user.role == "recruiter" && (
           <>
             <JobsTable />
+            <RecruitmentPipeline />
           </>
         )}
       </div>

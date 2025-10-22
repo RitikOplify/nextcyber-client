@@ -1,5 +1,6 @@
 "use client";
 import { jobApplyApi } from "@/api/jobApi";
+import { Loader2, Loader2Icon } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineClose } from "react-icons/ai";
@@ -66,7 +67,7 @@ export default function JobApplyModel({ isOpen, onClose, id }) {
           >
             {loading ? (
               <>
-                <FaSpinner className="animate-spin" />
+                <Loader2 size={20} className="animate-spin" />
                 Applying...
               </>
             ) : (
