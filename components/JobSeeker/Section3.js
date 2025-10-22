@@ -20,7 +20,7 @@ function Section3() {
             </h3>
             <p className="text-g-200 text-xl font-medium leading-6 max-w-lg mt-5">
               Upload your resume and let our NextGen AI Resume Builder craft a
-              standout version, designed to catch recruiters' attention and help
+              standout version, designed to catch recruiters&apos; attention and help
               you land the job.
             </p>
             <button className="bg-primary text-white text-xl leading-6 font-medium py-4 px-8 rounded-lg mt-8">
