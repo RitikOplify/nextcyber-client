@@ -3,40 +3,35 @@ import React from "react";
 
 function Section1() {
   return (
-    <div className=" bg-g-900 h-[calc(100vh-73.33px)]">
-      <div className=" flex items-center justify-center flex-col pt-35">
+    <div className=" bg-g-900 pb-50 pt-35">
+      <div className=" flex items-center justify-center flex-col ">
         <h2 className=" text-sm leading-5 tracking-[4%] font-semibold">
           TRUSTED BY THOUSANDS OF JOB SEEKERS!
         </h2>
         <div className="flex justify-center items-center space-x-[-12px] mt-5">
           <img
-            src="/avatar.jpeg"
+            src="/f973c36387c1964a5d500a6135787979811536fc.png"
             alt="User 1"
             className="w-13 h-13 rounded-full border-2 border-[#F7F7F7] object-cover"
           />
           <img
-            src="/user-profile.png"
+            src="/331ac9fed4e1e571263828548de37125a7df3a17.png"
             alt="User 2"
             className="w-13 h-13 rounded-full border-2 border-[#F7F7F7] object-cover"
           />
           <img
-            src="/avatar.jpeg"
+            src="/0cac5db297fb65c7894aabf960b291d105e2ec2a.png"
             alt="User 1"
             className="w-13 h-13 rounded-full border-2 border-[#F7F7F7] object-cover"
           />
           <img
-            src="/user-profile.png"
+            src="/ddac95768bb700e0748dde332c279b2d8f2c7a19.png"
             alt="User 2"
-            className="w-13 h-13 rounded-full border-2 border-[#F7F7F7] object-cover"
-          />{" "}
-          <img
-            src="/avatar.jpeg"
-            alt="User 1"
             className="w-13 h-13 rounded-full border-2 border-[#F7F7F7] object-cover"
           />
           <img
-            src="/user-profile.png"
-            alt="User 2"
+            src="/83e704b3a4b31c190fcf5c0150e6763209b76f80.png"
+            alt="User 1"
             className="w-13 h-13 rounded-full border-2 border-[#F7F7F7] object-cover"
           />
         </div>
@@ -44,6 +39,11 @@ function Section1() {
           AI Powered Resumes <br />
           that lands you dream job
         </h3>
+        <p className="mt-5 max-w-2xl text-center text-g-100 text-base font-medium leading-6">
+          Upload your resume and let our NextGen AI Resume Builder craft a
+          standout version, designed to catch recruiters' attention and help you
+          land the job.
+        </p>
         <Link
           href={"/auth"}
           className=" bg-primary text-white text-xl leading-6 font-medium py-4 px-8 rounded-lg mt-12"

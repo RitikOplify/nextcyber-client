@@ -51,22 +51,24 @@ const ClientReviewsSection = () => {
     );
   };
 
+  const loopTestimonials = [...testimonials, ...testimonials];
+
   return (
     <div className="bg-g-900 py-20 ">
-      <div className="max-w-[1440px] mx-auto px-5 sm:px-10 lg:px-20">
+      <div className="max-w-[1440px] mx-auto pl-5 sm:pl-10 lg:pl-20">
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row justify-between items-start mb-20 text-4xl leading-11 font-medium">
           <div>
             <h2 className="text-g-100 ">4.5/5 client review</h2>
           </div>
-          <div className="md:text-right text-accent-color-1 mt-5 lg:mt-0">
+          <div className="md:text-right text-accent-color-1 mt-5 lg:mt-0 pr-5 sm:pr-10 lg:pr-20">
             <h3>Thousands of Satisfied</h3>
             <h3>Clients and Jobseekers</h3>
           </div>
         </div>
 
         {/* Reviews Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr]  gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr]  gap-5 overflow-hidden">
           {/* Rating Card - Fixed */}
           <div className="gradient-border p-0.5">
             <div className="bg-g-600 p-10 lg:sticky lg:left-0 self-start h-[346px] rounded-lg">
@@ -85,38 +87,40 @@ const ClientReviewsSection = () => {
           </div>
 
           {/* Testimonials - Scrollable */}
-          <div className=" overflow-hidden flex gap-5 h-[350px]">
-            {testimonials.map((testimonial) => (
-              <div
-                key={testimonial.id}
-                className="bg-g-600 rounded-[10px] p-10 min-w-[350px] "
-              >
-                {/* User Info */}
-                <div className="flex items-center gap-5 mb-15">
-                  <img
-                    src={testimonial.avatar}
-                    alt={testimonial.name}
-                    className="w-16 h-16 rounded-full object-cover"
-                  />
-                  <div>
-                    <h4 className="text-white font-medium text-2xl leading-8 mb-1">
-                      {testimonial.name}
-                    </h4>
-                    <p className="text-g-300 text-base leading-6 whitespace-nowrap">
-                      {testimonial.position}
-                    </p>
+          <div className="relative overflow-hidden">
+            <div className="scroll-left flex gap-5 h-[350px]">
+              {loopTestimonials.map((testimonial, i) => (
+                <div
+                  key={i}
+                  className="bg-g-600 rounded-[10px] p-10 max-w-[350px] "
+                >
+                  {/* User Info */}
+                  <div className="flex items-center gap-5 mb-15">
+                    <img
+                      src={testimonial.avatar}
+                      alt={testimonial.name}
+                      className="w-16 h-16 rounded-full object-cover"
+                    />
+                    <div>
+                      <h4 className="text-white font-medium text-2xl leading-8 mb-1">
+                        {testimonial.name}
+                      </h4>
+                      <p className="text-g-300 text-base leading-6 whitespace-nowrap">
+                        {testimonial.position}
+                      </p>
+                    </div>
                   </div>
+
+                  {/* Star Rating */}
+                  <StarRating rating={testimonial.rating} />
+
+                  {/* Review Text */}
+                  <p className="text-white text-base mt-5 leading-6 text-wrap">
+                    &quot;{testimonial.review}&quot;
+                  </p>
                 </div>
-
-                {/* Star Rating */}
-                <StarRating rating={testimonial.rating} />
-
-                {/* Review Text */}
-                <p className="text-white text-base mt-5 leading-6">
-                  &quot;{testimonial.review}&quot;
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>

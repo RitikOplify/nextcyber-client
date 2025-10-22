@@ -116,6 +116,15 @@ body {
   }
 }
 
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 .ellipse-21 {
   position: absolute;
   width: 444px;
