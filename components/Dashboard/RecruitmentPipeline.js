@@ -34,7 +34,7 @@ function RecruitmentPipeline() {
         </p>
         <div className="mt-7.5 flex gap-15 flex-wrap">
           {stats.map((stat) => (
-            <div>
+            <div key={stat.key}>
               <h5 className="text-g-200 leading-5 font-medium mb-3 text-sm">
                 {stat.key}
               </h5>
