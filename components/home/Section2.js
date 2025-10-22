@@ -83,7 +83,7 @@ const CybersecurityJobBoard = () => {
         <div className="ellipse-23"></div>
       </div>
       <div className="relative top-0 left-0">
-        <div className="overflow-hidden px-5 sm:px-10">
+        <div className="overflow-hidden px-5 sm:px-10 lg:px-20">
           <div className="text-center mb-11">
             <h2 className="text-4xl leading-11 font-medium text-accent-color-1">
               Trusted by Startups and Agencies
@@ -105,7 +105,7 @@ const CybersecurityJobBoard = () => {
           </div>
         </div>
 
-        <div className="max-w-[1440px] mx-auto pt-40  px-5 sm:px-10">
+        <div className="max-w-[1440px] mx-auto pt-40  px-5 sm:px-10 lg:px-20">
           <div className="text-center">
             <h1 className="text-4xl leading-11 font-medium text-g-200 mb-5">
               <span className="text-accent-color-1">Browse</span> Thousands of{" "}

@@ -53,7 +53,7 @@ const ClientReviewsSection = () => {
 
   return (
     <div className="bg-g-900 py-20 ">
-      <div className="max-w-[1440px] mx-auto px-5 sm:px-10">
+      <div className="max-w-[1440px] mx-auto px-5 sm:px-10 lg:px-20">
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row justify-between items-start mb-20 text-4xl leading-11 font-medium">
           <div>

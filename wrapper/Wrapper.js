@@ -17,9 +17,15 @@ function Wrapper({ children }) {
     "/privacy-policy",
     "/terms-and-conditions",
     "/forgot-password",
+    "/job-seeker",
   ];
   const dynamicAuthPages = ["/reset-password/"];
-  const NavPages = ["/", "/privacy-policy", "/terms-and-conditions"];
+  const NavPages = [
+    "/",
+    "/privacy-policy",
+    "/terms-and-conditions",
+    "/job-seeker",
+  ];
   const isNavPage = NavPages.includes(pathname);
 
   const isAuthPage =

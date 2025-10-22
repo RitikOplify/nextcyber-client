@@ -17,18 +17,15 @@ function Nav() {
       </Link>
 
       <div className="items-center space-x-8 text-g-200 text-sm font-semibold hidden lg:flex">
-        <div className="flex items-center space-x-2 cursor-pointer ">
-          <span>For Recruiter</span>
-          <ChevronDown size={20} />
-        </div>
-        <div className="flex items-center space-x-2 cursor-pointer">
-          <span>For Candidates</span>
-          <ChevronDown size={20} />
-        </div>
-        <div className="flex items-center space-x-2 cursor-pointer">
-          <span>Blogs</span>
-          <ChevronDown size={20} />
-        </div>
+        <Link href={"/"} className="cursor-pointer ">
+          For Recruiter
+        </Link>
+        <Link href={"/job-seeker"} className="cursor-pointer">
+          For Candidates
+        </Link>
+        <Link href={"/"} className="cursor-pointer">
+          Blogs
+        </Link>
       </div>
 
       <div className="flex items-center space-x-4 text-white text-xs sm:text-base font-medium">
