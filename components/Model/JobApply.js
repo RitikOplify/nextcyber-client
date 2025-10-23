@@ -1,11 +1,10 @@
 "use client";
 import { jobApplyApi } from "@/api/jobApi";
 import { addJobs } from "@/store/slices/authSlice";
-import { Loader2, Loader2Icon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineClose } from "react-icons/ai";
-import { FaSpinner } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function JobApplyModel({ isOpen, onClose, id }) {
