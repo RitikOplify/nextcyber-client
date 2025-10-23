@@ -17,7 +17,7 @@ function Nav() {
       </Link>
 
       <div className="items-center space-x-8 text-g-200 text-sm font-semibold hidden lg:flex">
-        <Link href={"/"} className="cursor-pointer ">
+        <Link href={"/recruiter"} className="cursor-pointer ">
           For Recruiter
         </Link>
         <Link href={"/job-seeker"} className="cursor-pointer">
