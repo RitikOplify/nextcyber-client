@@ -144,7 +144,7 @@ function Step1LeftSide({ STEP }) {
             </h4>
           )}
           {STEP === "STEP6" && user.role == "candidate" && (
-            <h4 className="max-w-xs text-accent-color-1 text-2xl font-bold leading-8">
+            <h4 className="max-w-xs text-accent-color-1 text-2xl font-bold leading-8 mb-7.5">
               Browse Thousands of{" "}
               <span className="text-white">Cybersecurity Jobs </span>
               Daily, Connect on Your Terms
@@ -178,7 +178,7 @@ function Step1LeftSide({ STEP }) {
                   : STEP == "STEP6"
                   ? user.role == "recruiter"
                     ? "/onboarding/recruiter-info-1.svg"
-                    : "/onboarding/recruiter-info-1.svg"
+                    : "/onboarding/onboarding-job-post.svg"
                   : STEP == "STEP7" && "/onboarding/jobseeker-step-2.svg"
               }
               height={

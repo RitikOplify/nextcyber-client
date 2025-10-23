@@ -157,10 +157,8 @@ function RecruiterOnBoarding() {
     <div className="bg-g-900 h-screen overflow-hidden gap-20">
       <div className="flex">
         <div
-          className={`w-1/3 ${
-            ["STEP1", "STEP2"].includes(steps[activeStep].name)
-              ? "bg-primary"
-              : "bg-img"
+          className={`w-1/3 bg-primary ${
+            ["STEP1", "STEP2"].includes(steps[activeStep].name) ? "" : "bg-img"
           }  overflow-hidden`}
         >
           <Step1LeftSide STEP={steps[activeStep].name} />
