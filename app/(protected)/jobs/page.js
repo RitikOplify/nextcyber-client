@@ -259,8 +259,14 @@ function JobsPage() {
                         </div>
                         <button
                           title="Apply Job"
-                          disabled={user.role == "recruiter"}
-                          className=" text-g-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 border border-g-500"
+                          disabled={
+                            user.role === "recruiter" ||
+                            (user.role === "candidate" &&
+                              user.jobs.some(
+                                (applied) => applied.id === job.id
+                              ))
+                          }
+                          className=" text-g-200 px-4 cursor-pointer disabled:cursor-no-drop py-2 rounded-lg text-sm font-medium transition-colors duration-200 border border-g-500"
                           onClick={() => {
                             applyJob(job.id);
                           }}

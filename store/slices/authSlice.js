@@ -11,6 +11,9 @@ export const authReducer = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
+    addJobs: (state, action) => {
+      state.user.jobs.push(action.payload);
+    },
     clearUser: (state) => {
       state.user = null;
     },
@@ -20,6 +23,6 @@ export const authReducer = createSlice({
   },
 });
 
-export const { setUser, clearUser, setLoading } = authReducer.actions;
+export const { setUser, clearUser, setLoading, addJobs } = authReducer.actions;
 
 export default authReducer.reducer;
