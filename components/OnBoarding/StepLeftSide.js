@@ -29,12 +29,12 @@ function Step1LeftSide({ STEP }) {
   return (
     <div
       className={`h-full w-full flex flex-col ${
-        STEP == "STEP1" || STEP == "STEP2" || STEP == "STEP6"
+        STEP == "STEP1" || STEP == "STEP2"
           ? "justify-between"
           : " justify-center items-center"
       }`}
     >
-      {STEP == "STEP1" || STEP == "STEP2" || STEP == "STEP6" ? (
+      {STEP == "STEP1" || STEP == "STEP2" ? (
         <>
           <Image
             src={"/onboarding/top-half-circle-shades.svg"}
@@ -137,9 +137,29 @@ function Step1LeftSide({ STEP }) {
         </>
       ) : (
         <>
+          {STEP === "STEP6" && user.role == "recruiter" && (
+            <h4 className="max-w-xs text-accent-color-1 text-2xl font-bold leading-8">
+              Save cost and Accelerate Hiring. Find Job Seekers in Record Time —
+              <span className="text-white"> 3X Faster</span>
+            </h4>
+          )}
+          {STEP === "STEP6" && user.role == "candidate" && (
+            <h4 className="max-w-xs text-accent-color-1 text-2xl font-bold leading-8">
+              Browse Thousands of{" "}
+              <span className="text-white">Cybersecurity Jobs </span>
+              Daily, Connect on Your Terms
+            </h4>
+          )}
+          {STEP === "STEP7" && user.role == "candidate" && (
+            <h4 className="max-w-xs text-accent-color-1 text-2xl font-bold leading-8 mb-7.5">
+              A thorough, <span className="text-white">tailored analysis</span>{" "}
+              of each section from start to finish.
+            </h4>
+          )}
           {(STEP == "STEP3" ||
             STEP == "STEP4" ||
             STEP == "STEP5" ||
+            STEP == "STEP6" ||
             STEP == "STEP7") && (
             <Image
               src={
@@ -155,6 +175,10 @@ function Step1LeftSide({ STEP }) {
                   ? user.role == "candidate"
                     ? "/onboarding/showcase-wins.svg"
                     : "/onboarding/recruiter-step-5.svg"
+                  : STEP == "STEP6"
+                  ? user.role == "recruiter"
+                    ? "/onboarding/recruiter-info-1.svg"
+                    : "/onboarding/recruiter-info-1.svg"
                   : STEP == "STEP7" && "/onboarding/jobseeker-step-2.svg"
               }
               height={

@@ -184,3 +184,9 @@ body {
 .d-border {
   border: 1px solid red;
 }
+
+.bg-img {
+  background-image: url("../public/onboarding/bg-dots.png");
+  background-size: cover;
+  background-position: center;
+}
