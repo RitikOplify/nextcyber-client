@@ -8,7 +8,7 @@ function Section1() {
       <img
         src="/jobseeker/jobseeker-bg.svg"
         alt="jobseeker-bg"
-        className="absolute top-0 left-1/2 -translate-x-1/2 z-0 w-full"
+        className="absolute top-0 left-1/2 -translate-x-1/2 z-0 w-full h-auto 2xl:h-4/5"
       />
 
       {/* Content */}
