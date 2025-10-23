@@ -41,8 +41,8 @@ function Section1() {
 
         <p className="mt-5 max-w-2xl text-center text-g-100 text-base font-medium leading-6">
           Upload your resume and let our NextGen AI Resume Builder craft a
-          standout version, designed to catch recruiters&apos; attention and help you
-          land the job.
+          standout version, designed to catch recruiters&apos; attention and
+          help you land the job.
         </p>
 
         <Link
