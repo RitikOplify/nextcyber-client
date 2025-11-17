@@ -3,7 +3,7 @@
 import React from "react";
 import { Plus, X } from "lucide-react";
 
-export default function JobDetails({ form }) {
+export default function JobDetails({ form, showErrors }) {
   const {
     register,
     formState: { errors },
@@ -12,46 +12,60 @@ export default function JobDetails({ form }) {
     watch,
   } = form;
 
+  const additionalBenefits = watch("additionalBenefits") || [];
+
+  const errorClass = (field) =>
+    showErrors && errors[field] ? "border-dark-red/80" : "border-g-600";
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       <div>
-        <label className="text-[#9C9C9D] font-medium leading-6 block mb-1">
+        <label className="text-g-200 font-medium leading-6 block mb-1">
           Job title
         </label>
         <input
           {...register("jobTitle", { required: "Job title is required" })}
           placeholder="e.g. Penetration tester"
-          className={`w-full py-4 px-5 rounded-[8px] border text-g-300 outline-none ${
-            errors.jobTitle ? "border-red-600" : "border-g-600"
-          } bg-g-700`}
+          className={`w-full py-4 px-5 rounded-lg border text-g-300 outline-none bg-g-700 ${errorClass(
+            "jobTitle"
+          )}`}
         />
-        {errors.jobTitle && (
-          <p className="text-red-500 text-sm mt-1">{errors.jobTitle.message}</p>
+
+        {showErrors && errors.jobTitle && (
+          <p className="text-dark-red text-sm mt-1">
+            {errors.jobTitle.message}
+          </p>
         )}
       </div>
 
+      {/* Job Location */}
       <div>
-        <label className="text-[#9C9C9D] font-medium leading-6 block mb-1">
+        <label className="text-g-200 font-medium leading-6 block mb-1">
           Job location
         </label>
         <input
-          {...register("jobLocation", { required: "Job location is required" })}
+          {...register("jobLocation", {
+            required: "Job location is required",
+          })}
           placeholder="City or Remote"
-          className={`w-full py-4 px-5 rounded-[8px] border text-g-300 outline-none ${
-            errors.jobLocation ? "border-red-600" : "border-g-600"
-          } bg-g-700`}
+          className={`w-full py-4 px-5 rounded-lg border text-g-300 outline-none bg-g-700 ${errorClass(
+            "jobLocation"
+          )}`}
         />
-        {errors.jobLocation && (
-          <p className="text-red-500 text-sm mt-1">
+
+        {showErrors && errors.jobLocation && (
+          <p className="text-dark-red text-sm mt-1">
             {errors.jobLocation.message}
           </p>
         )}
       </div>
 
+      {/* Additional Benefits */}
       <div>
-        <label className="text-[#9C9C9D] font-medium leading-6 block mb-1">
+        <label className="text-g-200 font-medium leading-6 block mb-1">
           Additional benefits
         </label>
+
         <input
           type="text"
           placeholder="Type and press Enter to add"
@@ -60,31 +74,36 @@ export default function JobDetails({ form }) {
               e.preventDefault();
               const v = e.target.value.trim();
               if (!v) return;
+
               const cur = getValues("additionalBenefits") || [];
-              setValue("additionalBenefits", [...cur, v]);
+              setValue("additionalBenefits", [...cur, v], {
+                shouldDirty: true,
+              });
               e.target.value = "";
             }
           }}
-          className={`w-full py-4 px-5 rounded-[8px] border text-g-300 outline-none border-g-600 bg-g-700`}
+          className="w-full py-4 px-5 rounded-lg border border-g-600 text-g-300 outline-none bg-g-700"
         />
-        <div className="mt-3 flex gap-2 flex-wrap">
-          {(watch("additionalBenefits") || []).map((b, i) => (
+
+        <div className="flex gap-2 mt-4 flex-wrap">
+          {additionalBenefits.map((b, i) => (
             <div
               key={i}
-              className="px-2 py-1 rounded-full bg-g-600 border border-g-500 text-xs font-medium text-g-200 leading-4 flex items-center gap-1"
+              className="px-2 py-1 rounded-full border text-xs font-medium bg-g-600 text-g-200 border-g-500 flex items-center gap-2"
             >
-              <Plus size={12} />
               <span>{b}</span>
+
               <button
                 onClick={() => {
                   const cur = getValues("additionalBenefits") || [];
                   setValue(
                     "additionalBenefits",
-                    cur.filter((_, idx) => idx !== i)
+                    cur.filter((_, idx) => idx !== i),
+                    { shouldDirty: true }
                   );
                 }}
                 type="button"
-                className="ms-3 cursor-pointer"
+                className="cursor-pointer"
               >
                 <X size={14} />
               </button>

@@ -1,83 +1,117 @@
 "use client";
 
-import React, { useState } from "react";
-import { IoIosArrowDown } from "react-icons/io";
+import React from "react";
+import SelectField from "@/components/SelectField";
 
-export default function Compensation({ form }) {
+export default function Compensation({ form, showErrors }) {
   const {
     register,
-    formState: { errors },
     setValue,
     watch,
+    formState: { errors },
   } = form;
-  const [showSalary, setShowSalary] = useState(false);
 
-  // simple currency select implementation could be replaced by your CustomSelect
+  // React Hook Form controlled value
+  const showSalary = watch("showSalary");
+
+  // Toggle state but keep in sync with RHF
+  const handleToggle = () => {
+    setValue("showSalary", !showSalary, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
+
+  const errorClass = (field) =>
+    showErrors && errors[field] ? "border-red-600" : "border-g-600";
+
   return (
     <div className="space-y-10">
-      <div className=" flex flex-col ">
-        <span className=" text-g-200 text-base leading-6 font-medium mb-2">
+      <div className="flex flex-col">
+        <span className="text-g-200 text-base leading-6 font-medium mb-2">
           Show Salary
         </span>
+
         <label className="inline-flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"
-            checked={showSalary}
-            onChange={(e) => setShowSalary(e.target.checked)}
-            className="sr-only peer"
+            className="sr-only"
+            checked={!!showSalary}
+            onChange={handleToggle}
           />
-          {/* Switch track */}
-          <div className="relative w-9 h-5 bg-g-300 rounded-full transition-colors peer-checked:bg-primary">
-            {/* Switch thumb */}
+
+          <div
+            className={`relative w-9 h-5 rounded-full transition-colors ${
+              showSalary ? "bg-primary" : "bg-g-300"
+            }`}
+          >
             <span
-              className={`absolute top-1/2 transform -translate-y-1/2 left-[3px] w-3.5 h-3.5 bg-g-50 rounded-full transition-transform ${
+              className={`absolute top-1/2 -translate-y-1/2 left-[3px] w-3.5 h-3.5 rounded-full bg-g-50 transition-transform ${
                 showSalary ? "translate-x-4" : ""
               }`}
-            ></span>
+            />
           </div>
-          <span className=" text-g-200 text-base leading-6">Checked</span>
+
+          <span className="text-g-200 text-base leading-6">
+            {showSalary ? "Enabled" : "Disabled"}
+          </span>
         </label>
       </div>
 
       <div>
-        <label className="block mb-1 text-base leading-6 font-medium text-g-200">
-          Currency
-        </label>
-        <select
-          {...register("currency")}
-          defaultValue=""
-          className="w-full py-4 px-5 text-sm leading-5 rounded-lg border border-g-600 bg-g-700 text-g-300 text-left appearance-none outline-none"
-        >
-          <option value="" disabled>
-            Select Currency
-          </option>
-          {["INR", "USD"].map((val, i) => (
-            <option key={i} value={val}>
-              {val}
-            </option>
-          ))}
-        </select>
+        <SelectField
+          label="Currency"
+          name="currency"
+          placeholder="Select Currency"
+          options={["INR", "USD", "EUR", "GBP"]}
+          showErrors={showErrors}
+          rules={{
+            validate: (val) => (!val ? "Currency is required" : true),
+          }}
+        />
       </div>
-
       <div>
         <label className="block mb-1 text-base leading-6 font-medium text-g-200">
           Salary per month
         </label>
+
         <div className="flex gap-3">
           <input
-            {...register("salaryFrom", { valueAsNumber: true })}
+            {...register("salaryFrom", {
+              validate: (v) => {
+                if (!v) return "Required";
+                if (v && isNaN(v)) return "Invalid number";
+                return true;
+              },
+            })}
             placeholder="From"
-            className="w-full py-4 px-5 text-sm leading-5 rounded-lg border border-g-600 bg-g-700 text-g-300 text-left outline-none"
+            className={`w-full py-4 px-5 rounded-lg border text-g-300 outline-none bg-g-700 ${errorClass(
+              "salaryFrom"
+            )}`}
           />
+
           <div className="flex items-center text-g-200 leading-5 text-sm">
             to
           </div>
+
           <input
-            {...register("salaryTo", { valueAsNumber: true })}
+            {...register("salaryTo", {
+              validate: (v) => {
+                if (!v) return "Required";
+                if (v && isNaN(v)) return "Invalid number";
+                return true;
+              },
+            })}
             placeholder="To"
-            className="w-full py-4 px-5 text-sm leading-5 rounded-lg border border-g-600 bg-g-700 text-g-300 text-left  outline-none"
+            className={`w-full py-4 px-5 rounded-lg border text-g-300 outline-none bg-g-700 ${errorClass(
+              "salaryTo"
+            )}`}
           />
         </div>
+
+        {showErrors && (errors.salaryFrom || errors.salaryTo) && (
+          <p className="text-red-500 text-sm mt-1">Salary range is required.</p>
+        )}
       </div>
     </div>
   );
