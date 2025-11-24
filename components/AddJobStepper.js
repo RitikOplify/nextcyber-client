@@ -168,7 +168,7 @@ export default function AddJobStepper() {
       toast.dismiss(toastId);
       toast.success("Job created successfully!");
 
-      router.push("/jobs");
+      router.back();
     } catch (err) {
       console.log(err);
       toast.error("Failed to create job");
