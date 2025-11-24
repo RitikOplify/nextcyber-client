@@ -17,7 +17,7 @@ const Step6 = ({ files, setFiles, showErrors = true }) => {
   const selectedNationalities = watch("nationalities");
   const selectedRole = watch("role");
   const selectedLocation = watch("location");
-  const selectedHeadquarter = watch("headquarters");
+  const selectedHeadquarter = watch("headquarter");
   const selectedLanguage = watch("languages");
   const profileImage = watch("profilePicture");
 
@@ -81,23 +81,23 @@ const Step6 = ({ files, setFiles, showErrors = true }) => {
           Gender preference
         </label>
         <div className="flex gap-2 flex-wrap">
-          {["Male", "Female", "Prefer not to say"].map((option) => (
+          {["MALE", "FEMALE", "PREFER_NOT_TO_SAY"].map((option) => (
             <button
               type="button"
               key={option}
               onClick={() => setValue("gender", option)}
-              className={`px-4 py-2 rounded-full border transition text-sm leading-5 bg-g-600 text-g-200 border-g-500 font-medium ${
+              className={`px-4 py-2 rounded-full border capitalize transition text-sm leading-5 bg-g-600 text-g-200 border-g-500 font-medium ${
                 gender === option ? "border-primary" : "hover:bg-g-700"
               }`}
             >
-              {option}
+              {option.replaceAll("_", " ").toLowerCase()}
             </button>
           ))}
         </div>
       </div>
 
       {/* Candidate Section */}
-      {user?.role === "candidate" ? (
+      {user?.role === "STUDENT" ? (
         <>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
             <div>
@@ -193,15 +193,15 @@ const Step6 = ({ files, setFiles, showErrors = true }) => {
             <div>
               <SelectField
                 label="Role within the company"
-                name="role"
+                name="roleWithCompany"
                 placeholder="Search"
-                options={["Hr", "Ceo", "Director", "Cto"]}
+                options={["FOUNDER", "CEO", "HR_MANAGER"]}
                 showErrors={showErrors}
                 rules={{ required: "Role is required" }}
               />
               {selectedRole && (
-                <button className={`${pillClass()} mt-4`}>
-                  {selectedRole}
+                <button className={`${pillClass()} mt-4 capitalize`}>
+                  {selectedRole.toLowerCase()}
                 </button>
               )}
             </div>
@@ -250,12 +250,12 @@ const Step6 = ({ files, setFiles, showErrors = true }) => {
 
             <div>
               <SelectField
-                label="Headquarters"
-                name="headquarters"
+                label="Headquarter"
+                name="headquarter"
                 placeholder="Search"
                 options={["Pune", "Mumbai", "Delhi", "Bangalore"]}
                 showErrors={showErrors}
-                rules={{ required: "Headquarters is required" }}
+                rules={{ required: "Headquarter is required" }}
               />
               {selectedHeadquarter && (
                 <button className={`${pillClass()} mt-4`}>

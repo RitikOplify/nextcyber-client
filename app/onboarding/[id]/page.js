@@ -21,7 +21,7 @@ function StudentOnboardingPage() {
   // Redirect if user is not a candidate or already onboarded
   useEffect(() => {
     if (!isLoading && user) {
-      if (user.onboarding) {
+      if (user.onboardingComplete) {
         router.replace("/dashboard");
       }
     }
@@ -37,7 +37,7 @@ function StudentOnboardingPage() {
   }
 
   // Extra safety: while redirecting, also show loader
-  if (user.onboarding) {
+  if (user.onboardingComplete) {
     return (
       <div className="h-screen flex justify-center items-center">
         <Loader2 className="animate-spin" />

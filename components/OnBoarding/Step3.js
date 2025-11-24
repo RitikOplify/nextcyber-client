@@ -23,12 +23,12 @@ const Step3 = () => {
       <div className="flex flex-col justify-center">
         <h1 className="text-5xl font-medium leading-[56px] mb-7.5 tracking-[-2%] text-transparent bg-clip-text bg-gradient-to-r from-accent-color-1 to-primary">
           <span className="block">
-            {user.role == "candidate"
+            {user.role == "STUDENT"
               ? "AI powered resumes that"
               : "Hire Job Seekers that matches"}
           </span>
           <span>
-            {user.role == "candidate"
+            {user.role == "COMPANY"
               ? "lands you job"
               : "your profile with AI help"}
           </span>

@@ -10,16 +10,19 @@ import {
   Medal,
 } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { FaLinkedin } from "react-icons/fa6";
 import { BadgeCheck } from "lucide-react";
 import Link from "next/link";
 import ProfileTabs from "@/components/Dashboard/Tabs";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import JobsTable from "@/components/Dashboard/JobsTable";
 import RecruitmentPipeline from "@/components/Dashboard/RecruitmentPipeline";
+import { asyncGetAppliedJob } from "@/store/actions/jobActions";
 function DashboardPage() {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const { appliedJob } = useSelector((state) => state.jobs);
   const achievements = [
     { title: "Introduction to Cybersecurity", completedDate: "2024-05-18" },
     { title: "Top Learner", completedDate: "2024-05-18" },
@@ -43,7 +46,7 @@ function DashboardPage() {
     },
     {
       label: "Jobs Applied",
-      value: 8,
+      value: appliedJob.length,
       link: "browse jobs",
       href: "#",
       icon: BriefcaseBusiness,
@@ -87,7 +90,10 @@ function DashboardPage() {
       icon: FileBadge2,
     },
   ];
-
+  useEffect(() => {
+    if (user.role == "STUDENT" && appliedJob == 0)
+      dispatch(asyncGetAppliedJob());
+  }, []);
   return (
     <div className=" flex">
       <div className=" flex-1 lg:border-r lg:pr-5 border-g-600 overflow-x-hidden">
@@ -102,7 +108,12 @@ function DashboardPage() {
             />
             <div className="absolute  z-10 -bottom-17 pl-5">
               <Image
-                src={user?.profilePicture?.url || "/user-profile.png"}
+                src={
+                  user.role == "STUDENT"
+                    ? user?.studentProfile?.profilePicture?.url
+                    : user?.companyProfile?.profilePicture?.url ||
+                      "/user-profile.png"
+                }
                 height={100}
                 width={100}
                 alt="user-profile"
@@ -126,7 +137,7 @@ function DashboardPage() {
               </div>
 
               <div className=" hidden  md:flex lg:hidden xl:flex items-center gap-2">
-                {user.role == "candidate" && (
+                {user.role == "STUDENT" && (
                   <button className=" py-1 px-2 bg-g-600 border cursor-pointer border-g-500 text-g-200 rounded-full flex items-center gap-2">
                     <ArrowDownToLine size={20} />
                     <span className="">Download CV</span>
@@ -161,7 +172,7 @@ function DashboardPage() {
         </div>
         <div className=" my-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-            {(user.role == "candidate" ? stats : recruiterStats).map(
+            {(user.role == "STUDENT" ? stats : recruiterStats).map(
               (item, i) => (
                 <div
                   key={i}
@@ -196,7 +207,7 @@ function DashboardPage() {
             )}
           </div>
         </div>
-        {user.role == "candidate" && (
+        {user.role == "STUDENT" && (
           <>
             <ProfileTabs />
             <div className="bg-gradient-to-b from-g-500 to-g-600 p-0.5 mt-5 rounded-[10px] overflow-hidden">
@@ -297,7 +308,7 @@ function DashboardPage() {
             </div>
           </>
         )}
-        {user.role == "recruiter" && (
+        {user.role == "COMPANY" && (
           <>
             <JobsTable />
             <RecruitmentPipeline />
@@ -323,7 +334,7 @@ function DashboardPage() {
           </div>
         </div>
 
-        {user.role == "recruiter" && (
+        {user.role == "COMPANY" && (
           <div className=" p-2.5 pb-4 bg-gradient-to-b from-g-600 to-[#434345] mt-3.5 rounded-lg border border-g-500">
             <h6 className="font-semibold leading-6 text-g-100 max-w-3xs">
               AI Job Seeker Profile Suggestions
@@ -371,7 +382,7 @@ function DashboardPage() {
           </div>
         )}
 
-        {user.role == "candidate" && (
+        {user.role == "STUDENT" && (
           <>
             <div className=" p-2.5 pb-4 bg-gradient-to-b from-g-600 to-[#434345] mt-3.5 rounded-lg border border-g-500">
               <h6 className="font-semibold leading-6 text-g-100">

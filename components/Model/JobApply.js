@@ -1,28 +1,25 @@
 "use client";
 import { jobApplyApi } from "@/api/jobApi";
-import { addJobs } from "@/store/slices/authSlice";
+import { addAppliedJobs } from "@/store/slices/jobSlice";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineClose } from "react-icons/ai";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 export default function JobApplyModel({ isOpen, onClose, id }) {
   const [loading, setLoading] = useState(false);
-  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const applyJob = async () => {
     setLoading(true);
     try {
-      const { data } = await jobApplyApi(id, { studentId: user.id });
-      dispatch(addJobs(data.job));
+      const { data } = await jobApplyApi(id);
+      dispatch(addAppliedJobs(data.data));
       toast.success(data.message);
       setLoading(false);
       onClose();
     } catch (error) {
-      console.log(error);
-
       setLoading(false);
       toast.error("Failed to apply job!");
     }

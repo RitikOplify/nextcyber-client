@@ -48,7 +48,7 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
   };
 
   const navItems =
-    user?.role === "candidate"
+    user?.role === "STUDENT"
       ? [
           {
             label: "Dashboard",
@@ -91,7 +91,7 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
             href: "/plans",
           },
         ]
-      : user?.role === "recruiter"
+      : user?.role === "COMPANY"
       ? [
           {
             label: "Dashboard",
@@ -106,7 +106,7 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
           {
             label: "Job Postings",
             icon: Briefcase,
-            href: "/jobs",
+            href: "/add-new-job",
           },
           {
             label: "Candidate Search",

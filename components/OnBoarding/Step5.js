@@ -23,19 +23,19 @@ const Step5 = () => {
       <div className="flex flex-col justify-center">
         <h1 className="text-5xl font-medium leading-[56px] mb-7.5 tracking-[-2%] text-transparent bg-clip-text bg-gradient-to-r from-accent-color-1 to-primary">
           <span className="block">
-            {user.role == "candidate"
+            {user.role == "STUDENT"
               ? "Showcase your wins and to"
               : "AI Assistant for Crafting Clear Job "}
           </span>
           <span>
-            {user.role == "candidate"
+            {user.role == "COMPANY"
               ? "your dream job faster"
               : "Descriptions"}
           </span>
         </h1>
 
         <p className="text-g-200 text-xl leading-6 max-w-3xl">
-          {user.role == "candidate"
+          {user.role == "STUDENT"
             ? "Badges, completed challenges, internships  all displayed as milestones that boost your AI-powered profile score."
             : "An AI assistant that helps you craft clearer job descriptions and define key responsibilities using keywords or basic role outlines."}
         </p>

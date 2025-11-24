@@ -1,6 +1,5 @@
 "use client";
-import React, { use, useState } from "react";
-import { studentOnboardingApi } from "@/api/studentApi";
+import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -15,10 +14,9 @@ import Step5 from "./Step5";
 import Step6 from "./Step6";
 import Step1LeftSide from "./StepLeftSide";
 import { recruiterOnboardingApi } from "@/api/recruiterApi";
+import { asyncCurrentUser } from "@/store/actions/authActions";
 
 function RecruiterOnBoarding() {
-  const params = useParams();
-  const { id } = params;
   const router = useRouter();
   const dispatch = useDispatch();
   const [activeStep, setActiveStep] = useState(0);
@@ -29,10 +27,10 @@ function RecruiterOnBoarding() {
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues: {
-      hearFrom: "",
+      hearAboutUs: "",
       gender: "",
-      role: "",
-      headquarters: "",
+      roleWithCompany: "",
+      headquarter: "",
       companyEmail: "",
       companyName: "",
     },
@@ -44,13 +42,19 @@ function RecruiterOnBoarding() {
 
   const steps = [
     { name: "STEP1", fields: [] },
-    { name: "STEP2", fields: ["hearFrom"] },
+    { name: "STEP2", fields: ["hearAboutUs"] },
     { name: "STEP3", fields: [] },
     { name: "STEP4", fields: [] },
     { name: "STEP5", fields: [] },
     {
       name: "STEP6",
-      fields: ["gender", "role", "headquarters", "companyEmail", "companyName"],
+      fields: [
+        "gender",
+        "roleWithCompany",
+        "headquarter",
+        "companyEmail",
+        "companyName",
+      ],
     },
   ];
   const validateCurrentStep = async () => {
@@ -111,9 +115,9 @@ function RecruiterOnBoarding() {
 
     setLoading(true);
     try {
-      const { data: responseData } = await recruiterOnboardingApi(id, formData);
-      dispatch(setUser(responseData.recruiter));
+      const { data } = await recruiterOnboardingApi(formData);
       toast.success("Onboarding completed successfully!");
+      dispatch(asyncCurrentUser());
       router.push("/dashboard");
     } catch (error) {
       console.log(error);

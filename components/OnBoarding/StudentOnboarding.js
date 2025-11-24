@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { studentOnboardingApi } from "@/api/studentApi";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/slices/authSlice";
@@ -16,10 +16,9 @@ import Step5 from "./Step5";
 import Step6 from "./Step6";
 import Step7 from "./Step7";
 import Step1LeftSide from "./StepLeftSide";
+import { asyncCurrentUser } from "@/store/actions/authActions";
 
 function StudentOnBoarding() {
-  const params = useParams();
-  const { id } = params;
   const router = useRouter();
   const dispatch = useDispatch();
   const [activeStep, setActiveStep] = useState(0);
@@ -30,7 +29,7 @@ function StudentOnBoarding() {
     reValidateMode: "onChange",
     shouldUnregister: false,
     defaultValues: {
-      hearFrom: "",
+      hearAboutUs: "",
       gender: "",
       nationalities: [],
       location: "",
@@ -49,7 +48,7 @@ function StudentOnBoarding() {
 
   const steps = [
     { name: "STEP1", fields: [] },
-    { name: "STEP2", fields: ["hearFrom"] },
+    { name: "STEP2", fields: ["hearAboutUs"] },
     { name: "STEP3", fields: [] },
     { name: "STEP4", fields: [] },
     { name: "STEP5", fields: [] },
@@ -59,7 +58,7 @@ function StudentOnBoarding() {
     },
     {
       name: "STEP7",
-      fields: ["contractType", "remotePolicy", "certificates", "skills"],
+      fields: ["contractType", "remotePolicy", "skills"],
     },
   ];
 
@@ -123,10 +122,6 @@ function StudentOnBoarding() {
       formData.append("languages", JSON.stringify(data.languages));
     }
 
-    if (data.certificates && data.certificates.length > 0) {
-      formData.append("certificates", JSON.stringify(data.certificates));
-    }
-
     if (data.skills && data.skills.length > 0) {
       formData.append("skills", JSON.stringify(data.skills));
     }
@@ -137,9 +132,9 @@ function StudentOnBoarding() {
 
     setLoading(true);
     try {
-      const { data: responseData } = await studentOnboardingApi(id, formData);
-      dispatch(setUser(responseData.student));
+      const { data } = await studentOnboardingApi(formData);
       toast.success("Onboarding completed successfully!");
+      dispatch(asyncCurrentUser());
       router.push("/dashboard");
     } catch (error) {
       console.log(error);

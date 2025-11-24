@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { usePathname, useRouter } from "next/navigation";
 import { asyncCurrentUser } from "@/store/actions/authActions";
 import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 function Wrapper({ children }) {
   const pathname = usePathname();
@@ -35,6 +36,19 @@ function Wrapper({ children }) {
     dynamicAuthPages.some((route) => pathname.startsWith(route));
 
   useEffect(() => {
+    if (!user) return;
+    const handler = (notification) => {
+      toast(notification.data.message);
+    };
+
+    socket.on("notification", handler);
+
+    return () => {
+      socket.off("notification", handler);
+    };
+  }, []);
+
+  useEffect(() => {
     if (user === null && !isAuthPage) {
       dispatch(asyncCurrentUser());
     }
@@ -54,7 +68,7 @@ function Wrapper({ children }) {
 
   useEffect(() => {
     if (!isLoading && user) {
-      if (!user.onboarding) {
+      if (!user.onboardingComplete) {
         router.replace(`/onboarding/${user.id}`);
       }
     }

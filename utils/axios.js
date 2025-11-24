@@ -1,6 +1,5 @@
 import axios from "axios";
 import { store } from "@/store/store";
-import { toast } from "react-hot-toast";
 import { clearUser } from "@/store/slices/authSlice";
 
 let isRefreshing = false;
@@ -33,10 +32,6 @@ instance.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // const pathname = window.location.pathname;
-    // const excludedPaths = ["/signin", "/forgot-password"];
-    // const isExcluded = excludedPaths.some((path) => pathname.startsWith(path));
-
     if (isRefreshing) {
       return new Promise((resolve, reject) => {
         failedQueue.push({ resolve, reject });
@@ -48,7 +43,7 @@ instance.interceptors.response.use(
 
     try {
       await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`,
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
         {},
         { withCredentials: true }
       );
@@ -60,11 +55,6 @@ instance.interceptors.response.use(
       processQueue(err);
 
       store.dispatch(clearUser());
-
-      // if (!isExcluded) {
-      //   toast.error("Session expired. Please log in again.");
-      //   window.location.replace("/signin");
-      // }
 
       return Promise.reject(err);
     } finally {

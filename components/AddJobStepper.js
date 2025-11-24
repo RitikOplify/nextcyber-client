@@ -138,14 +138,14 @@ export default function AddJobStepper() {
 
       const payload = {
         title: values.jobTitle,
-        description: values.jobDescription,
-        minExperience: Number(values.minExperience.split(" ")[0]),
-        maxExperience: Number(values.maxExperience.split(" ")[0]),
+        jobDescription: values.jobDescription,
+        minWorkExperience: Number(values.minExperience.split(" ")[0]),
+        maxWorkExperience: Number(values.maxExperience.split(" ")[0]),
         contractType: values.contractType?.[0]
           ?.toUpperCase()
           .replace(/\s+/g, "_"),
         remotePolicy: values.remotePolicy,
-        qualification: values.qualification?.[0]
+        qualifications: values.qualification?.[0]
           ?.toUpperCase()
           .replace(/\s+/g, "_"),
         genderPreference: values.genderPreference?.toUpperCase(),
@@ -158,12 +158,12 @@ export default function AddJobStepper() {
         certifications: values.certifications,
         location: values.jobLocation,
         additionalBenefits: values.additionalBenefits,
-        active: true,
+        status: "ACTIVE",
       };
 
       toastId = toast.loading("Posting job...");
 
-      const { data } = await instance.post("/job/create-job", payload);
+      const { data } = await instance.post("/company/create-job", payload);
 
       toast.dismiss(toastId);
       toast.success("Job created successfully!");

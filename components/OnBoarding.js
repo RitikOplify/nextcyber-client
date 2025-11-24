@@ -5,7 +5,7 @@ import RecruiterOnBoarding from "./OnBoarding/RecruiterOnBoarding";
 
 function OnBoarding() {
   const { user } = useSelector((state) => state.auth);
-  if (user.role == "candidate") return <StudentOnBoarding />;
+  if (user.role == "STUDENT") return <StudentOnBoarding />;
   return <RecruiterOnBoarding />;
 }
 

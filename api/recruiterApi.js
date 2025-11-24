@@ -1,4 +1,4 @@
 import axios from "@/utils/axios";
 
-export const recruiterOnboardingApi = (id, data) =>
-  axios.post(`/recruiter/onboarding/${id}`, data);
+export const recruiterOnboardingApi = (data) =>
+  axios.post(`/company/onboarding`, data);

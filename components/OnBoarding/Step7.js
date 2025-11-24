@@ -11,7 +11,6 @@ const Step7 = ({ showErrors = true }) => {
   } = useFormContext();
 
   const contractType = watch("contractType");
-  // const certificates = watch("certificates");
   const skills = watch("skills");
   const remotePolicy = watch("remotePolicy");
 
@@ -29,20 +28,20 @@ const Step7 = ({ showErrors = true }) => {
           Contract Type
         </label>
         <div className="flex gap-2 flex-wrap">
-          {["Regular Employment", "Fixed-term", "Freelance", "Internship"].map(
+          {["FREELANCE", "INTERNSHIP", "TEMPORARY", "PERMANENT"].map(
             (option) => (
               <button
                 type="button"
                 key={option}
                 onClick={() => setValue("contractType", option)}
-                className={`px-4 py-2 rounded-full border bg-g-600 transition text-sm leading-5 font-medium ${
+                className={`px-4 py-2 rounded-full capitalize border bg-g-600 transition text-sm leading-5 font-medium ${
                   contractType == option
                     ? "text-white border-primary "
                     : "text-g-200  border-g-500 hover:bg-g-700"
                 }
     `}
               >
-                {option}
+                {option.toLocaleLowerCase()}
               </button>
             )
           )}
@@ -54,49 +53,25 @@ const Step7 = ({ showErrors = true }) => {
           Remote Policy
         </label>
         <div className="flex gap-2 flex-wrap">
-          {["On-site", "Hybrid", "Remote"].map((option) => (
+          {["ONSITE", "REMOTE", "HYBRID"].map((option) => (
             <button
               type="button"
               key={option}
               onClick={() => setValue("remotePolicy", option)}
-              className={`px-4 py-2 rounded-full border bg-g-600 transition text-sm leading-5 font-medium ${
+              className={`px-4 py-2 rounded-full border capitalize bg-g-600 transition text-sm leading-5 font-medium ${
                 remotePolicy == option
                   ? "text-white border-primary "
                   : "text-g-200  border-g-500 hover:bg-g-700"
               }
     `}
             >
-              {option}
+              {option.toLocaleLowerCase()}
             </button>
           ))}
         </div>
       </div>
 
       <div className=" w-1/2 flex flex-col gap-10">
-        {/* <div>
-          <SelectField
-            label="Certificates"
-            name="certificates"
-            placeholder="Select Certificates"
-            multiple
-            options={[
-              "CCNA",
-              "AWS Certified Cloud Practitioner",
-              "AWS Certified SysOps Administrator - Associate",
-            ]}
-            rules={{
-              validate: (value) =>
-                value.length > 0 || "Please select at least one certificate",
-            }}
-          />
-          <div className="flex gap-2 mt-4 flex-wrap">
-            {certificates?.map((certificate) => (
-              <button key={certificate} className={`${pillClass()}`}>
-                {certificate}
-              </button>
-            ))}
-          </div>
-        </div> */}
         <div>
           <SelectField
             label="Skills"

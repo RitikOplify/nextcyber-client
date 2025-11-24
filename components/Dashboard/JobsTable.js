@@ -1,5 +1,5 @@
 "use client";
-import { recruiterjobApi } from "@/api/jobApi";
+import { companyjobApi } from "@/api/jobApi";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { ArrowUpRight, MessageSquareMore, Star } from "lucide-react";
@@ -10,9 +10,9 @@ function JobsTable() {
   useEffect(() => {
     const getJob = async () => {
       try {
-        const { data } = await recruiterjobApi();
-        setJobs(data.jobs || []);
-        console.log("Fetched Jobs:", data.jobs);
+        const { data } = await companyjobApi();
+        setJobs(data.data.jobs || []);
+        console.log("Fetched Jobs:", data.data.jobs);
       } catch (error) {
         console.log("Error fetching jobs:", error);
       }
@@ -69,7 +69,7 @@ function JobsTable() {
               <tr>
                 <td
                   colSpan={5}
-                  className="text-center py-5 text-g-200 border border-g-500"
+                  className="text-center py-5 text-g-200 border  border-g-500"
                 >
                   No recent applications found.
                 </td>

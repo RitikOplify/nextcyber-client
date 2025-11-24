@@ -77,16 +77,17 @@ export default function ProfileTabs() {
                 Skills
               </h3>
               <div className="flex flex-wrap gap-2">
-                {(user.skills?.length ? user.skills : skills).map(
-                  (skill, i) => (
-                    <span
-                      key={i}
-                      className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500"
-                    >
-                      {skill}
-                    </span>
-                  )
-                )}
+                {(user.studentProfile.skills?.length
+                  ? user.studentProfile.skills
+                  : skills
+                ).map((skill, i) => (
+                  <span
+                    key={i}
+                    className="px-2 py-1 text-g-200 leading-4 text-xs rounded-full bg-g-600 border border-g-500"
+                  >
+                    {skill}
+                  </span>
+                ))}
               </div>
             </div>
 
@@ -96,8 +97,8 @@ export default function ProfileTabs() {
                 Certifications
               </h3>
               <div className="flex flex-wrap gap-2">
-                {(user?.certificates?.length
-                  ? user.certificates
+                {(user?.studentProfile.certificates?.length
+                  ? user.studentProfile.certificates
                   : certifications
                 ).map((cert, i) => (
                   <span

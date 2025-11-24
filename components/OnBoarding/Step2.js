@@ -8,7 +8,7 @@ export default function Step2() {
     watch,
   } = useFormContext();
 
-  const hearFrom = watch("hearFrom");
+  const hearFrom = watch("hearAboutUs");
 
   const options = [
     "LinkedIn",
@@ -41,7 +41,7 @@ export default function Step2() {
               <input
                 type="radio"
                 value={option}
-                {...register("hearFrom", {
+                {...register("hearAboutUs", {
                   required: "Please Select One These!",
                 })}
                 className="hidden"
@@ -61,8 +61,8 @@ export default function Step2() {
             </label>
           ))}
         </div>
-        {errors.hearFrom && (
-          <p className="text-red-500 text-sm mt-2">{errors.hearFrom.message}</p>
+        {errors.hearAboutUs && (
+          <p className="text-red-500 text-sm mt-2">{errors.hearAboutUs.message}</p>
         )}
       </div>
     </div>

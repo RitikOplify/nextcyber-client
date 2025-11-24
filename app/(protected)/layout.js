@@ -72,7 +72,7 @@ function ProtectedLayout({ children }) {
 
   useEffect(() => {
     if (!isLoading && user) {
-      if (user.role === "candidate" && !user.onboarding) {
+      if (user.role === "candidate" && !user.onboardingComplete) {
         router.replace(`/onboarding/${user.id}`);
       }
     }

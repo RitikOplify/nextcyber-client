@@ -53,7 +53,7 @@ const NextCyberAuth = () => {
   const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedRole, setSelectedRole] = useState("candidate");
+  const [selectedRole, setSelectedRole] = useState("STUDENT");
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -71,7 +71,7 @@ const NextCyberAuth = () => {
     };
 
     if (isLogin) {
-      dispatch(asyncSigninUser(user, setLoading, router));
+      dispatch(asyncSigninUser(data, setLoading, router));
     } else {
       dispatch(asyncSignupUser(user, setLoading, router));
     }
@@ -136,9 +136,9 @@ const NextCyberAuth = () => {
                 }`}
               >
                 <button
-                  onClick={() => setSelectedRole("recruiter")}
+                  onClick={() => setSelectedRole("COMPANY")}
                   className={`flex-1 py-2 px-4 rounded-full font-medium text-sm flex items-center justify-center gap-2 transition-all ${
-                    selectedRole === "recruiter"
+                    selectedRole === "COMPANY"
                       ? "bg-primary text-g-50"
                       : "bg-g-600 text-g-500"
                   }`}
@@ -147,9 +147,9 @@ const NextCyberAuth = () => {
                   Recruiter
                 </button>
                 <button
-                  onClick={() => setSelectedRole("candidate")}
+                  onClick={() => setSelectedRole("STUDENT")}
                   className={`flex-1 py-2 px-4 rounded-full font-medium text-sm flex items-center justify-center gap-2 transition-all ${
-                    selectedRole === "candidate"
+                    selectedRole === "STUDENT"
                       ? "bg-primary text-g-50"
                       : "bg-g-600 text-g-500"
                   }`}
@@ -161,7 +161,7 @@ const NextCyberAuth = () => {
             }
 
             {/* Social Login Buttons (Login only) */}
-            {selectedRole == "candidate" && (
+            {selectedRole == "STUDENT" && (
               <div className="space-y-7.5 mb-7.5">
                 <div className="flex gap-4">
                   <button className="flex-1 bg-[#1B1C1E] text-[#9C9C9D] py-2 px-4 border border-[#2F3031] rounded-full font-medium text-sm flex items-center justify-center gap-2 transition-colors">

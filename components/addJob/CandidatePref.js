@@ -82,7 +82,7 @@ export default function CandidatePreference({ form, showErrors }) {
           Gender preference
         </label>
         <div className="flex gap-4 flex-wrap">
-          {["Any", "Male", "Female"].map((g) => (
+          {["MALE", "FEMALE", "PREFER_NOT_TO_SAY"].map((g) => (
             <button
               key={g}
               type="button"
@@ -92,9 +92,9 @@ export default function CandidatePreference({ form, showErrors }) {
                   shouldValidate: true,
                 })
               }
-              className={pillClass(selectedGender === g)}
+              className={`${pillClass(selectedGender === g)} capitalize`}
             >
-              {g}
+              {g.replaceAll("_", " ").toLowerCase()}
             </button>
           ))}
         </div>

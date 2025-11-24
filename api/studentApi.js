@@ -1,4 +1,4 @@
 import axios from "@/utils/axios";
 
-export const studentOnboardingApi = (id, data) =>
-  axios.post(`/student/onboarding/${id}`, data);
+export const studentOnboardingApi = (data) =>
+  axios.post(`/student/onboarding`, data);
