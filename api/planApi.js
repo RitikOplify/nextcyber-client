@@ -1,6 +1,4 @@
 import axios from "@/utils/axios";
 
-export const getPlansApi = (params) =>
-  axios.get(`/plan`, {
-    params,
-  });
+export const getStudentPlansApi = () =>
+  axios.get(`/student/subscription-plans`);

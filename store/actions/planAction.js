@@ -1,4 +1,4 @@
-import { getPlansApi } from "@/api/planApi";
+import { getStudentPlansApi } from "@/api/planApi";
 import { setPlans } from "../slices/planSlice";
 import toast from "react-hot-toast";
 
@@ -7,11 +7,13 @@ const getErrorMessage = (error) =>
   error?.message ||
   "Something went wrong. Please try again.";
 
-export const asyncGetPlans = (query, setIsLoading) => async (dispatch) => {
+export const asyncGetStudentPlans = (setIsLoading) => async (dispatch) => {
   if (typeof setIsLoading === "function") setIsLoading(true);
 
   try {
-    const { data } = await getPlansApi(query);
+    const { data } = await getStudentPlansApi();
+    console.log(data);
+    
     dispatch(setPlans(data.plans));
   } catch (error) {
     toast.error(getErrorMessage(error));

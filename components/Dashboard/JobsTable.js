@@ -27,7 +27,6 @@ function JobsTable() {
   const jobsWithApplications = jobs.filter(
     (job) => job.jobApplications?.length > 0
   );
-  console.log(jobsWithApplications);
 
   return (
     <div className="bg-gradient-to-b from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden">

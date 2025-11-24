@@ -1,30 +1,29 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Search, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
-import instance from "@/utils/axios";
-
-const jobs = Array.from({ length: 105 }).map((_, i) => ({
-  id: i + 1,
-  title: "Security Consultant",
-  company: "Google",
-  type: "Regular employment",
-  remote: "Full Time",
-  status: i % 3 === 0 ? "Accepted" : i % 5 === 0 ? "Rejected" : "In Review",
-}));
+import { useDispatch, useSelector } from "react-redux";
+import { asyncGetAppliedJob } from "@/store/actions/jobActions";
 
 const statusColors = {
   "In Review": "bg-dark-yellow",
-  Accepted: "bg-dark-green",
+  APPLIED: "bg-dark-green",
   Rejected: "bg-dark-red",
 };
 
 export default function JobTable() {
+  const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const { appliedJob } = useSelector((state) => state.jobs);
+
+  useEffect(() => {
+    if (appliedJob == 0) dispatch(asyncGetAppliedJob());
+  }, []);
+
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
-  const currentJobs = jobs.slice(indexOfFirst, indexOfLast);
-  const totalPages = Math.ceil(jobs.length / itemsPerPage);
+  const currentJobs = appliedJob.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(appliedJob.length / itemsPerPage);
 
   return (
     <div className="border border-g-500 rounded-[10px] bg-g-900 flex flex-col overflow-hidden">
@@ -86,28 +85,32 @@ export default function JobTable() {
                     currentJobs.length - 1 === i ? "" : "border-b border-g-500"
                   }`}
                 >
-                  <span className={`border-b border-dotted`}>{job.title}</span>
+                  <span className={`border-b border-dotted`}>
+                    {job.job.title}
+                  </span>
                 </td>
                 <td
                   className={`py-3 pr-2 pl-5 cursor-pointer ${
                     currentJobs.length - 1 === i ? "" : "border-b border-g-500"
                   }`}
                 >
-                  <span className="border-b border-dotted">{job.company}</span>
+                  <span className="border-b border-dotted">
+                    {job?.job?.company?.companyName}
+                  </span>
                 </td>
                 <td
                   className={`py-3 pr-2 pl-5 ${
                     currentJobs.length - 1 === i ? "" : "border-b border-g-500"
                   }`}
                 >
-                  {job.type}
+                  {job.job.contractType}
                 </td>
                 <td
                   className={`py-3 pr-2 pl-5 ${
                     currentJobs.length - 1 === i ? "" : "border-b border-g-500"
                   }`}
                 >
-                  {job.remote}
+                  {job.job.remotePolicy}
                 </td>
                 <td
                   className={`py-3 pr-2 pl-5 ${

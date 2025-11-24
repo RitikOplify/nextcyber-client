@@ -32,56 +32,6 @@ import { FcGoogle } from "react-icons/fc";
 import { useDispatch, useSelector } from "react-redux";
 
 function JobsPage() {
-  const localJobs = [
-    {
-      id: 1,
-      title: "Safety & Security Engineer",
-      company: "Google",
-      location: "Texas, USA",
-      salary: "$130K",
-      experience: "3-5 Years",
-      type: "Fulltime",
-      posted: "May 01, 2023",
-      featured: true,
-      urgent: true,
-    },
-    {
-      id: 2,
-      title: "Safety & Security Engineer",
-      company: "Google",
-      location: "Texas, USA",
-      salary: "$130K",
-      experience: "3-5 Years",
-      type: "Fulltime",
-      posted: "May 01, 2023",
-      featured: true,
-      urgent: true,
-    },
-    {
-      id: 3,
-      title: "Safety & Security Engineer",
-      company: "Google",
-      location: "Texas, USA",
-      salary: "$130K",
-      experience: "3-5 Years",
-      type: "Fulltime",
-      posted: "May 01, 2023",
-      featured: true,
-      urgent: true,
-    },
-    {
-      id: 4,
-      title: "Safety & Security Engineer",
-      company: "Google",
-      location: "Texas, USA",
-      salary: "$130K",
-      experience: "3-5 Years",
-      type: "Fulltime",
-      posted: "May 01, 2023",
-      featured: true,
-      urgent: true,
-    },
-  ];
   const [activeTab, setActiveTab] = useState("Browse Jobs");
   const [jobOpen, setJobOpen] = useState(false);
   const [jobId, setJobId] = useState(null);

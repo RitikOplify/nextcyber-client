@@ -1,5 +1,8 @@
 "use client";
-import { asyncGetPlans } from "@/store/actions/planAction";
+import {
+  asyncGetPlans,
+  asyncGetStudentPlans,
+} from "@/store/actions/planAction";
 import {
   Infinity,
   Rocket,
@@ -27,7 +30,7 @@ export default function Pricing() {
   useEffect(() => {
     if (user) {
       if (plans.length == 0) {
-        dispatch(asyncGetPlans({ user: user?.role }, setLoading));
+        dispatch(asyncGetStudentPlans(setLoading));
       }
     }
   }, [user]);
