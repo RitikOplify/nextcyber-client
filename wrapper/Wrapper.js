@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { asyncCurrentUser } from "@/store/actions/authActions";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { socket } from "@/utils/socket";
 
 function Wrapper({ children }) {
   const pathname = usePathname();

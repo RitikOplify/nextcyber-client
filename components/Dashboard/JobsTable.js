@@ -25,7 +25,9 @@ function JobsTable() {
     Inactive: "bg-dark-red",
   };
 
-  const jobsWithStudents = jobs.filter((job) => job.students?.length > 0);
+  const jobsWithApplications = jobs.filter(
+    (job) => job.jobApplications?.length > 0
+  );
 
   return (
     <div className="bg-gradient-to-b from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden">
@@ -65,61 +67,55 @@ function JobsTable() {
                   No jobs found.
                 </td>
               </tr>
-            ) : jobsWithStudents.length === 0 ? (
+            ) : jobsWithApplications.length === 0 ? (
               <tr>
                 <td
                   colSpan={5}
-                  className="text-center py-5 text-g-200 border  border-g-500"
+                  className="text-center py-5 text-g-200 border border-g-500"
                 >
                   No recent applications found.
                 </td>
               </tr>
             ) : (
-              jobsWithStudents.map((job, i) =>
-                job.students.map((student, j) => (
+              jobsWithApplications.map((job, i) =>
+                job.jobApplications.map((application, j) => (
                   <tr
-                    key={student.id}
+                    key={application.id}
                     className="text-g-300 whitespace-nowrap text-sm leading-5 font-medium"
                   >
-                    <td className={`py-2.5 pr-2.5 flex items-center gap-2.5`}>
+                    {/* Candidate */}
+                    <td className="py-2.5 pr-2.5 flex items-center gap-2.5">
                       <Image
-                        src={student.profilePicture?.url || "/avatar.jpeg"}
-                        alt={student.firstName}
+                        src={"/avatar.jpeg"}
+                        alt={"Candidate"}
                         width={32}
                         height={32}
                         className="rounded-full h-8 w-8 object-cover"
                       />
-                      <span>
-                        {student.firstName} {student.lastName}
-                      </span>
+                      <span>{application.studentId}</span>
                     </td>
 
-                    <td className={`py-2.5 pr-2.5`}>
+                    {/* Applied For */}
+                    <td className="py-2.5 pr-2.5">
                       <span>{job.title}</span>
                     </td>
 
-                    <td className={`py-2.5 pr-2.5 `}>
-                      {new Date(student.updatedAt).toLocaleDateString()}
+                    {/* Date */}
+                    <td className="py-2.5 pr-2.5">
+                      {new Date(application.appliedDate).toLocaleDateString()}
                     </td>
 
-                    <td className={`py-2.5 pr-2.5 `}>
+                    {/* Status */}
+                    <td className="py-2.5 pr-2.5">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs leading-4 text-white font-medium ${
-                          statusColors[job.active ? "Active" : "Inactive"]
-                        }`}
+                        className={`px-2 py-1 rounded-full text-xs leading-4 text-white font-medium ${statusColors["Active"]}`}
                       >
-                        {job.active ? "Active" : "Inactive"}
+                        Applied
                       </span>
                     </td>
 
-                    <td
-                      className={`py-2.5 pr-2.5 ${
-                        jobsWithStudents.length - 1 === i &&
-                        job.students.length - 1 === j
-                          ? ""
-                          : "border-b border-g-500"
-                      }`}
-                    >
+                    {/* Actions */}
+                    <td className={`py-2.5 pr-2.5`}>
                       <div className="flex items-center gap-2.5 text-g-200">
                         <button>
                           <Star size={20} />
