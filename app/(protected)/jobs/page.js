@@ -228,11 +228,13 @@ function JobsPage() {
                   <div className=" border-b border-dashed border-g-400">
                     <div className=" flex items-center gap-3">
                       <Image
-                        src={"/image.png"}
+                        src={
+                          selectedJob?.company?.profilePicture?.url || "/image.png"
+                        }
                         height={60}
                         width={60}
                         alt="company-logo"
-                        className=" rounded-[10px]"
+                        className=" rounded-[10px] h-15 w-15 object-cover"
                       />
                       <h4 className=" font-medium text-xl leading-6 underline decoration-dotted underline-offset-[25%] text-g-100">
                         {selectedJob?.company?.companyName}
