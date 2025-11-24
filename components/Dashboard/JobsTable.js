@@ -12,7 +12,6 @@ function JobsTable() {
       try {
         const { data } = await companyjobApi();
         setJobs(data.data.jobs || []);
-        console.log("Fetched Jobs:", data.data.jobs);
       } catch (error) {
         console.log("Error fetching jobs:", error);
       }
@@ -28,6 +27,7 @@ function JobsTable() {
   const jobsWithApplications = jobs.filter(
     (job) => job.jobApplications?.length > 0
   );
+  console.log(jobsWithApplications);
 
   return (
     <div className="bg-gradient-to-b from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden">
@@ -78,58 +78,72 @@ function JobsTable() {
               </tr>
             ) : (
               jobsWithApplications.map((job, i) =>
-                job.jobApplications.map((application, j) => (
-                  <tr
-                    key={application.id}
-                    className="text-g-300 whitespace-nowrap text-sm leading-5 font-medium"
-                  >
-                    {/* Candidate */}
-                    <td className="py-2.5 pr-2.5 flex items-center gap-2.5">
-                      <Image
-                        src={"/avatar.jpeg"}
-                        alt={"Candidate"}
-                        width={32}
-                        height={32}
-                        className="rounded-full h-8 w-8 object-cover"
-                      />
-                      <span>{application.studentId}</span>
-                    </td>
+                job.jobApplications.map((application, j) => {
+                  const student = application.student;
+                  const user = student?.user;
 
-                    {/* Applied For */}
-                    <td className="py-2.5 pr-2.5">
-                      <span>{job.title}</span>
-                    </td>
+                  return (
+                    <tr
+                      key={application.id}
+                      className="text-g-300 whitespace-nowrap text-sm leading-5 font-medium"
+                    >
+                      {/* Candidate */}
+                      <td className="py-2.5 pr-2.5 flex items-center gap-2.5">
+                        <Image
+                          src={student?.profilePicture?.url || "/avatar.jpeg"}
+                          alt={user?.firstName || "Candidate"}
+                          width={32}
+                          height={32}
+                          className="rounded-full h-8 w-8 object-cover"
+                        />
+                        <span>
+                          {user?.firstName} {user?.lastName}
+                        </span>
+                      </td>
 
-                    {/* Date */}
-                    <td className="py-2.5 pr-2.5">
-                      {new Date(application.appliedDate).toLocaleDateString()}
-                    </td>
+                      {/* Applied For */}
+                      <td className="py-2.5 pr-2.5">
+                        <span>{job.title}</span>
+                      </td>
 
-                    {/* Status */}
-                    <td className="py-2.5 pr-2.5">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs leading-4 text-white font-medium ${statusColors["Active"]}`}
+                      {/* Date */}
+                      <td className="py-2.5 pr-2.5">
+                        {new Date(application.appliedDate).toLocaleDateString()}
+                      </td>
+
+                      {/* Status */}
+                      <td className="py-2.5 pr-2.5">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs leading-4 text-white font-medium bg-dark-green`}
+                        >
+                          {application.status}
+                        </span>
+                      </td>
+
+                      {/* Actions */}
+                      <td
+                        className={`py-2.5 pr-2.5 ${
+                          jobsWithApplications.length - 1 === i &&
+                          job.jobApplications.length - 1 === j
+                            ? ""
+                            : "border-b border-g-500"
+                        }`}
                       >
-                        Applied
-                      </span>
-                    </td>
-
-                    {/* Actions */}
-                    <td className={`py-2.5 pr-2.5`}>
-                      <div className="flex items-center gap-2.5 text-g-200">
-                        <button>
-                          <Star size={20} />
-                        </button>
-                        <button>
-                          <MessageSquareMore size={20} />
-                        </button>
-                        <button>
-                          <ArrowUpRight size={20} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                        <div className="flex items-center gap-2.5 text-g-200">
+                          <button>
+                            <Star size={20} />
+                          </button>
+                          <button>
+                            <MessageSquareMore size={20} />
+                          </button>
+                          <button>
+                            <ArrowUpRight size={20} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               )
             )}
           </tbody>
