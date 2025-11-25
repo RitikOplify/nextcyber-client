@@ -53,19 +53,16 @@ export default function CandidatePreference({ form, showErrors }) {
           Candidate’s qualification
         </label>
         <div className="flex gap-4 flex-wrap">
-          {[
-            "High School",
-            "Associate Degree",
-            "Bachelor's Degree",
-            "Master's Degree",
-          ].map((q) => (
+          {["HIGH_SCHOOL", "ASSOCIATE", "BACHELORS", "MASTERS"].map((q) => (
             <button
               key={q}
               type="button"
               onClick={() => toggleMulti("qualification", q)}
-              className={pillClass(selectedQualification.includes(q))}
+              className={`${pillClass(
+                selectedQualification.includes(q)
+              )} capitalize`}
             >
-              {q}
+              {q.replaceAll("_", " ").toLowerCase()}
             </button>
           ))}
         </div>

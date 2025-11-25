@@ -48,7 +48,7 @@ function CompaniesPage() {
         {companies &&
           companies.map((company, i) => (
             <Link
-              href={`/companies/${i}`}
+              href={`/companies/${company.id}`}
               key={i}
               className=" bg-g-900 border border-g-500 backdrop-blur-[35] p-4 rounded-[10px]"
             >
