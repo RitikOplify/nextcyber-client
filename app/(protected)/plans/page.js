@@ -1,5 +1,6 @@
 "use client";
 import {
+  asyncGetCompanyPlans,
   asyncGetPlans,
   asyncGetStudentPlans,
 } from "@/store/actions/planAction";
@@ -28,12 +29,15 @@ export default function Pricing() {
   const { plans } = useSelector((state) => state.plans);
 
   useEffect(() => {
-    if (user) {
-      if (plans.length == 0) {
-        dispatch(asyncGetStudentPlans(setLoading));
-      }
+    if (!user) return;
+    if (plans.length > 0) return;
+
+    if (user.role === "STUDENT") {
+      dispatch(asyncGetStudentPlans(setLoading));
+    } else {
+      dispatch(asyncGetCompanyPlans(setLoading));
     }
-  }, [user]);
+  }, [user, plans.length]);
 
   const faqItems = [
     {

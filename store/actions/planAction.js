@@ -1,4 +1,4 @@
-import { getStudentPlansApi } from "@/api/planApi";
+import { getCompanyPlansApi, getStudentPlansApi } from "@/api/planApi";
 import { setPlans } from "../slices/planSlice";
 import toast from "react-hot-toast";
 
@@ -12,8 +12,18 @@ export const asyncGetStudentPlans = (setIsLoading) => async (dispatch) => {
 
   try {
     const { data } = await getStudentPlansApi();
-    console.log(data);
-    
+    dispatch(setPlans(data.plans));
+  } catch (error) {
+    toast.error(getErrorMessage(error));
+  } finally {
+    if (typeof setIsLoading === "function") setIsLoading(false);
+  }
+};
+
+export const asyncGetCompanyPlans = (setIsLoading) => async (dispatch) => {
+  if (typeof setIsLoading === "function") setIsLoading(true);
+  try {
+    const { data } = await getCompanyPlansApi();
     dispatch(setPlans(data.plans));
   } catch (error) {
     toast.error(getErrorMessage(error));
