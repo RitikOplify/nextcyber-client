@@ -26,7 +26,7 @@ export default function AddJobStepper() {
       remotePolicy: "ONSITE",
       languages: [],
       qualification: [],
-      genderPreference: "Any",
+      genderPreference: "MALE",
       skills: [],
       certifications: [],
       showSalary: false,
