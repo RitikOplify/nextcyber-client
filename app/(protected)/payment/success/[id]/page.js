@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-const page = () => {
+const PaymentVerification = () => {
   const dispatch = useDispatch();
   const params = useParams();
   const [loading, setLoading] = useState(false);
@@ -36,4 +36,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default PaymentVerification;
