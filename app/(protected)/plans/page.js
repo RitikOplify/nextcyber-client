@@ -4,6 +4,7 @@ import {
   asyncGetPlans,
   asyncGetStudentPlans,
 } from "@/store/actions/planAction";
+import { buySubscriptionAPIHandler } from "@/store/actions/subscriptionAction";
 import {
   Infinity,
   Rocket,
@@ -27,6 +28,9 @@ export default function Pricing() {
   const dispatch = useDispatch();
 
   const { plans } = useSelector((state) => state.plans);
+
+  // ⭐ Added: Billing type toggle state
+  const [billingType, setBillingType] = useState("MONTHLY");
 
   useEffect(() => {
     if (!user) return;
@@ -96,6 +100,15 @@ export default function Pricing() {
     );
   }
 
+  // ⭐ Filter logic for monthly / yearly plans
+  const filteredPlans = plans.filter(
+    (p) => p.billingCycle === billingType || p.price === 0 // free plan always visible
+  );
+
+  const buySubscriptionHandler = (payload) => {
+    dispatch(buySubscriptionAPIHandler(payload, setLoading));
+  };
+
   return (
     <section className="bg-g-900">
       <div className="text-center max-w-xl mx-auto">
@@ -108,11 +121,28 @@ export default function Pricing() {
         <p className="text-accent-color-1 leading-6 font-medium mt-6">
           Save 15% on yearly plan!
         </p>
+
+        {/* ⭐ Monthly / Yearly toggle */}
         <div className="inline-flex mt-2.5 rounded-full bg-g-700 p-2 space-x-2 border border-g-500">
-          <button className="px-4 py-2 text-xs leading-4 font-semibold rounded-full bg-g-500 text-g-200">
+          <button
+            onClick={() => setBillingType("MONTHLY")}
+            className={`px-4 py-2 text-xs leading-4 font-semibold rounded-full ${
+              billingType === "MONTHLY"
+                ? "bg-g-500 text-g-200"
+                : "bg-g-700 text-g-200"
+            }`}
+          >
             Monthly
           </button>
-          <button className="px-4 py-2 text-xs leading-4 font-semibold rounded-full bg-g-700 text-g-200">
+
+          <button
+            onClick={() => setBillingType("YEARLY")}
+            className={`px-4 py-2 text-xs leading-4 font-semibold rounded-full ${
+              billingType === "YEARLY"
+                ? "bg-g-500 text-g-200"
+                : "bg-g-700 text-g-200"
+            }`}
+          >
             Yearly
           </button>
         </div>
@@ -120,58 +150,79 @@ export default function Pricing() {
 
       {/* Pricing Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 max-w-5xl mx-auto mt-5">
-        {plans.map((plan, index) => (
-          <div key={plan.id}>
-            <div className=" border border-g-500 rounded-[20px] p-5">
-              <div className="mb-5 flex items-center justify-between">
-                {plan.name == "Basic" ? (
-                  <Atom size={32} className=" text-light-yellow" />
-                ) : plan.name == "Pro" ? (
-                  <Rocket size={32} className=" text-light-green" />
-                ) : (
-                  <Infinity size={32} className=" text-light-blue" />
-                )}
-                {plan.tag && (
-                  <span className=" bg-g-600 border border-g-500 text-g-200 text-xs leading-4 font-medium px-2 py-1 rounded-full">
-                    {plan.tag}
+        {filteredPlans.map((plan, index) => {
+          const currentSubs =
+            user?.subscription.type ===
+              plan.name.split(" ").join("_").toUpperCase() &&
+            user?.subscription.billingCycle === plan.billingCycle;
+          return (
+            <div key={plan.id}>
+              <div className=" border border-g-500 rounded-[20px] p-5">
+                <div className="mb-5 flex items-center justify-between">
+                  {plan.name == "Basic" ? (
+                    <Atom size={32} className=" text-light-yellow" />
+                  ) : plan.name == "Pro" ? (
+                    <Rocket size={32} className=" text-light-green" />
+                  ) : (
+                    <Infinity size={32} className=" text-light-blue" />
+                  )}
+                  {plan.tag && (
+                    <span className=" bg-g-600 border border-g-500 text-g-200 text-xs leading-4 font-medium px-2 py-1 rounded-full">
+                      {plan.tag}
+                    </span>
+                  )}
+                </div>
+                <h3 className="text-base text-g-100 leading-6 font-semibold">
+                  {plan.name}
+                </h3>
+                <p className="text-g-200 text-sm mt-2 leading-4 max-w-4/5">
+                  {plan.description}
+                </p>
+
+                <div className="mt-7.5">
+                  <span className="text-4xl font-semibold leading-11 tracking-[-1%] text-g-100">
+                    {plan.price == 0 ? "Free" : plan.price}
                   </span>
-                )}
-              </div>
-              <h3 className="text-base text-g-100 leading-6 font-semibold">
-                {plan.name}
-              </h3>
-              <p className="text-g-200 text-sm mt-2 leading-4 max-w-4/5">
-                {plan.description}
-              </p>
+                  <span className="text-g-200 text-xs leading-4 font-medium ml-2">
+                    {plan.price !== 0
+                      ? `/${plan.billingCycle === "MONTHLY" ? "month" : "year"}`
+                      : ""}
+                  </span>
+                </div>
 
-              <div className="mt-7.5">
-                <span className="text-4xl font-semibold leading-11 tracking-[-1%] text-g-100">
-                  {plan.price == 0 ? "Free" : plan.price}
-                </span>
-                <span className="text-g-200 text-xs leading-4 font-medium ml-2">
-                  {plan.price !== 0
-                    ? `/${plan.billingCycle === "MONTHLY" ? "month" : "year"}`
-                    : ""}
-                </span>
+                <button
+                  className={`w-full mt-10 bg-g-600 text-g-200 hover:text-white transition-colors hover:bg-gradient-to-b hover:from-accent-color-1 hover:to-primary leading-4 text-sm py-2 px-4 font-medium rounded-full border border-g-500 ${
+                    index === 0 || currentSubs
+                      ? "cursor-not-allowed"
+                      : "cursor-pointer"
+                  } ${
+                    currentSubs &&
+                    "bg-gradient-to-b from-accent-color-1 to-primary text-white"
+                  }`}
+                  disabled={index === 0 ? true : false || currentSubs}
+                  onClick={() => {
+                    const payload = {
+                      plan: plan.name.split(" ").join("_").toUpperCase(),
+                      billingCycle: plan.billingCycle,
+                    };
+                    buySubscriptionHandler(payload);
+                  }}
+                >
+                  {currentSubs ? "Currently Active" : plan.ctaText}
+                </button>
               </div>
 
-              <button
-                className={`w-full mt-10 bg-g-600 text-g-200 hover:text-white cursor-pointer transition-colors hover:bg-gradient-to-b hover:from-accent-color-1 hover:to-primary leading-4 text-sm py-2 px-4 font-medium rounded-full border border-g-500`}
-              >
-                {plan.ctaText}
-              </button>
+              <ul className="mt-10 space-y-2 px-5 text-g-200 text-xs leading-4 font-medium">
+                {plan.features.map((feature, i) => (
+                  <li key={i} className="flex items-center gap-2">
+                    <CheckCircle2 size={16} className="text-dark-blue" />{" "}
+                    {feature.text}
+                  </li>
+                ))}
+              </ul>
             </div>
-
-            <ul className="mt-10 space-y-2 px-5 text-g-200 text-xs leading-4 font-medium">
-              {plan.features.map((feature, i) => (
-                <li key={i} className="flex items-center gap-2">
-                  <CheckCircle2 size={16} className="text-dark-blue" />{" "}
-                  {feature.text}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className=" py-25">
