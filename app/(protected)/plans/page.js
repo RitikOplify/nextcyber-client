@@ -152,6 +152,7 @@ export default function Pricing() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 max-w-5xl mx-auto mt-5">
         {filteredPlans.map((plan, index) => {
           const currentSubs =
+            user?.subscription &&
             user?.subscription.type ===
               plan.name.split(" ").join("_").toUpperCase() &&
             user?.subscription.billingCycle === plan.billingCycle;

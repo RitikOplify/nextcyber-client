@@ -12,7 +12,11 @@ export const buySubscriptionAPIHandler =
     try {
       const { data } = await buySubscription(payload);
       // Redirect to Stripe Checkout
-      window.location.href = data.url;
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        toast.error("You already have active subscription.");
+      }
     } catch (error) {
       toast.error(getErrorMessage(error));
     } finally {
