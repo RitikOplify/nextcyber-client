@@ -11,7 +11,6 @@ export const buySubscriptionAPIHandler =
     if (typeof setIsLoading === "function") setIsLoading(true);
     try {
       const { data } = await buySubscription(payload);
-      // Redirect to Stripe Checkout
       if (data.url) {
         window.location.href = data.url;
       } else {
