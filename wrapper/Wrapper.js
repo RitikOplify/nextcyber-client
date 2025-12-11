@@ -14,6 +14,8 @@ function Wrapper({ children }) {
   const dispatch = useDispatch();
   const { user, isLoading } = useSelector((state) => state.auth);
   const authPages = [
+    "/signin",
+    "/signup",
     "/auth",
     "/",
     "/privacy-policy",

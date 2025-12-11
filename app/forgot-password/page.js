@@ -33,20 +33,20 @@ function ForgotPassword() {
 
   return (
     <div className="bg-g-900 ">
-      <div className="min-h-screen flex max-w-[1440px] mx-auto">
+      <div className="min-h-screen flex max-w-[1440px] mx-auto py-20 sm:py-10">
         <div className=" w-full lg:w-1/2 flex items-center justify-center px-5 sm:px-10">
           <div className="w-full max-w-sm">
             <Image
               src="/logo.png"
-              className=" h-9 w-auto mb-7.5"
+              className=" h-9 w-auto mb-10"
               height={72}
               width={329}
               alt="nextcybr-logo"
             />
-            <h1 className="text-g-200 text-3xl font-medium leading-tight">
+            <h1 className="text-g-100 text-2xl font-semibold leading-8">
               Forgot Password
             </h1>
-            <p className="text-g-300 text-sm mt-4">
+            <p className="text-g-200 text-sm mt-1 leading-5">
               Please enter the email address associated with your account and We
               will email you a link to reset your password.
             </p>
@@ -72,7 +72,7 @@ function ForgotPassword() {
             <button
               onClick={handleSubmit(onSubmit)}
               disabled={loading}
-              className="w-full disabled:bg-primary/50 disabled:text-g-200 bg-primary text-white py-3 px-6 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors mt-6"
+              className="w-full disabled:bg-primary/50 cursor-pointer disabled:cursor-not-allowed disabled:text-g-200 bg-primary text-white py-3 px-6 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors mt-4"
             >
               {loading && (
                 <Loader2 className=" animate-spin text-g-200" size={18} />
@@ -80,10 +80,10 @@ function ForgotPassword() {
               {loading ? "Sending Mail..." : " Reset password"}
             </button>
 
-            <div className=" flex justify-center mt-7.5">
+            <div className=" flex justify-center mt-10">
               <Link
                 href={"/auth"}
-                className=" flex items-center text-g-300 text-sm leading-5 font-medium gap-1.5"
+                className=" flex items-center text-g-200 text-sm leading-5 font-medium gap-1.5"
               >
                 <ChevronLeft size={20} />
                 <span>Back to login</span>
@@ -105,9 +105,7 @@ function ForgotPassword() {
               </div>
             </div>
 
-            {/* Background content that shows behind card */}
             <div className="relative bg-[#111214] w-[93%] xl:w-full  rounded-[10px]  overflow-hidden">
-              {/* Background text content */}
               <div className="absolute inset-0 p-10 text-white blur-[0.8px] text-right text-sm leading-relaxed z-0 pt-19">
                 <p className="text-lg text-[#6A6B6C]">HR Manager Google</p>
                 <div className=" pt-28">
@@ -117,9 +115,7 @@ function ForgotPassword() {
                 </div>
               </div>
 
-              {/* Testimonial Card - positioned to partially cover background */}
               <div className="bg-[#111214] rounded-[10px] p-10 text-white relative z-10 border border-[#434345] max-w-sm">
-                {/* Profile Section */}
                 <div className="flex items-center gap-5 mb-15">
                   <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-400 to-pink-500 flex items-center justify-center">
                     <span className="text-white font-bold text-sm">JB</span>
@@ -134,7 +130,6 @@ function ForgotPassword() {
                   </div>
                 </div>
 
-                {/* Star Rating */}
                 <div className="flex gap-1 mb-5">
                   {[...Array(5)].map((_, i) => (
                     <Star
@@ -144,7 +139,6 @@ function ForgotPassword() {
                   ))}
                 </div>
 
-                {/* Testimonial Quote */}
                 <blockquote className="text-white text-sm leading-relaxed">
                   &quot;What impressed me most was their strategic approach.
                   Every design choice had a reason behind it&quot;

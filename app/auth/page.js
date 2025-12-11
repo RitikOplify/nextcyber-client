@@ -1,5 +1,4 @@
 "use client";
-
 import NextCyberAuth from "@/components/Auth";
 import { asyncCurrentUser } from "@/store/actions/authActions";
 import { Loader2 } from "lucide-react";
