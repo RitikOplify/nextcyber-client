@@ -189,3 +189,11 @@ body {
   background-size: cover;
   background-position: center;
 }
+
+.input {
+  @apply w-full py-4 px-5 rounded-lg border text-g-300 outline-none bg-g-700;
+}
+
+.error {
+  @apply text-red-500 text-xs mt-1;
+}
