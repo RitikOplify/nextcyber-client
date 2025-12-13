@@ -58,7 +58,7 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
           {
             label: "My NextGen CV",
             icon: FileText,
-            href: "/cv",
+            href: "/resume",
           },
           {
             label: "Training & Certifications",
