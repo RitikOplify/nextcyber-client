@@ -152,7 +152,7 @@ function ProtectedLayout({ children }) {
                 </Fragment>
               ))}
             </div>
-            <div className="flex items-center space-x-4 relative">
+            <div className="flex items-center gap-4 relative">
               <button className="relative bg-g-400/50 transition-colors p-2 rounded-full cursor-pointer bg-g-4000 hover:bg-g-500">
                 <Bell size={20} />
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -161,7 +161,7 @@ function ProtectedLayout({ children }) {
               </button>
 
               <div
-                className="w-9 h-9 bg-g-500 rounded-full flex items-center justify-center"
+                className="w-9 h-9 bg-g-500 rounded-full flex items-center justify-center overflow-hidden"
                 onClick={() => {
                   setProfileSettingOpen(!profileSettingOpen);
                 }}
@@ -174,18 +174,24 @@ function ProtectedLayout({ children }) {
                   height={36}
                   width={36}
                   alt="profile"
-                  className=" rounded-full"
+                  className="rounded-full cursor-pointer"
                 />
               </div>
               {profileSettingOpen && (
-                <div className="absolute top-11 rounded right-5 bg-g-600 text-white">
-                  <ProfileSetting />
+                <div className="absolute top-11 rounded right-0 bg-g-600 text-white">
+                  <ProfileSetting
+                    setProfileSettingOpen={setProfileSettingOpen}
+                  />
                 </div>
               )}
             </div>
           </div>
         </div>
-        <section className="p-5 bg-background h-[calc(100vh-60.84px)] flex-1 overflow-auto">
+        <section
+          className={`${
+            pathname === "/resume" ? "p-0" : "p-5"
+          } bg-background h-[calc(100vh-60.84px)] flex-1 overflow-auto`}
+        >
           {children}
         </section>
       </main>
