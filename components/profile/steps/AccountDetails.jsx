@@ -1,12 +1,12 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import SelectField from "@/components/SelectField";
 import Image from "next/image";
 import { Image as LucideImage, X } from "lucide-react";
 import toast from "react-hot-toast";
 
-export default function AccountDetails() {
+export default function AccountDetails({ showErrors = true }) {
   const {
     register,
     setValue,
@@ -16,11 +16,17 @@ export default function AccountDetails() {
 
   const fileRef = useRef(null);
   const gender = watch("gender");
-
   const file = watch("profilePicture");
-  const [preview, setPreview] = useState(
-    file instanceof File ? URL.createObjectURL(file) : null
-  );
+
+  const [preview, setPreview] = useState(null);
+
+  useEffect(() => {
+    if (file instanceof File) {
+      setPreview(URL.createObjectURL(file));
+    } else {
+      setPreview(null);
+    }
+  }, [file]);
 
   const handleSelect = (e) => {
     const f = e.target.files?.[0];
@@ -31,8 +37,12 @@ export default function AccountDetails() {
       return;
     }
 
-    setValue("profilePicture", f);
-    setPreview(URL.createObjectURL(f));
+    if (f.size > 5 * 1024 * 1024) {
+      toast.error("Image must be less than 5MB");
+      return;
+    }
+
+    setValue("profilePicture", f, { shouldValidate: true });
   };
 
   const handleDrop = (e) => {
@@ -45,14 +55,25 @@ export default function AccountDetails() {
       return;
     }
 
-    setValue("profilePicture", f);
-    setPreview(URL.createObjectURL(f));
+    if (f.size > 5 * 1024 * 1024) {
+      toast.error("Image must be less than 5MB");
+      return;
+    }
+
+    setValue("profilePicture", f, { shouldValidate: true });
   };
 
   const removeImage = () => {
-    setValue("profilePicture", null);
+    setValue("profilePicture", null, { shouldValidate: true });
     setPreview(null);
+    if (fileRef.current) fileRef.current.value = "";
   };
+
+  useEffect(() => {
+    register("profilePicture", {
+      required: "Profile picture is required",
+    });
+  }, [register]);
 
   return (
     <div className="grid grid-cols-2 gap-x-6 gap-y-8">
@@ -79,7 +100,6 @@ export default function AccountDetails() {
                   height={50}
                   className="rounded-full object-cover"
                 />
-
                 <button
                   type="button"
                   onClick={(e) => {
@@ -92,7 +112,7 @@ export default function AccountDetails() {
                 </button>
               </div>
             ) : (
-              <div className="select-none text-sm font-medium  text-g-200 flex flex-col items-center justify-center gap-1">
+              <div className="select-none text-sm font-medium text-g-200 flex flex-col items-center justify-center gap-1">
                 <LucideImage size={20} />
                 <p>
                   <span className="text-primary">Upload an image</span> or drag
@@ -110,9 +130,14 @@ export default function AccountDetails() {
             accept="image/*"
             onChange={handleSelect}
           />
+
+          {showErrors && errors.profilePicture && (
+            <p className="mt-1 text-sm text-red-400">
+              {errors.profilePicture.message}
+            </p>
+          )}
         </div>
       </div>
-
       <div>
         <label className="text-g-200 font-medium leading-6 block mb-1">
           First Name
@@ -125,9 +150,8 @@ export default function AccountDetails() {
           className="w-full py-4 px-5 rounded-lg border text-g-300 outline-none bg-g-700 border-g-600"
           placeholder="Enter first name"
         />
-        <p className="error">{errors.firstName?.message}</p>
+        {showErrors && <p className="error">{errors.firstName?.message}</p>}
       </div>
-
       <div>
         <label className="text-g-200 font-medium leading-6 block mb-1">
           Last Name
@@ -137,58 +161,63 @@ export default function AccountDetails() {
           className="w-full py-4 px-5 rounded-lg border text-g-300 outline-none bg-g-700 border-g-600"
           placeholder="Enter last name"
         />
-        <p className="error">{errors.lastName?.message}</p>
+        {showErrors && <p className="error">{errors.lastName?.message}</p>}
       </div>
-
       <SelectField
         label="Location"
         name="location"
         options={["India", "USA", "UK", "UAE"]}
         placeholder="Select location"
         rules={{ required: "Location required" }}
+        showErrors={showErrors}
       />
-
       <SelectField
         label="Currency"
         name="currency"
         options={["INR", "USD", "EUR"]}
         placeholder="Select currency"
         rules={{ required: "Currency required" }}
+        showErrors={showErrors}
       />
-      
+
       <div className="col-span-2">
-        <div>
-          <label className="block mb-2 text-sm font-medium text-g-200 leading-5">
-            Gender preference
-          </label>
-          <div className="flex gap-2 flex-wrap">
-            {["MALE", "FEMALE", "PREFER_NOT_TO_SAY"].map((option) => (
-              <button
-                type="button"
-                key={option}
-                onClick={() => setValue("gender", option)}
-                className={`px-4 py-2 cursor-pointer rounded-full border capitalize transition text-sm leading-5 bg-g-600 text-g-200 border-g-500 font-medium ${
-                  gender === option ? "border-primary" : "hover:bg-g-700"
-                }`}
-              >
-                {option.replaceAll("_", " ").toLowerCase()}
-              </button>
-            ))}
-          </div>
+        <label className="block mb-2 text-sm font-medium text-g-200 leading-5">
+          Gender preference
+        </label>
+        <div className="flex gap-2 flex-wrap">
+          {["MALE", "FEMALE", "PREFER_NOT_TO_SAY"].map((option) => (
+            <button
+              type="button"
+              key={option}
+              onClick={() =>
+                setValue("gender", option, { shouldValidate: true })
+              }
+              className={`px-4 py-2 cursor-pointer rounded-full border capitalize transition text-sm leading-5 bg-g-600 text-g-200 border-g-500 font-medium ${
+                gender === option ? "border-primary" : "hover:bg-g-700"
+              }`}
+            >
+              {option.replaceAll("_", " ").toLowerCase()}
+            </button>
+          ))}
         </div>
+        {showErrors && errors.gender && (
+          <p className="mt-1 text-sm text-red-400">{errors.gender.message}</p>
+        )}
       </div>
 
       <SelectField
         label="Nationality"
-        name="nationality"
+        name="nationalities"
+        multiple
         options={["India", "USA", "Canada"]}
+        showErrors={showErrors}
       />
-
       <SelectField
         label="Language"
-        name="language"
+        name="languages"
         multiple
         options={["English", "Hindi", "Gujarati"]}
+        showErrors={showErrors}
       />
 
       <div>
@@ -201,6 +230,7 @@ export default function AccountDetails() {
           placeholder="Enter your salary"
         />
       </div>
+
       <div>
         <label className="text-g-200 font-medium leading-6 block mb-1">
           Hourly Rate

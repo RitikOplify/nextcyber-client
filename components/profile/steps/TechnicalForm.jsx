@@ -3,7 +3,7 @@ import SelectField from "@/components/SelectField";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
-export default function TechnicalForm() {
+export default function TechnicalForm({ showErrors = false }) {
   const {
     register,
     watch,
@@ -25,7 +25,6 @@ export default function TechnicalForm() {
 
   return (
     <div className="grid grid-cols-1 gap-x-6 gap-y-8">
-      {/* CONTRACT TYPE */}
       <div>
         <label className="block mb-2 text-sm font-medium text-g-200 leading-5">
           Contract Type
@@ -51,7 +50,6 @@ export default function TechnicalForm() {
         </div>
       </div>
 
-      {/* REMOTE POLICY */}
       <div>
         <label className="block mb-2 text-sm font-medium text-g-200 leading-5">
           Remote Policy
@@ -75,7 +73,6 @@ export default function TechnicalForm() {
         </div>
       </div>
 
-      {/* SKILLS */}
       <div className="flex flex-col gap-6 w-1/2">
         <div>
           <SelectField
@@ -88,13 +85,10 @@ export default function TechnicalForm() {
               "AWS Certified Cloud Practitioner",
               "AWS Certified SysOps Administrator - Associate",
             ]}
-            rules={{
-              validate: (value) =>
-                value?.length > 0 || "Please select at least one certificates",
-            }}
+            rules={{ required: "Certificates are required" }}
+            showErrors={showErrors}
           />
 
-          {/* Selected Skills - Chips */}
           <div className="flex gap-2 mt-4 flex-wrap">
             {certificates?.length > 0 &&
               certificates.map((certificate) => (
@@ -106,7 +100,6 @@ export default function TechnicalForm() {
         </div>
       </div>
 
-      {/* SKILLS */}
       <div className="flex flex-col gap-6 w-1/2">
         <div>
           <SelectField
@@ -120,13 +113,10 @@ export default function TechnicalForm() {
               "JavaScript",
               "Node.js",
             ]}
-            rules={{
-              validate: (value) =>
-                value?.length > 0 || "Please select at least one skill",
-            }}
+            rules={{ required: "Skills are required" }}
+            showErrors={showErrors}
           />
 
-          {/* Selected Skills - Chips */}
           <div className="flex gap-2 mt-4 flex-wrap">
             {skills?.length > 0 &&
               skills.map((skill) => (

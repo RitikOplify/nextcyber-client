@@ -34,8 +34,8 @@ export default function AddExperienceModal({
     setForm((s) => ({ ...s, [key]: e.target?.value ?? e }));
 
   const handleSave = () => {
-    if (!form.companyName || !form.jobTitle) {
-      toast.error("Please enter company and job title");
+    if (!form.companyName || !form.jobTitle || !form.startDate) {
+      toast.error("Please enter company , job title and Start Date");
       return;
     }
     onSave(form);

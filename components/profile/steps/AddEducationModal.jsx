@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "./Model";
 import SelectField from "@/components/SelectField";
+import toast from "react-hot-toast";
 
 export default function AddEducationModal({
   isOpen,
@@ -25,8 +26,8 @@ export default function AddEducationModal({
     setForm((s) => ({ ...s, [key]: e.target?.value ?? e }));
 
   const handleSave = () => {
-    if (!form.institute || !form.level) {
-      alert("Please enter institute and level");
+    if (!form.institute || !form.level || !form.startDate) {
+      toast.error("Please enter institute, level and Start Date");
       return;
     }
     onSave(form);
@@ -43,13 +44,13 @@ export default function AddEducationModal({
           <label className="text-g-200 font-medium leading-6 block mb-1.5">
             Institute
           </label>
-          <SelectField
-            label={null}
-            name={null}
-            options={["Army Public School", "IIT Bombay", "NIT Surat"]}
+          <input
             placeholder="Enter institute name"
             value={form.institute}
-            onChange={(v) => setForm((s) => ({ ...s, institute: v }))}
+            onChange={(e) =>
+              setForm((s) => ({ ...s, institute: e.target.value }))
+            }
+            className="w-full py-4 px-5 rounded-lg border text-g-300 outline-none bg-g-700 border-g-600"
           />
         </div>
 
@@ -60,7 +61,7 @@ export default function AddEducationModal({
           <SelectField
             label={null}
             name={null}
-            options={["School", "Diploma", "Bachelor", "Master"]}
+            options={["HIGH_SCHOOL", "ASSOCIATE", "BACHELORS", "MASTERS"]}
             placeholder="Select level"
             value={form.level}
             onChange={(v) => setForm((s) => ({ ...s, level: v }))}
