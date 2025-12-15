@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Modal from "./Model";
+import Modal from "../../Model";
 import SelectField from "@/components/SelectField";
 import toast from "react-hot-toast";
 
