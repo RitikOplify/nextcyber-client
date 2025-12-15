@@ -85,16 +85,16 @@ export default function AccountDetails({ showErrors = true }) {
 
           <div
             className={`${
-              !preview && "border border-dashed border-g-200 p-5 "
+              !preview && !file?.url && "border border-dashed border-g-200 p-5 "
             } rounded text-center cursor-pointer`}
             onClick={() => fileRef.current.click()}
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleDrop}
           >
-            {preview ? (
+            {preview || file?.url ? (
               <div className="relative w-fit">
                 <Image
-                  src={preview}
+                  src={preview || file?.url}
                   alt="Preview"
                   width={50}
                   height={50}

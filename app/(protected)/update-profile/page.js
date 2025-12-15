@@ -10,12 +10,14 @@ import AddExperienceModal from "@/components/profile/steps/AddExperienceModal";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { updateStudentApi } from "@/api/studentApi";
+import { useSelector } from "react-redux";
 
 export default function SettingsPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [validatedSteps, setValidatedSteps] = useState(new Set());
   const [loading, setLoading] = useState(false);
+  const { user } = useSelector((state) => state.auth);
 
   const methods = useForm({
     mode: "onChange",
@@ -42,10 +44,39 @@ export default function SettingsPage() {
     },
   });
 
+  useEffect(() => {
+    if (!user || !user.studentProfile) return;
+
+    const sp = user.studentProfile;
+
+    methods.reset({
+      firstName: user.firstName || "",
+      lastName: user.lastName || "",
+      location: sp.location || "",
+      currency: sp.currency || "",
+      gender: sp.gender || "",
+      nationalities: sp.nationalities || [],
+      languages: sp.languages || [],
+      expectedSalary: sp.expectedSalary || "",
+      hourlyRate: sp.hourlyRate || "",
+
+      education: sp.education || [],
+      workExperience: sp.workExperience || [],
+      resume: sp.resume || null,
+
+      skills: sp.skills || [],
+      certificates: sp.certificates || [],
+      contractType: sp.contractType || "",
+      remotePolicy: sp.remotePolicy || "",
+
+      profilePicture: sp.profilePicture || null,
+    });
+  }, [user, methods]);
+
   const { control, trigger, handleSubmit, getValues, clearErrors } = methods;
 
   const eduFieldArray = useFieldArray({ control, name: "education" });
-  const expFieldArray = useFieldArray({ control, name: "experience" });
+  const expFieldArray = useFieldArray({ control, name: "workExperience" });
 
   const [eduModalOpen, setEduModalOpen] = useState(false);
   const [eduEditIndex, setEduEditIndex] = useState(null);
@@ -63,7 +94,7 @@ export default function SettingsPage() {
         "location",
         "currency",
         "gender",
-        "nationality",
+        "nationalities",
         "language",
         "expectedSalary",
         "hourlyRate",
@@ -102,7 +133,7 @@ export default function SettingsPage() {
   const onBack = () => {
     setStep((s) => Math.max(0, s - 1));
   };
-
+  let toastId;
   const onSubmit = async (data) => {
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
@@ -122,16 +153,17 @@ export default function SettingsPage() {
     }
 
     setLoading(true);
+    toastId = toast.loading("Updating Profile...");
     try {
       const { data } = await updateStudentApi(formData);
-      console.log(data);
-
       toast.success("Profile Updated!");
+      toast.dismiss(toastId);
       router.push("/dashboard");
     } catch (error) {
       console.log(error);
       toast.error("Request Failed. Please Try Again!");
     } finally {
+      toast.dismiss(toastId);
       setLoading(false);
     }
   };
@@ -187,7 +219,8 @@ export default function SettingsPage() {
                   <button
                     type="button"
                     onClick={onBack}
-                    className="px-4 py-3 text-sm font-semibold leading-5 bg-g-600 text-white rounded cursor-pointer"
+                    disabled={loading}
+                    className="px-4 py-3 text-sm font-semibold leading-5 disabled:cursor-not-allowed disabled:text-g-200 bg-g-600 text-white rounded cursor-pointer"
                   >
                     Back
                   </button>
@@ -197,7 +230,7 @@ export default function SettingsPage() {
                   <button
                     type="button"
                     onClick={onNext}
-                    className="px-4 py-3 text-sm font-semibold leading-5 bg-primary text-white rounded cursor-pointer"
+                    className="px-4 py-3 text-sm font-semibold leading-5  bg-primary text-white rounded cursor-pointer"
                   >
                     Next
                   </button>
@@ -215,7 +248,8 @@ export default function SettingsPage() {
 
                       handleSubmit(onSubmit)();
                     }}
-                    className="px-4 py-3 text-sm font-semibold leading-5 bg-primary text-white rounded cursor-pointer"
+                    disabled={loading}
+                    className="px-4 py-3 text-sm font-semibold leading-5 disabled:bg-primary/50 disabled:cursor-not-allowed disabled:text-g-200 bg-primary text-white rounded cursor-pointer"
                   >
                     Save Changes
                   </button>
