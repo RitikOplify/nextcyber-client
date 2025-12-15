@@ -1,26 +1,30 @@
+"use client";
 import React from "react";
+import { useSelector } from "react-redux";
 
 function RecruitmentPipeline() {
+  const { user } = useSelector((state) => state.auth);
+  const recruiterStat = user?.companyProfile?.stats?.recruitmentPipeline;
   const stats = [
     {
       key: "New Applications",
-      value: "78",
+      value: recruiterStat.newApplications || 0,
     },
     {
       key: "Shortlisted",
-      value: "24",
+      value: recruiterStat.shortlisted || 0,
     },
     {
       key: "Interviewing",
-      value: "12",
+      value: recruiterStat.interviewing || 0,
     },
     {
       key: "Offer Sent",
-      value: "5",
+      value: recruiterStat.offerSent || 0,
     },
     {
       key: "Hired",
-      value: "2",
+      value: recruiterStat.hired || 0,
     },
   ];
   return (

@@ -19,10 +19,12 @@ import { useDispatch, useSelector } from "react-redux";
 import JobsTable from "@/components/Dashboard/JobsTable";
 import RecruitmentPipeline from "@/components/Dashboard/RecruitmentPipeline";
 import { asyncGetAppliedJob } from "@/store/actions/jobActions";
+
 function DashboardPage() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { appliedJob } = useSelector((state) => state.jobs);
+  const recruiterStat = user?.companyProfile?.stats?.basicStats;
   const achievements = [
     { title: "Introduction to Cybersecurity", completedDate: "2024-05-18" },
     { title: "Top Learner", completedDate: "2024-05-18" },
@@ -63,28 +65,28 @@ function DashboardPage() {
   const recruiterStats = [
     {
       label: "Active Jobs",
-      value: 12,
+      value: recruiterStat?.activeJobs || 0,
       link: "view jobs",
       href: "#",
       icon: Medal,
     },
     {
       label: "New Applications",
-      value: 4,
+      value: recruiterStat?.newApplications || 0,
       link: "view applicants",
       href: "#",
       icon: UserStar,
     },
     {
       label: "Pending Approval",
-      value: 8,
+      value: recruiterStat?.pendingApproval,
       link: "take action",
       href: "#",
       icon: BriefcaseBusiness,
     },
     {
       label: "Candidates Hired",
-      value: 15,
+      value: recruiterStat?.candidatesHired,
       link: "view list",
       href: "#",
       icon: FileBadge2,
@@ -327,10 +329,22 @@ function DashboardPage() {
           </div>
           <div className="mt-4 relative">
             <div className=" text-right text-g-200 text-xs leading-[150%]">
-              72%
+              {user.role == "COMPANY"
+                ? user.companyProfile.profileScore.overallPercentage
+                : user.studentProfile.profileScore.overallPercentage || 0}
+              %
             </div>
             <div className=" w-full h-1.5 bg-g-500"></div>
-            <div className=" w-[72%] h-1.5 bg-primary absolute bottom-0"></div>
+            <div
+              className="h-1.5 bg-primary absolute bottom-0"
+              style={{
+                width: `${
+                  user.role == "COMPANY"
+                    ? user.companyProfile.profileScore.overallPercentage
+                    : user.studentProfile.profileScore.overallPercentage || 0
+                }%`,
+              }}
+            ></div>
           </div>
         </div>
 
