@@ -21,8 +21,10 @@ export const generateResumeAPIHandler =
       // clear selection on new resume
       setSelectedSection(null);
     } catch (error) {
+      console.log(error);
       setError(error?.message || "Failed to generate resume");
-      toast.error(getErrorMessage(error));
+      // toast.error(getErrorMessage(error));
+      toast.error("Failed to generate resume. Please try again.");
     } finally {
       setLoading(false);
     }

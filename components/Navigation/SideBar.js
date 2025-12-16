@@ -31,13 +31,14 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { asyncSignOutUser } from "@/store/actions/authActions";
+import { toggleSidebar } from "@/store/slices/appSettingsSlice";
 
 export default function Sidebar({ isMobileOpen, toggleMobile }) {
   const { user } = useSelector((state) => state.auth);
+  const { collapseSidebar } = useSelector((state) => state.appSettings);
   const pathname = usePathname();
   const dispatch = useDispatch();
 
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [openGroups, setOpenGroups] = useState({});
 
   const toggleGroup = (label) => {
@@ -58,7 +59,7 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
           {
             label: "My NextGen CV",
             icon: FileText,
-            href: "/resume",
+            href: "/resume-builder",
           },
           {
             label: "Training & Certifications",
@@ -203,10 +204,11 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
             href={item.href}
             title={collapsed ? item.label : ""}
             className={clsx(
-              "flex items-center py-4 pr-2.5 pl-6 gap-4 whitespace-nowrap transition-colors font-semibold text-sm leading-[150%] text-g-100 hover:bg-g-600",
+              "flex items-center py-4 pr-2.5 gap-4 whitespace-nowrap transition-colors font-semibold text-sm leading-[150%] text-g-100 hover:bg-g-600",
               isActive
                 ? "bg-gradient-to-r  from-g-500 to-primary"
-                : "hover:bg-background"
+                : "hover:bg-background",
+              collapsed ? "justify-center pl-2.5" : "pl-6"
             )}
           >
             <IconComponent
@@ -229,15 +231,15 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
         <div
           className={clsx(
             "bg-g-800 text-heading-secondary text-sm font-medium h-full flex flex-col justify-between transition-all duration-300",
-            isCollapsed ? "w-20 items-start" : "w-60"
+            collapseSidebar ? "w-20 items-start" : "w-60"
           )}
         >
           <div
             className={`flex min-h-[60.67px] ${
-              !isCollapsed ? "justify-between" : "justify-center"
+              collapseSidebar ? "justify-center pl-2.5" : "justify-between"
             } items-center py-4 pr-2.5 w-full border-b border-g-500 sticky top-0 bg-g-800 z-30`}
           >
-            {!isCollapsed && (
+            {!collapseSidebar && (
               <Link href={"/dashboard"}>
                 <Image
                   src="/logo.png"
@@ -249,10 +251,10 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
               </Link>
             )}
             <button
-              onClick={() => setIsCollapsed(!isCollapsed)}
+              onClick={() => dispatch(toggleSidebar())}
               className=" cursor-pointer"
             >
-              {isCollapsed ? (
+              {collapseSidebar ? (
                 <PanelLeftOpen size={22} />
               ) : (
                 <PanelLeftClose size={22} />
@@ -261,20 +263,24 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
           </div>
 
           <div className="flex-grow scrollbar overflow-y-auto overflow-x-hidden flex flex-col w-full bg-g-800 border-r border-g-500">
-            <SidebarNavLinks items={navItems} collapsed={isCollapsed} />
+            <SidebarNavLinks items={navItems} collapsed={collapseSidebar} />
           </div>
 
           <div className="border-g-500 w-full bg-g-800 border-r">
-            <SidebarNavLinks items={bottomNavItem} collapsed={isCollapsed} />
+            <SidebarNavLinks
+              items={bottomNavItem}
+              collapsed={collapseSidebar}
+            />
 
             <button
               onClick={handleLogout}
               className={clsx(
-                "flex items-center cursor-pointer py-4 pr-2.5 pl-6 gap-4 w-full transition-colors font-semibold text-sm leading-[150%] text-g-100 hover:bg-g-600"
+                "flex items-center cursor-pointer py-4 pr-2.5 pl-6 gap-4 w-full transition-colors font-semibold text-sm leading-[150%] text-g-100 hover:bg-g-600",
+                collapseSidebar ? "justify-center pl-2.5" : "pl-6"
               )}
             >
               <LogOut size={20} />
-              {!isCollapsed && (
+              {!collapseSidebar && (
                 <span className="text-sm font-medium">Logout</span>
               )}
             </button>
