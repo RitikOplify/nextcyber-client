@@ -3,7 +3,8 @@ import auth from "./slices/authSlice.js";
 import plans from "./slices/planSlice.js";
 import jobs from "./slices/jobSlice.js";
 import companies from "./slices/companySlice.js";
+import appSettings from "./slices/appSettingsSlice.js";
 
 export const store = configureStore({
-  reducer: { auth, plans, jobs, companies },
+  reducer: { auth, plans, jobs, companies, appSettings },
 });

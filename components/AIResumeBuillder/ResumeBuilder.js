@@ -12,6 +12,7 @@ import {
   MapPin,
   Calendar,
   Wand2,
+  CircleX,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -19,6 +20,7 @@ import {
   generateResumeAPIHandler,
 } from "@/store/actions/resumeActions";
 import { useDispatch } from "react-redux";
+import { toggleSidebar } from "@/store/slices/appSettingsSlice";
 
 // Load jsPDF from CDN
 const loadJsPDF = () => {
@@ -70,8 +72,15 @@ const SECTION_KEYS = [
 ];
 
 // Main Resume Builder Component
-export default function ResumeBuilders() {
-  const [prompt, setPrompt] = useState("");
+export default function ResumeBuilder({
+  promptInput,
+  setPromptInput,
+  resumeInput,
+  setResumeInput,
+  setShowResumeBuilder,
+  resetAll,
+}) {
+  const [prompt, setPrompt] = useState(promptInput);
   const [loading, setLoading] = useState(false);
   const [resume, setResume] = useState(null);
   const [error, setError] = useState(null);
@@ -300,6 +309,14 @@ export default function ResumeBuilders() {
     // optionally scroll preview to top or focus - not required
   };
 
+  useEffect(() => {
+    if (prompt.length > 0) {
+      generate();
+    }
+
+    return () => {};
+  }, []);
+
   return (
     <div className="h-[calc(100vh-60.8px)] text-black flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 overflow-hidden">
       <div className="flex-1 flex overflow-hidden">
@@ -403,16 +420,27 @@ export default function ResumeBuilders() {
             <h2 className="text-sm font-semibold text-slate-700">
               Resume Preview
             </h2>
-
-            {true && (
+            <div className="flex items-center gap-2.5">
+              {true && (
+                <button
+                  onClick={exportToPDF}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:shadow-lg transition-all hover:scale-105"
+                >
+                  <Download className="w-3 h-3" />
+                  <span className="font-medium">Download as PDF</span>
+                </button>
+              )}
               <button
-                onClick={exportToPDF}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:shadow-lg transition-all hover:scale-105"
+                onClick={() => {
+                  setShowResumeBuilder(false);
+                  resetAll();
+                  dispatch(toggleSidebar());
+                }}
+                className="text-g-200 cursor-pointer hover:text-g-200/90 transition-colors"
               >
-                <Download className="w-3 h-3" />
-                <span className="font-medium">Download as PDF</span>
+                <CircleX size={20} />
               </button>
-            )}
+            </div>
           </div>
 
           <div className="flex-1 overflow-y-auto p-6">
