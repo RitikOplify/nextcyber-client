@@ -68,6 +68,7 @@ const NextCyberAuth = () => {
         document.startViewTransition?.(() => setActiveTab(tab));
         router.replace(`?role=${tab}`, { scroll: false });
       });
+      setSelectedRole(tab);
     },
     [router]
   );
