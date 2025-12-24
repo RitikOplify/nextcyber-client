@@ -50,7 +50,7 @@ const hasSequentialChars = (s) => {
 
 const NextCyberAuth = () => {
   const [loading, setLoading] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRole, setSelectedRole] = useState("STUDENT");
   const router = useRouter();
