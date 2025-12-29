@@ -1,6 +1,6 @@
 "use client";
 import JobTable from "@/components/Jobs/MyJob";
-import JobApplyModel from "@/components/Model/JobApply";
+import JobApplyModel from "@/components/Modal/JobApply";
 import { asyncGetAppliedJob, asyncGetJobs } from "@/store/actions/jobActions";
 import instance from "@/utils/axios";
 import {

@@ -1,0 +1,310 @@
+import { useState, useEffect } from "react";
+import { X, RotateCcw } from "lucide-react";
+
+export default function CandidateFilter({
+  isOpen,
+  onClose,
+  filterData,
+  setFilterData,
+}) {
+  // Local state
+  const [selectedContractType, setSelectedContractType] = useState("regular");
+  const [selectedRemotePolicy, setSelectedRemotePolicy] = useState("onsite");
+  const [skillInput, setSkillInput] = useState("");
+  const [minSalary, setMinSalary] = useState("");
+  const [maxSalary, setMaxSalary] = useState("");
+  const [experienceRange, setExperienceRange] = useState([0, 1]); // [min, max] in years
+
+  // Sync with external filterData
+  useEffect(() => {
+    if (filterData) {
+      setSelectedContractType(filterData.contractType || "regular");
+      setSelectedRemotePolicy(filterData.remotePolicy || "onsite");
+      setMinSalary(filterData.salaryRange?.[0] || "");
+      setMaxSalary(filterData.salaryRange?.[1] || "");
+      setExperienceRange(filterData.experienceRange);
+    }
+  }, [filterData]);
+
+  const handleContractTypeChange = (type) => {
+    setSelectedContractType(type);
+    setFilterData({ ...filterData, contractType: type });
+  };
+
+  const handleRemotePolicyChange = (policy) => {
+    setSelectedRemotePolicy(policy);
+    setFilterData({ ...filterData, remotePolicy: policy });
+  };
+
+  const handleAddSkill = () => {
+    if (skillInput.trim()) {
+      const newSkills = [...(filterData.skills || []), skillInput.trim()];
+      setFilterData({ ...filterData, skills: newSkills });
+      setSkillInput("");
+    }
+  };
+
+  const handleRemoveSkill = (skillToRemove) => {
+    const updatedSkills = (filterData.skills || []).filter(
+      (s) => s !== skillToRemove
+    );
+    setFilterData({ ...filterData, skills: updatedSkills });
+  };
+
+  const handleExperienceChange = (index, value) => {
+    const newRange = [...experienceRange];
+    newRange[index] = parseInt(value);
+
+    // Ensure min <= max
+    if (index === 0 && newRange[0] > newRange[1]) newRange[1] = newRange[0];
+    if (index === 1 && newRange[1] < newRange[0]) newRange[0] = newRange[1];
+
+    setExperienceRange(newRange);
+    setFilterData({ ...filterData, experienceRange: newRange });
+  };
+
+  const handleReset = () => {
+    setSelectedContractType("regular");
+    setSelectedRemotePolicy("onsite");
+    setMinSalary("");
+    setMaxSalary("");
+    setExperienceRange([0, 3]);
+    setSkillInput("");
+
+    setFilterData({
+      location: "",
+      experienceRange: [0, 3],
+      skills: [],
+      salaryRange: [0, 0],
+      contractType: "regular",
+      remotePolicy: "onsite",
+    });
+  };
+
+  const handleApply = () => {
+    setFilterData({
+      ...filterData,
+      contractType: selectedContractType,
+      remotePolicy: selectedRemotePolicy,
+      salaryRange: [
+        minSalary ? parseInt(minSalary.replace(/\D/g, "")) || 0 : 0,
+        maxSalary ? parseInt(maxSalary.replace(/\D/g, "")) || 0 : 0,
+      ],
+      experienceRange,
+    });
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  const minExp = experienceRange[0];
+  const maxExp = experienceRange[1];
+
+  return (
+    <div className="absolute top-0 right-0 z-50 w-full max-w-[360px] backdrop-blur-[40px] bg-g-900/40 text-g-100 min-h-screen p-6 flex flex-col">
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-xl font-semibold">Filters</h2>
+        <button
+          onClick={onClose}
+          className="text-gray-400 hover:text-g-200 transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+
+      <div className="overflow-y-auto pr-2 flex-1 pb-24">
+        {/* Contract Type */}
+        <div className="mb-8">
+          <h3 className="text-sm font-medium mb-4">Contract Type</h3>
+          <div className="space-y-3">
+            {[
+              { value: "regular", label: "Regular employment" },
+              { value: "fixed", label: "Fixed term" },
+              { value: "freelance", label: "Freelance" },
+              { value: "internship", label: "Internship" },
+            ].map(({ value, label }) => (
+              <label
+                key={value}
+                className="flex items-center cursor-pointer group"
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedContractType === value}
+                  onChange={() => handleContractTypeChange(value)}
+                  className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-blue-600 checked:border-blue-600 focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                />
+                <span className="ml-3 text-sm text-gray-300 group-hover:text-white transition-colors">
+                  {label}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Remote Policy */}
+        <div className="mb-8">
+          <h3 className="text-sm font-medium mb-4">Remote Policy</h3>
+          <div className="space-y-3">
+            {[
+              { value: "onsite", label: "On-site" },
+              { value: "hybrid", label: "Hybrid" },
+              { value: "remote", label: "Remote" },
+            ].map(({ value, label }) => (
+              <label
+                key={value}
+                className="flex items-center cursor-pointer group"
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedRemotePolicy === value}
+                  onChange={() => handleRemotePolicyChange(value)}
+                  className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-blue-600 checked:border-blue-600 focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                />
+                <span className="ml-3 text-sm text-gray-300 group-hover:text-white transition-colors">
+                  {label}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Salary */}
+        <div className="mb-8">
+          <h3 className="text-sm font-medium mb-4">Salary</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs text-gray-400 mb-2">Min.</label>
+              <input
+                type="text"
+                value={minSalary}
+                onChange={(e) => setMinSalary(e.target.value)}
+                placeholder="e.g. 50,000"
+                className="w-full bg-g-700 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-400 mb-2">Max.</label>
+              <input
+                type="text"
+                value={maxSalary}
+                onChange={(e) => setMaxSalary(e.target.value)}
+                placeholder="e.g. 150,000"
+                className="w-full bg-g-700 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Experience Range - Fixed & Improved */}
+        <div className="mb-8">
+          <h3 className="text-sm font-medium mb-4">Experience</h3>
+
+          {/* Current Values Display */}
+          <div className="flex justify-between text-sm text-gray-300 mb-5">
+            <span>
+              {minExp === 0
+                ? "Fresher"
+                : `${minExp} year${minExp > 1 ? "s" : ""}`}
+            </span>
+            <span>
+              {maxExp === 10
+                ? "10+ years"
+                : `${maxExp} year${maxExp > 1 ? "s" : ""}`}
+            </span>
+          </div>
+
+          {/* Slider Container */}
+          <div className="relative h-10 px-1">
+            {/* Track Background */}
+            <div className="absolute inset-x-0 top-4 h-1.5 bg-neutral-700 rounded-full"></div>
+
+            {/* Selected Range Highlight */}
+            <div
+              className="absolute top-4 h-1.5 bg-blue-600 rounded-full transition-all"
+              style={{
+                left: `${(minExp / 10) * 100}%`,
+                right: `${100 - (maxExp / 10) * 100}%`,
+              }}
+            />
+
+            {/* Min Thumb */}
+            <input
+              type="range"
+              min="0"
+              max="10"
+              value={minExp}
+              onChange={(e) => handleExperienceChange(0, e.target.value)}
+              className="absolute w-full h-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-g-900 [&::-webkit-slider-thumb]:cursor-pointer focus:[&::-webkit-slider-thumb]:ring-4 focus:[&::-webkit-slider-thumb]:ring-blue-500/30"
+              style={{ zIndex: minExp > maxExp - 1 ? 3 : 2 }}
+            />
+
+            {/* Max Thumb */}
+            <input
+              type="range"
+              min="0"
+              max="10"
+              value={maxExp}
+              onChange={(e) => handleExperienceChange(1, e.target.value)}
+              className="absolute w-full h-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-g-900 [&::-webkit-slider-thumb]:cursor-pointer focus:[&::-webkit-slider-thumb]:ring-4 focus:[&::-webkit-slider-thumb]:ring-blue-500/30"
+              style={{ zIndex: maxExp < minExp + 1 ? 3 : 2 }}
+            />
+          </div>
+
+          {/* Scale Labels */}
+          <div className="flex justify-between mt-4 text-xs text-gray-500">
+            <span>0 yrs</span>
+            <span>10+ yrs</span>
+          </div>
+        </div>
+
+        {/* Skills */}
+        <div className="mb-8">
+          <h3 className="text-sm font-medium mb-4">Skills</h3>
+          <input
+            type="text"
+            placeholder="Type skill and press Enter"
+            value={skillInput}
+            onChange={(e) => setSkillInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleAddSkill()}
+            className="w-full bg-g-700 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mb-3"
+          />
+          <div className="flex flex-wrap gap-2">
+            {filterData?.skills?.map((skill, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-2 bg-g-700 rounded-full px-3 py-1.5 text-sm text-gray-300"
+              >
+                <span>{skill}</span>
+                <button
+                  onClick={() => handleRemoveSkill(skill)}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="fixed bottom-0 left-0 right-0 p-6 bg-g-900/80 backdrop-blur-md border-t border-neutral-800">
+        <div className="max-w-[360px] mx-auto flex gap-3">
+          <button
+            onClick={handleReset}
+            className="flex-1 flex items-center justify-center gap-2 bg-g-700 hover:bg-neutral-750 text-gray-300 py-3 rounded-lg transition-colors font-medium"
+          >
+            <RotateCcw className="w-4 h-4" />
+            <span>Reset</span>
+          </button>
+          <button
+            onClick={handleApply}
+            className="flex-1 bg-primary hover:bg-primary-dark text-white py-3 rounded-lg transition-colors font-medium"
+          >
+            Apply Filters
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
