@@ -96,6 +96,27 @@ body {
   width: max-content;
 }
 
+*::-webkit-scrollbar {
+  height: 5px !important;
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #f7f7f9;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #0073cf;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #0053cf;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 /* Keyframes */
 @keyframes scrollLeft {
   0% {
@@ -196,4 +217,32 @@ body {
 
 .error {
   @apply text-red-500 text-xs mt-1;
+}
+
+.ql-editor {
+  background-color: var(--color-g-700) !important;
+}
+
+.ql-toolbar {
+  background-color: var(--color-g-700) !important;
+}
+
+.ql-editor.ql-blank::before {
+  color: #6a6b6c !important;
+  opacity: 1;
+}
+
+.ql-container.ql-snow {
+  border: 1px solid #2f3031 !important;
+  overflow: hidden !important;
+}
+
+.ql-toolbar.ql-snow {
+  border: 1px solid #2f3031 !important;
+  border-bottom: none !important;
+  border-radius: 8px 8px 0 0;
+}
+
+.ql-container.ql-snow {
+  border-radius: 0 0 8px 8px;
 }

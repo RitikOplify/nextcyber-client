@@ -12,13 +12,13 @@ export default function CandidatePreference({ form, showErrors }) {
     formState: { errors },
   } = form;
 
-  const selectedQualification = watch("qualification");
+  const selectedQualification = watch("qualifications");
   const selectedGender = watch("genderPreference");
   const selectedSkills = watch("skills");
   const selectedCerts = watch("certifications");
 
   useEffect(() => {
-    register("qualification", {
+    register("qualifications", {
       required: "Qualification is required",
     });
   }, [register]);
@@ -29,22 +29,6 @@ export default function CandidatePreference({ form, showErrors }) {
         ? "bg-primary text-white border-primary"
         : "bg-g-600 text-g-200 border-g-500 hover:bg-g-700"
     }`;
-
-  const toggleMulti = (field, value) => {
-    const current = getValues(field) || [];
-    if (current.includes(value)) {
-      setValue(
-        field,
-        current.filter((v) => v !== value),
-        { shouldDirty: true, shouldValidate: true }
-      );
-    } else {
-      setValue(field, [...current, value], {
-        shouldDirty: true,
-        shouldValidate: true,
-      });
-    }
-  };
 
   return (
     <div className="space-y-10">
@@ -57,10 +41,15 @@ export default function CandidatePreference({ form, showErrors }) {
             <button
               key={q}
               type="button"
-              onClick={() => toggleMulti("qualification", q)}
+              onClick={() =>
+                setValue("qualifications", q, {
+                  shouldDirty: true,
+                  shouldValidate: true,
+                })
+              }
               className={`${pillClass(
                 selectedQualification.includes(q)
-              )} capitalize`}
+              )} capitalize cursor-pointer`}
             >
               {q.replaceAll("_", " ").toLowerCase()}
             </button>
@@ -89,7 +78,7 @@ export default function CandidatePreference({ form, showErrors }) {
                   shouldValidate: true,
                 })
               }
-              className={`${pillClass(selectedGender === g)} capitalize`}
+              className={`${pillClass(selectedGender === g)} capitalize cursor-pointer`}
             >
               {g.replaceAll("_", " ").toLowerCase()}
             </button>

@@ -63,7 +63,6 @@ export default function WorkReq({ form, showErrors }) {
         </label>
 
         <div className="flex gap-3">
-          {/* MIN */}
           <div className="flex-1">
             <SelectField
               name="minExperience"
@@ -122,7 +121,9 @@ export default function WorkReq({ form, showErrors }) {
               key={c}
               type="button"
               onClick={() => toggleSelection("contractType", c)}
-              className={pillClass(selectedContractTypes.includes(c))}
+              className={`${pillClass(
+                selectedContractTypes.includes(c)
+              )} cursor-pointer`}
             >
               {c}
             </button>

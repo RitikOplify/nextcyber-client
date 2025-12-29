@@ -6,4 +6,5 @@ export const getJobsApi = (params) =>
 export const jobApplyApi = (id) => axios.post(`/student/apply-job?jobId=${id}`);
 export const appliedJobApi = () => axios.get(`/student/job-applications`);
 
-export const companyjobApi = () => axios.get(`/company/created-jobs`);
+export const companyjobApi = (params) =>
+  axios.get(`/company/created-jobs`, { params });
