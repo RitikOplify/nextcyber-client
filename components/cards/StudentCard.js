@@ -1,32 +1,47 @@
 import React from "react";
-import { MessageCircleMore, ArrowUpRight, Heart, Clock, Wallet } from 'lucide-react';
+import {
+  MessageCircleMore,
+  ArrowUpRight,
+  Heart,
+  Clock,
+  Wallet,
+} from "lucide-react";
 
-const StudentCard = ({ candidate, index, favorites, toggleFavorite }) => {
+const StudentCard = ({
+  candidate,
+  index,
+  className,
+  style,
+  handleFavoriteToggle,
+  isFavorite,
+}) => {
   return (
     <>
       <div
         key={candidate.id}
-        className="bg-g-600 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all"
+        className={`bg-g-600 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all ${className}`}
+        style={style}
       >
         {/* Header with Avatar and Heart */}
         <div className="flex justify-between items-start mb-4">
           <img
-            src={candidate?.profilePicture?.url || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop"}
+            src={
+              candidate?.profilePicture?.url ||
+              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop"
+            }
             alt={candidate.name}
             className="w-14 h-14 rounded-full object-cover"
           />
           <button
-            onClick={() => toggleFavorite(index)}
+            onClick={handleFavoriteToggle}
             className={`p-2 rounded-full transition-colors cursor-pointer ${
-              favorites.includes(index)
+              isFavorite
                 ? "bg-purple-500/20 text-purple-400"
                 : "bg-zinc-800 text-gray-400 hover:bg-zinc-700"
             }`}
           >
             <Heart
-              className={`w-5 h-5 ${
-                favorites.includes(index) ? "fill-primary-2-light" : ""
-              }`}
+              className={`w-5 h-5 ${isFavorite ? "fill-primary-2-light" : ""}`}
             />
           </button>
         </div>
@@ -35,13 +50,19 @@ const StudentCard = ({ candidate, index, favorites, toggleFavorite }) => {
         <h3 className="text-g-200 font-semibold text-lg mb-1">
           {candidate.user.firstName} {candidate.user.lastName}
         </h3>
-        <p className="text-g-300 text-sm mb-4">{candidate.role || candidate?.user?.email}</p>
+        <p className="text-g-300 text-sm mb-4 break-words">
+          {candidate.role || candidate?.user?.email}
+        </p>
 
         {/* Salary and Experience */}
         <div className="flex items-center gap-4 mb-6">
           <div className="flex items-center gap-1.5 text-gray-400 bg-g-500 text-sm py-0.5 px-1 rounded-sm">
             <Wallet className="w-4 h-4" />
-            <span>{ candidate?.contractType === "FREELANCE" ? (candidate?.hourlyRate || 'N/A') : (candidate.salary || 'N/A')}</span>
+            <span>
+              {candidate?.contractType === "FREELANCE"
+                ? candidate?.hourlyRate || "N/A"
+                : candidate.salary || "N/A"}
+            </span>
           </div>
           <div className="flex items-center gap-1.5 text-g-200 bg-g-500 text-sm py-0.5 px-2 rounded-sm">
             <Clock className="w-4 h-4" />

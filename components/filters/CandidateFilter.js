@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { X, RotateCcw } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { asyncGetCandidates } from "@/store/actions/candidateAction";
 
 export default function CandidateFilter({
   isOpen,
@@ -14,6 +16,7 @@ export default function CandidateFilter({
   const [minSalary, setMinSalary] = useState("");
   const [maxSalary, setMaxSalary] = useState("");
   const [experienceRange, setExperienceRange] = useState([0, 1]); // [min, max] in years
+  const dispatch = useDispatch();
 
   // Sync with external filterData
   useEffect(() => {
@@ -79,6 +82,7 @@ export default function CandidateFilter({
       contractType: "regular",
       remotePolicy: "onsite",
     });
+    dispatch(asyncGetCandidates());
   };
 
   const handleApply = () => {
@@ -92,6 +96,15 @@ export default function CandidateFilter({
       ],
       experienceRange,
     });
+    const params = {
+      contractType: selectedContractType?.toUpperCase(),
+      remotePolicy: selectedRemotePolicy?.toUpperCase(),
+      salaryMin: minSalary ? parseInt(minSalary.replace(/\D/g, "")) || 0 : 0,
+      salaryMax: maxSalary ? parseInt(maxSalary.replace(/\D/g, "")) || 0 : 0,
+      experience: `${experienceRange[0]}-${experienceRange[1]}`,
+      skills: filterData.skills.join(",") || [],
+    };
+    dispatch(asyncGetCandidates(params));
     onClose();
   };
 
@@ -101,7 +114,7 @@ export default function CandidateFilter({
   const maxExp = experienceRange[1];
 
   return (
-    <div className="absolute top-0 right-0 z-50 w-full max-w-[360px] backdrop-blur-[40px] bg-g-900/40 text-g-100 min-h-screen p-6 flex flex-col">
+    <div className="absolute top-0 right-0 z-50 w-full max-w-[360px] backdrop-blur-[40px] bg-g-900/40 text-g-100 max-h-screen p-6 flex flex-col">
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-xl font-semibold">Filters</h2>
         <button
@@ -131,7 +144,7 @@ export default function CandidateFilter({
                   type="checkbox"
                   checked={selectedContractType === value}
                   onChange={() => handleContractTypeChange(value)}
-                  className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-blue-600 checked:border-blue-600 focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                  className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-blue-600 checked:border-blue-600 focus:ring-2 focus:ring-primaborder-primary cursor-pointer"
                 />
                 <span className="ml-3 text-sm text-gray-300 group-hover:text-white transition-colors">
                   {label}
@@ -158,7 +171,7 @@ export default function CandidateFilter({
                   type="checkbox"
                   checked={selectedRemotePolicy === value}
                   onChange={() => handleRemotePolicyChange(value)}
-                  className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-blue-600 checked:border-blue-600 focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                  className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-blue-600 checked:border-blue-600 focus:ring-2 focus:ring-primaborder-primary cursor-pointer"
                 />
                 <span className="ml-3 text-sm text-gray-300 group-hover:text-white transition-colors">
                   {label}
@@ -179,7 +192,7 @@ export default function CandidateFilter({
                 value={minSalary}
                 onChange={(e) => setMinSalary(e.target.value)}
                 placeholder="e.g. 50,000"
-                className="w-full bg-g-700 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full bg-g-700 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primaborder-primary"
               />
             </div>
             <div>
@@ -189,7 +202,7 @@ export default function CandidateFilter({
                 value={maxSalary}
                 onChange={(e) => setMaxSalary(e.target.value)}
                 placeholder="e.g. 150,000"
-                className="w-full bg-g-700 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full bg-g-700 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primaborder-primary"
               />
             </div>
           </div>
@@ -234,7 +247,7 @@ export default function CandidateFilter({
               max="10"
               value={minExp}
               onChange={(e) => handleExperienceChange(0, e.target.value)}
-              className="absolute w-full h-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-g-900 [&::-webkit-slider-thumb]:cursor-pointer focus:[&::-webkit-slider-thumb]:ring-4 focus:[&::-webkit-slider-thumb]:ring-blue-500/30"
+              className="absolute w-full h-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-g-900 [&::-webkit-slider-thumb]:cursor-pointer focus:[&::-webkit-slider-thumb]:ring-4 focus:[&::-webkit-slider-thumb]:ring-primaborder-primary/30"
               style={{ zIndex: minExp > maxExp - 1 ? 3 : 2 }}
             />
 
@@ -245,7 +258,7 @@ export default function CandidateFilter({
               max="10"
               value={maxExp}
               onChange={(e) => handleExperienceChange(1, e.target.value)}
-              className="absolute w-full h-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-g-900 [&::-webkit-slider-thumb]:cursor-pointer focus:[&::-webkit-slider-thumb]:ring-4 focus:[&::-webkit-slider-thumb]:ring-blue-500/30"
+              className="absolute w-full h-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-g-900 [&::-webkit-slider-thumb]:cursor-pointer focus:[&::-webkit-slider-thumb]:ring-4 focus:[&::-webkit-slider-thumb]:ring-primaborder-primary/30"
               style={{ zIndex: maxExp < minExp + 1 ? 3 : 2 }}
             />
           </div>
@@ -266,7 +279,7 @@ export default function CandidateFilter({
             value={skillInput}
             onChange={(e) => setSkillInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAddSkill()}
-            className="w-full bg-g-700 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mb-3"
+            className="w-full bg-g-700 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primaborder-primary mb-3"
           />
           <div className="flex flex-wrap gap-2">
             {filterData?.skills?.map((skill, index) => (

@@ -1,23 +1,27 @@
 "use client";
-import { useEffect, useState } from "react";
+import { use, useCallback, useEffect, useMemo, useState } from "react";
 import { Search, ChevronDown, SlidersHorizontal, Loader2 } from "lucide-react";
 import LocationSearchInput from "@/components/helper/LocationSearchInput";
 import StudentCard from "@/components/cards/StudentCard";
-import { asyncGetCandidates } from "@/store/actions/candidateAction";
+import {
+  asyncAddCandidateToFavorite,
+  asyncGetCandidates,
+  asyncRemoveCandidateFromFavorite,
+} from "@/store/actions/candidateAction";
 import { useDispatch, useSelector } from "react-redux";
 import CandidateFilter from "@/components/filters/CandidateFilter";
+import Pagination from "@/components/Pagination";
+import toast from "react-hot-toast";
 
 export default function CandidatesPage() {
-  const { candidates } = useSelector((state) => state.candidate);
-  const [favorites, setFavorites] = useState([]);
-  const [dropdowns, setDropdowns] = useState({
-    location: false,
-    contractType: false,
-    salary: false,
-    skills: false,
-    experience: false,
-  });
+  const { user } = useSelector((state) => state.auth);
+  const { candidates, totalPages } = useSelector((state) => state.candidate);
+  const [page, setPage] = useState(1);
+  const [pageLimit, setPageLimit] = useState(10);
+
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debounceSearchTerm, setDebounceSearchTerm] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const dispatch = useDispatch();
   const [showFilter, setShowFilter] = useState(false);
@@ -31,32 +35,76 @@ export default function CandidatesPage() {
     experienceRange: [0, 1],
   });
 
-  const toggleFavorite = (index) => {
-    setFavorites((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-    );
-  };
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebounceSearchTerm(searchTerm);
+    }, 500);
 
-  const toggleDropdown = (dropdown) => {
-    setDropdowns((prev) => ({
-      ...prev,
-      [dropdown]: !prev[dropdown],
-    }));
-  };
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
 
-  const handleFetchCandidates = () => {
-    dispatch(asyncGetCandidates()).then(() => {
+  // Build query params
+  const buildParams = useCallback(() => {
+    const params = {
+      page,
+      limit: pageLimit,
+      ...Object.fromEntries(
+        Object.entries({
+          search: debounceSearchTerm, // Use debounced search term
+        }).filter(([_, value]) => value !== "")
+      ),
+    };
+    return params;
+  }, [page, pageLimit, debounceSearchTerm]);
+
+  const handleFetchCandidates = (params) => {
+    setLoading(true);
+
+    dispatch(asyncGetCandidates(params)).then(() => {
       setLoading(false);
     });
   };
 
-  useEffect(() => {
-    handleFetchCandidates();
-  }, []);
+  const handleSearchCandidates = (params) => {
+    setLoading(true);
+    dispatch(asyncGetCandidates(params)).then(() => {
+      setLoading(false);
+    });
+  };
 
+  const handleFavoriteToggle = async (candidate) => {
+    console.log("Toggling favorite for candidate:", candidate);
+    candidate?.favoritedBy
+      ?.map(({ company }) => company.id)
+      .includes(user?.companyProfile.id)
+      ? dispatch(
+          asyncRemoveCandidateFromFavorite(
+            candidate.id,
+            user?.companyProfile.id
+          )
+        )
+      : dispatch(
+          asyncAddCandidateToFavorite(candidate.id, user?.companyProfile.id)
+        );
+  };
+
+  useEffect(() => {
+    const params = buildParams();
+    console.log("Fetching with params:", params);
+    if (debounceSearchTerm) {
+      setLoading(true);
+      dispatch(asyncGetCandidates(params)).then(() => {
+        setLoading(false);
+      });
+    } else {
+      handleFetchCandidates(params);
+    }
+  }, [debounceSearchTerm, page, pageLimit]);
 
   return (
-    <div className="min-h-screen bg-g-900 text-white">
+    <div className="max-h-screen bg-g-900 text-white">
       <div className="space-y-8">
         {/* Search Bar */}
         <div className="flex flex-col items-center md:flex-row gap-4">
@@ -65,7 +113,9 @@ export default function CandidatesPage() {
             <input
               type="text"
               placeholder="Search for candidates, skills..."
-              className="w-full bg-zinc-900 border border-g-600 rounded-lg py-3.5 pl-12 pr-4 text-g-300 placeholder-gray-500 focus:outline-none focus:border-zinc-700"
+              className="w-full rounded-lg py-3.5 pl-12 pr-4  bg-g-700 border border-g-500 outline-none"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
@@ -83,8 +133,8 @@ export default function CandidatesPage() {
           <div className="flex justify-center items-center gap-3">
             <div className="relative">
               <button
-                onClick={() => toggleDropdown("location")}
-                className="flex items-center gap-2 bg-primary border border-g-600 rounded-lg px-8 py-3.5 text-gray-300 hover:border-zinc-700 transition-colors"
+                onClick={handleSearchCandidates}
+                className="flex items-center gap-2 bg-primary rounded-lg px-8 py-3.5 text-gray-300 hover:border-zinc-700 transition-colors cursor-pointer"
               >
                 Search
               </button>
@@ -93,7 +143,7 @@ export default function CandidatesPage() {
             <div className="relative">
               <button
                 onClick={handleToggleFilter}
-                className="flex items-center gap-2 bg-zinc-900 border border-g-600 rounded-lg px-12 py-3.5 text-gray-300 hover:border-zinc-700 transition-colors"
+                className="flex items-center gap-2 bg-zinc-900 border border-g-600 rounded-lg px-12 py-3.5 text-gray-300 hover:border-zinc-700 transition-colors cursor-pointer"
               >
                 <SlidersHorizontal className="w-4 h-4" />
                 <span>Filter</span>
@@ -103,24 +153,39 @@ export default function CandidatesPage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-          {  
-          loading ? (
+          {loading ? (
             <div className="flex justify-center items-center col-span-full py-10">
               <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
             </div>
+          ) : candidates.length > 0 ? (
+            <>
+              {candidates?.map((candidate, index) => (
+                <StudentCard
+                  key={candidate.id}
+                  candidate={candidate}
+                  index={index}
+                  handleFavoriteToggle={() => handleFavoriteToggle(candidate)}
+                  isFavorite={candidate?.favoritedBy
+                    ?.map(({ company }) => company.id)
+                    .includes(user?.companyProfile.id)}
+                />
+              ))}
+            </>
           ) : (
-          candidates?.map((candidate, index) => (
-            <StudentCard
-              key={candidate.id}
-              candidate={candidate}
-              index={index}
-              favorites={favorites}
-              toggleFavorite={toggleFavorite}
-            />
-          ))
-          )
-        }
+            <div className="flex justify-center items-center col-span-full py-10 text-gray-400">
+              No candidates found.
+            </div>
+          )}
         </div>
+        {candidates?.length > 0 && !loading && (
+          <Pagination
+            page={page}
+            setPage={setPage}
+            pageSize={pageLimit}
+            setPageSize={setPageLimit}
+            totalPages={totalPages}
+          />
+        )}
       </div>
 
       {

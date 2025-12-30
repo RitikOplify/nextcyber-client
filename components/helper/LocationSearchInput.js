@@ -116,13 +116,13 @@ export default function LocationSearchInput({ onPlaceSelected }) {
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
         onFocus={() => searchValue && setDropdownVisible(true)}
-        className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-4 py-3.5 text-gray-300 placeholder-gray-500 focus:outline-none focus:border-zinc-600"
+        className="w-full rounded-lg px-4 py-3.5 bg-g-700 border border-g-500 outline-none"
       />
 
       <ChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
 
       {showDropdown && (
-        <div className="absolute z-20 mt-1 w-full rounded-lg bg-zinc-800 shadow-lg">
+        <div className="absolute z-20 mt-1 w-full rounded-lg bg-g-700 shadow-lg">
           {isPlacePredictionsLoading ? (
             <div className="flex items-center justify-center p-4">
               <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
