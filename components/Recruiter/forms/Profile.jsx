@@ -89,11 +89,11 @@ export default function Profile() {
     const formData = new FormData();
 
     if (data.profileImage?.file) {
-      formData.append("profileImage", data.profileImage.file);
+      formData.append("profilePicture", data.profileImage.file);
     }
 
     if (data.bannerImage?.file) {
-      formData.append("bannerImage", data.bannerImage.file);
+      formData.append("profileBanner", data.bannerImage.file);
     }
 
     formData.append("roleWithCompany", roleWithCompany);
@@ -216,7 +216,7 @@ export default function Profile() {
               <p className="text-[#CDCECE] font-medium">Gender</p>
 
               <div className="flex gap-2.5">
-                {["Male", "Female", "Prefer not to say"].map((g) => (
+                {["MALE", "FEMALE", "PREFER_NOT_TO_SAY"].map((g) => (
                   <button
                     type="button"
                     key={g}

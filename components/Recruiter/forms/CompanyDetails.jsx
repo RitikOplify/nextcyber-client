@@ -17,7 +17,6 @@ export default function CompanyDetails() {
     formState: { errors },
   } = useForm();
   const { companyProfile } = useSelector((state) => state.auth.user);
-  console.log(companyProfile.socialLinks);
 
   useEffect(() => {
     if (!companyProfile) return;
