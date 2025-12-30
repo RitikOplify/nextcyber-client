@@ -96,7 +96,6 @@ export default function BillingPage() {
                 </td>
 
                 <td className="px-5 py-4 text-g-300">July 25, 2025</td>
-
                 <td className="px-5 py-4 text-g-300">$99.00</td>
 
                 <td className="px-5 py-4">

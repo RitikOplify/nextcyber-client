@@ -42,6 +42,7 @@ body {
   --color-light-blue: #dbf9ff;
   --color-dark-blue: #03c3ec;
   --color-accent-color-1: #69edfe;
+  --radius-primary: 10px;
 }
 
 *::-webkit-scrollbar {
