@@ -10,7 +10,7 @@ export default function CandidateFilter({
   setFilterData,
 }) {
   // Local state
-  const [selectedContractType, setSelectedContractType] = useState("regular");
+  const [selectedContractType, setSelectedContractType] = useState("TEMPORARY");
   const [selectedRemotePolicy, setSelectedRemotePolicy] = useState("onsite");
   const [skillInput, setSkillInput] = useState("");
   const [minSalary, setMinSalary] = useState("");
@@ -21,9 +21,9 @@ export default function CandidateFilter({
   // Sync with external filterData
   useEffect(() => {
     if (filterData) {
-      setSelectedContractType(filterData.contractType || "regular");
+      setSelectedContractType(filterData.contractType || "TEMPORARY");
       setSelectedRemotePolicy(filterData.remotePolicy || "onsite");
-      setMinSalary(filterData.salaryRange?.[0] || "");
+      setMinSalary(filterData.salaryRange?.[0] || "");  
       setMaxSalary(filterData.salaryRange?.[1] || "");
       setExperienceRange(filterData.experienceRange);
     }
@@ -99,8 +99,9 @@ export default function CandidateFilter({
     const params = {
       contractType: selectedContractType?.toUpperCase(),
       remotePolicy: selectedRemotePolicy?.toUpperCase(),
-      salaryMin: minSalary ? parseInt(minSalary.replace(/\D/g, "")) || 0 : 0,
-      salaryMax: maxSalary ? parseInt(maxSalary.replace(/\D/g, "")) || 0 : 0,
+      salary: (minSalary && maxSalary) ? `${minSalary ? parseInt(minSalary.replace(/\D/g, "")) : 0}-${
+        maxSalary ? parseInt(maxSalary.replace(/\D/g, "")) : 0
+      }` : null,
       experience: `${experienceRange[0]}-${experienceRange[1]}`,
       skills: filterData.skills.join(",") || [],
     };
@@ -131,10 +132,10 @@ export default function CandidateFilter({
           <h3 className="text-sm font-medium mb-4">Contract Type</h3>
           <div className="space-y-3">
             {[
-              { value: "regular", label: "Regular employment" },
-              { value: "fixed", label: "Fixed term" },
-              { value: "freelance", label: "Freelance" },
-              { value: "internship", label: "Internship" },
+              { value: "TEMPORARY", label: "Temporary employment" },
+              { value: "PERMANENT", label: "Fixed term" },
+              { value: "FREELANCE", label: "Freelance" },
+              { value: "INTERNSHIP", label: "Internship" },
             ].map(({ value, label }) => (
               <label
                 key={value}
@@ -305,14 +306,14 @@ export default function CandidateFilter({
         <div className="max-w-[360px] mx-auto flex gap-3">
           <button
             onClick={handleReset}
-            className="flex-1 flex items-center justify-center gap-2 bg-g-700 hover:bg-neutral-750 text-gray-300 py-3 rounded-lg transition-colors font-medium"
+            className="flex-1 flex items-center justify-center gap-2 bg-g-700 hover:bg-neutral-750 text-gray-300 py-3 rounded-lg transition-colors font-medium cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" />
             <span>Reset</span>
           </button>
           <button
             onClick={handleApply}
-            className="flex-1 bg-primary hover:bg-primary-dark text-white py-3 rounded-lg transition-colors font-medium"
+            className="flex-1 bg-primary hover:bg-primary-dark text-white py-3 rounded-lg transition-colors font-medium cursor-pointer"
           >
             Apply Filters
           </button>

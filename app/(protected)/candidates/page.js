@@ -92,7 +92,6 @@ export default function CandidatesPage() {
 
   useEffect(() => {
     const params = buildParams();
-    console.log("Fetching with params:", params);
     if (debounceSearchTerm) {
       setLoading(true);
       dispatch(asyncGetCandidates(params)).then(() => {
