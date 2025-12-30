@@ -142,7 +142,7 @@ export default function CandidatesPage() {
             <div className="relative">
               <button
                 onClick={handleToggleFilter}
-                className="flex items-center gap-2 bg-zinc-900 border border-g-600 rounded-lg px-12 py-3.5 text-gray-300 hover:border-zinc-700 transition-colors cursor-pointer"
+                className="flex items-center gap-2 bg-g-600 border border-g-600 rounded-lg px-12 py-3.5 text-gray-300 hover:border-zinc-700 transition-colors cursor-pointer"
               >
                 <SlidersHorizontal className="w-4 h-4" />
                 <span>Filter</span>
