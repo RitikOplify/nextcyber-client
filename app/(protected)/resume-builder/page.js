@@ -1,6 +1,7 @@
 "use client";
 import DocumentUploader from "@/components/AIResumeBuillder/DocumentUploader";
 import ResumeBuilder from "@/components/AIResumeBuillder/ResumeBuilder";
+import ResumeBuilderPrev from "@/components/AIResumeBuillder/ResumeBuilderPrev";
 import { toggleSidebar } from "@/store/slices/appSettingsSlice";
 import {
   ArrowLeft,
@@ -47,7 +48,16 @@ const MyNextgenCV = () => {
 
   return (
     <>
-      {showResumeBuilder ? (
+      {true ? (
+        // old one but working -
+        // <ResumeBuilderPrev
+        //   promptInput={prompt}
+        //   setPromptInput={setPrompt}
+        //   resumeInput={resume}
+        //   setResumeInput={setResume}
+        //   setShowResumeBuilder={setShowResumeBuilder}
+        //   resetAll={resetAll}
+        // />
         <ResumeBuilder
           promptInput={prompt}
           setPromptInput={setPrompt}
