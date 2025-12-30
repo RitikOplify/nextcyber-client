@@ -12,15 +12,69 @@ import {
   MapPin,
   Calendar,
   Wand2,
-  CircleX,
+  ChevronDown,
+  ChevronUp,
+  X,
+  Plus,
+  Upload,
+  FileText,
+  Award,
+  Link as LinkIcon,
+  User,
+  MessageSquare,
+  Heart,
+  Trash2,
+  Save,
 } from "lucide-react";
-import Link from "next/link";
-import {
-  enhanceResumeSectionAPIAPIHandler,
-  generateResumeAPIHandler,
-} from "@/store/actions/resumeActions";
-import { useDispatch } from "react-redux";
-import { toggleSidebar } from "@/store/slices/appSettingsSlice";
+
+// Section configuration
+const SECTION_CONFIG = [
+  {
+    key: "personalDetails",
+    title: "Personal Details",
+    icon: <User className="w-4 h-4" />,
+  },
+  {
+    key: "socialLinks",
+    title: "Social Links",
+    icon: <LinkIcon className="w-4 h-4" />,
+  },
+  {
+    key: "professionalSummary",
+    title: "Professional Summary",
+    icon: <MessageSquare className="w-4 h-4" />,
+  },
+  {
+    key: "workExperience",
+    title: "Work Experience",
+    icon: <Briefcase className="w-4 h-4" />,
+  },
+  {
+    key: "skills",
+    title: "Skills",
+    icon: <Code className="w-4 h-4" />,
+  },
+  {
+    key: "projects",
+    title: "Projects",
+    icon: <Code className="w-4 h-4" />,
+  },
+  {
+    key: "education",
+    title: "Education",
+    icon: <GraduationCap className="w-4 h-4" />,
+  },
+  {
+    key: "certifications",
+    title: "Certifications",
+    icon: <Award className="w-4 h-4" />,
+  },
+  {
+    key: "hobbies",
+    title: "Hobbies",
+    icon: <Heart className="w-4 h-4" />,
+  },
+];
 
 // Load jsPDF from CDN
 const loadJsPDF = () => {
@@ -38,40 +92,6 @@ const loadJsPDF = () => {
   });
 };
 
-// Helper: default section keys in the LEFT sidebar (Option B: show all)
-const SECTION_KEYS = [
-  {
-    key: "personalInfo",
-    title: "Personal Info",
-    icon: <Mail className="w-3 h-3" />,
-  },
-  { key: "summary", title: "Summary", icon: <Briefcase className="w-3 h-3" /> },
-  { key: "skills", title: "Skills", icon: <Code className="w-3 h-3" /> },
-  {
-    key: "workExperience",
-    title: "Experience",
-    icon: <Briefcase className="w-3 h-3" />,
-  },
-  {
-    key: "education",
-    title: "Education",
-    icon: <GraduationCap className="w-3 h-3" />,
-  },
-  { key: "projects", title: "Projects", icon: <Code className="w-3 h-3" /> },
-  {
-    key: "certifications",
-    title: "Certifications",
-    icon: <Briefcase className="w-3 h-3" />,
-  },
-  { key: "contact", title: "Contact", icon: <Mail className="w-3 h-3" /> },
-  {
-    key: "additional",
-    title: "Additional",
-    icon: <Wand2 className="w-3 h-3" />,
-  },
-];
-
-// Main Resume Builder Component
 export default function ResumeBuilder({
   promptInput,
   setPromptInput,
@@ -80,45 +100,290 @@ export default function ResumeBuilder({
   setShowResumeBuilder,
   resetAll,
 }) {
+  const [showModal, setShowModal] = useState(false);
+  const [modalStep, setModalStep] = useState("choice");
   const [prompt, setPrompt] = useState(promptInput);
+  const [uploadedFile, setUploadedFile] = useState(resumeInput);
   const [loading, setLoading] = useState(false);
-  const [resume, setResume] = useState(null);
+  const [resume, setResume] = useState({
+    personalDetails: {
+      firstName: "Pradeep",
+      lastName: "Gusain",
+      email: "pradeepg@gmail.com",
+      phone: null,
+      jobTitle: "Full Stack Developer",
+      city: "Pune",
+      state: "Maharashtra",
+      country: null,
+      zipCode: null,
+    },
+    socialLinks: [
+      {
+        platform: "linkedin",
+        url: "https://linkedin.com/in/example",
+        label: "LinkedIn",
+      },
+      {
+        platform: "github",
+        url: "https://github.com/example",
+        label: "GitHub",
+      },
+      {
+        platform: "website",
+        url: "https://example.com",
+        label: "Personal",
+      },
+    ],
+    professionalSummary:
+      "Results-oriented Full Stack Developer with 3 years of experience specializing in MERN stack development, with a strong focus on building robust and scalable e-commerce platforms. Proven ability to deliver high-quality web applications from concept to deployment, utilizing modern technologies and best practices in software engineering. Adept at collaborating with cross-functional teams to achieve project goals and enhance user experiences.",
+    workExperience: [
+      {
+        company: "Company ABC",
+        position: "MERN Stack Developer",
+        startDate: "2021-07",
+        endDate: "2025-12",
+        highlights: [
+          "Developed and maintained scalable web applications using MongoDB, Express.js, React, and Node.js, improving application responsiveness by 30%.",
+          "Collaborated with UI/UX designers and product managers to implement new features aligned with user requirements and business goals.",
+          "Implemented RESTful APIs and integrated third-party services to enhance application functionality and user experience.",
+          "Conducted code reviews and wrote unit tests to ensure code quality and reduce bugs by 20%.",
+        ],
+      },
+      {
+        company: "Company XYZ",
+        position: "Front-End Developer (React)",
+        startDate: "2020-01",
+        endDate: "2021-06",
+        highlights: [
+          "Designed and developed responsive user interfaces using React, Redux, HTML5, and CSS3, increasing user engagement by 15%.",
+          "Optimized front-end performance through code splitting and lazy loading, reducing initial load time by 25%.",
+          "Collaborated with back-end developers to integrate RESTful APIs and ensure seamless data flow.",
+        ],
+      },
+    ],
+    skills: [
+      "MongoDB",
+      "Express.js",
+      "React",
+      "Node.js",
+      "Python",
+      "Java",
+      "JavaScript",
+      "DevOps Tools",
+      "Jenkins",
+      "Docker",
+      "CI/CD",
+      "Tomcat",
+      "Linux",
+      "Shell Scripting",
+      "Angular",
+      "Spring Boot",
+      "HTML5",
+      "CSS3",
+      "WebSockets",
+      "REST APIs",
+      "OracleDB",
+    ],
+    projects: [
+      {
+        name: "Real-Time Chat Application using React and Express",
+        highlights: [
+          "Developed and maintained scalable web applications using MongoDB, Express.js, React, and Node.js, improving application responsiveness by 30%.",
+          "Collaborated with UI/UX designers and product managers to implement new features aligned with user requirements and business goals.",
+        ],
+        link: "https://linkedin.com/in/example",
+        startDate: "2021-07",
+        endDate: "2025-12",
+      },
+    ],
+    education: [
+      {
+        institution: "University of Technology",
+        degree: "Bachelor of Science",
+        field: "Computer Science",
+        startYear: 2015,
+        endYear: 2019,
+        highlights: [
+          "Relevant coursework: Data Structures, Algorithms, Web Development, Database Systems, Software Engineering.",
+          "Completed capstone project focused on developing a full-stack web application using the MERN stack.",
+        ],
+      },
+    ],
+    certifications: [
+      {
+        name: "Full Stack Web Development - MERN",
+        issuer: "Oplify Solutions Pvt. Ltd.",
+        year: 2025,
+        credentialId: "OSPLFSWDP738926001",
+        url: "https://linkedin.com/in/example",
+      },
+    ],
+    hobbies: ["Book Reading", "Cricket", "Travelling"],
+  });
   const [error, setError] = useState(null);
+  const [activeSection, setActiveSection] = useState(null);
 
-  const dispatch = useDispatch();
-
-  // left section refs for scroll + highlight
   const leftRefs = useRef({});
   const leftContainerRef = useRef(null);
-  const [selectedSection, setSelectedSection] = useState(null);
+  const fileInputRef = useRef();
 
-  const generate = async () => {
-    dispatch(
-      generateResumeAPIHandler(
-        { prompt },
-        setError,
-        setLoading,
-        setResume,
-        setSelectedSection
-      )
-    );
+  // Open modal on mount if no resume
+  useEffect(() => {
+    if (!resume) {
+      setShowModal(true);
+    }
+  }, []);
+
+  const handleFileSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setUploadedFile(file);
+    }
   };
 
-  const enhanceSection = async (sectionKey, enhancementPrompt, setLoading) => {
-    const payload = {
-      resume,
-      sectionKey,
-      prompt: enhancementPrompt,
-    };
-    dispatch(
-      enhanceResumeSectionAPIAPIHandler(
-        payload,
-        setResume,
-        setSelectedSection,
-        scrollLeftTo,
-        setLoading
-      )
-    );
+  const uploadAndGenerate = async () => {
+    if (!uploadedFile) return;
+
+    setError(null);
+    setLoading(true);
+
+    try {
+      // Step 1: Upload file to get base64 data
+      const formData = new FormData();
+      formData.append("resume", uploadedFile);
+
+      const uploadRes = await fetch(
+        "http://localhost:7500/api/v1/resume/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!uploadRes.ok) {
+        throw new Error(`Upload failed: ${uploadRes.statusText}`);
+      }
+
+      const uploadData = await uploadRes.json();
+
+      if (!uploadData.success) {
+        throw new Error(uploadData.message || "Failed to upload resume");
+      }
+
+      // Step 2: Generate resume by sending file data to Gemini
+      const genRes = await fetch(
+        "http://localhost:8500/api/v1/resume/generate",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            prompt:
+              "Analyze this resume file and create an enhanced, professional version. Extract all information accurately and improve the presentation while maintaining truthfulness.",
+            uploadedFileData: uploadData.fileData,
+          }),
+        }
+      );
+
+      if (!genRes.ok) {
+        throw new Error(`Generation failed: ${genRes.statusText}`);
+      }
+
+      const genData = await genRes.json();
+
+      if (!genData.success) {
+        throw new Error(genData.message || "Failed to generate resume");
+      }
+
+      setResume(genData.resume);
+      setShowModal(false);
+      setModalStep("choice");
+      setUploadedFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } catch (err) {
+      console.error("Upload error:", err);
+      setError(err?.message || "Failed to process resume");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const generateFromPrompt = async () => {
+    console.log(prompt);
+    if (!prompt.trim()) return;
+
+    console.log("reached api call");
+
+    setError(null);
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:7500/api/v1/resume/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: "demo-user",
+          prompt,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Request failed: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+
+      if (!data.success) {
+        throw new Error(data.message || "Failed to generate resume");
+      }
+
+      setResume(data.resume);
+      setShowModal(false);
+      setModalStep("choice");
+      setPrompt("");
+    } catch (err) {
+      console.error("Generation error:", err);
+      setError(err?.message || "Failed to generate resume");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const enhanceSection = async (sectionKey, enhancementPrompt) => {
+    if (!resume) return;
+
+    try {
+      const res = await fetch(
+        "http://localhost:7500/api/v1/resume/enhance-section",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            resume,
+            sectionKey,
+            prompt: enhancementPrompt || "Improve clarity and impact",
+          }),
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error(`Enhancement failed: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+
+      if (!data.success) {
+        throw new Error(data.message || "Enhancement failed");
+      }
+
+      setResume(data.resume);
+    } catch (err) {
+      console.error("Enhancement error:", err);
+      alert("Enhancement failed: " + (err?.message || "Unknown error"));
+    }
+  };
+
+  const updateResume = (newResumeData) => {
+    setResume(newResumeData);
   };
 
   const exportToPDF = async () => {
@@ -133,7 +398,6 @@ export default function ResumeBuilder({
       const pageWidth = doc.internal.pageSize.getWidth();
       const contentWidth = pageWidth - 2 * margin;
 
-      // Helper function to add text with wrapping
       const addText = (text, size, isBold = false, color = [0, 0, 0]) => {
         doc.setFontSize(size);
         doc.setFont("helvetica", isBold ? "bold" : "normal");
@@ -154,43 +418,75 @@ export default function ResumeBuilder({
         }
       };
 
-      // Header - Name using personalInfo
-      const headerName = resume?.personalInfo?.fullName || "Your Name";
+      // Header - Name
+      const headerName = resume.personalDetails
+        ? `${resume.personalDetails.firstName || ""} ${
+            resume.personalDetails.lastName || ""
+          }`.trim()
+        : "Your Name";
       doc.setFontSize(24);
       doc.setFont("helvetica", "bold");
-      doc.setTextColor(30, 64, 175); // Blue color
+      doc.setTextColor(30, 64, 175);
       doc.text(headerName, pageWidth / 2, yPos, { align: "center" });
       yPos += 10;
 
-      // Contact Info using personalInfo and contact
-      doc.setFontSize(9);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(100, 100, 100);
-      const contactInfoArr = [
-        resume?.personalInfo?.email,
-        resume?.contact?.phone,
-        resume?.personalInfo?.location || resume?.contact?.location,
-      ].filter(Boolean);
-      const contactInfo = contactInfoArr.join(" • ");
-      if (contactInfo) {
-        doc.text(contactInfo, pageWidth / 2, yPos, { align: "center" });
+      // Job Title
+      if (resume.personalDetails?.jobTitle) {
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(100, 100, 100);
+        doc.text(resume.personalDetails.jobTitle, pageWidth / 2, yPos, {
+          align: "center",
+        });
         yPos += 8;
       }
 
-      // Divider line
+      // Contact Info
+      const contactParts = [
+        resume.personalDetails?.email,
+        resume.personalDetails?.phone,
+        [
+          resume.personalDetails?.city,
+          resume.personalDetails?.state,
+          resume.personalDetails?.country,
+        ]
+          .filter(Boolean)
+          .join(", "),
+      ].filter(Boolean);
+
+      if (contactParts.length > 0) {
+        doc.setFontSize(9);
+        doc.text(contactParts.join(" • "), pageWidth / 2, yPos, {
+          align: "center",
+        });
+        yPos += 8;
+      }
+
+      // Social Links
+      if (resume.socialLinks && resume.socialLinks.length > 0) {
+        const socialText = resume.socialLinks
+          .map((s) => s.label || s.platform)
+          .join(" • ");
+        doc.setFontSize(8);
+        doc.setTextColor(30, 64, 175);
+        doc.text(socialText, pageWidth / 2, yPos, { align: "center" });
+        yPos += 8;
+      }
+
+      // Divider
       doc.setDrawColor(200, 200, 200);
       doc.line(margin, yPos, pageWidth - margin, yPos);
       yPos += 8;
 
-      // Summary Section
-      if (resume.summary) {
+      // Professional Summary
+      if (resume.professionalSummary) {
         checkPageBreak();
         addText("PROFESSIONAL SUMMARY", 11, true, [30, 64, 175]);
-        addText(resume.summary, 9);
+        addText(resume.professionalSummary, 9);
         addSpace();
       }
 
-      // Skills Section
+      // Skills
       if (resume.skills && resume.skills.length > 0) {
         checkPageBreak();
         addText("SKILLS", 11, true, [30, 64, 175]);
@@ -198,7 +494,7 @@ export default function ResumeBuilder({
         addSpace();
       }
 
-      // Work Experience Section
+      // Work Experience
       if (resume.workExperience && resume.workExperience.length > 0) {
         checkPageBreak(40);
         addText("WORK EXPERIENCE", 11, true, [30, 64, 175]);
@@ -206,7 +502,6 @@ export default function ResumeBuilder({
         resume.workExperience.forEach((work, index) => {
           checkPageBreak(30);
 
-          // Position and Company
           doc.setFontSize(10);
           doc.setFont("helvetica", "bold");
           doc.setTextColor(0, 0, 0);
@@ -218,7 +513,6 @@ export default function ResumeBuilder({
           doc.setTextColor(30, 64, 175);
           doc.text(work.company || "", margin, yPos);
 
-          // Date (right aligned)
           doc.setTextColor(100, 100, 100);
           const dateText = `${work.startDate || ""} - ${
             work.endDate || "Present"
@@ -226,7 +520,6 @@ export default function ResumeBuilder({
           doc.text(dateText, pageWidth - margin, yPos, { align: "right" });
           yPos += 6;
 
-          // Highlights
           if (work.highlights && work.highlights.length > 0) {
             doc.setTextColor(0, 0, 0);
             work.highlights.forEach((highlight) => {
@@ -246,13 +539,57 @@ export default function ResumeBuilder({
         addSpace();
       }
 
-      // Education Section
+      // Projects
+      if (resume.projects && resume.projects.length > 0) {
+        checkPageBreak(30);
+        addText("PROJECTS", 11, true, [30, 64, 175]);
+
+        resume.projects.forEach((project, index) => {
+          checkPageBreak(20);
+
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(0, 0, 0);
+          doc.text(project.name || "", margin, yPos);
+          yPos += 5;
+
+          if (project.description) {
+            doc.setFontSize(9);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(0, 0, 0);
+            const lines = doc.splitTextToSize(
+              project.description,
+              contentWidth
+            );
+            doc.text(lines, margin, yPos);
+            yPos += lines.length * 9 * 0.4 + 2;
+          }
+
+          if (project.technologies && project.technologies.length > 0) {
+            doc.setFontSize(8);
+            doc.setTextColor(100, 100, 100);
+            doc.text(
+              "Technologies: " + project.technologies.join(", "),
+              margin,
+              yPos
+            );
+            yPos += 4;
+          }
+
+          if (index < resume.projects.length - 1) {
+            addSpace(3);
+          }
+        });
+        addSpace();
+      }
+
+      // Education
       if (resume.education && resume.education.length > 0) {
         checkPageBreak(30);
         addText("EDUCATION", 11, true, [30, 64, 175]);
 
-        resume.education.forEach((edu) => {
-          checkPageBreak(20);
+        resume.education.forEach((edu, index) => {
+          checkPageBreak(15);
 
           doc.setFontSize(10);
           doc.setFont("helvetica", "bold");
@@ -267,195 +604,1484 @@ export default function ResumeBuilder({
 
           if (edu.startYear || edu.endYear) {
             doc.setTextColor(100, 100, 100);
-            const eduDate = `${edu.startYear || ""} - ${edu.endYear || ""}`;
-            doc.text(eduDate, pageWidth - margin, yPos, { align: "right" });
+            const yearText = `${edu.startYear || ""} - ${edu.endYear || ""}`;
+            doc.text(yearText, pageWidth - margin, yPos, { align: "right" });
           }
-          yPos += 8;
+          yPos += 5;
+
+          if (edu.field) {
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Field: ${edu.field}`, margin, yPos);
+            yPos += 4;
+          }
+
+          if (index < resume.education.length - 1) {
+            addSpace(2);
+          }
         });
+        addSpace();
       }
 
-      // Save the PDF
-      const fileName =
-        (resume?.personalInfo?.fullName || "resume").replace(/\s+/g, "_") +
-        ".pdf";
-      doc.save(fileName);
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      alert("Failed to generate PDF. Please try again.");
+      // Certifications
+      if (resume.certifications && resume.certifications.length > 0) {
+        checkPageBreak(20);
+        addText("CERTIFICATIONS", 11, true, [30, 64, 175]);
+
+        resume.certifications.forEach((cert, index) => {
+          checkPageBreak(10);
+          doc.setFontSize(9);
+          doc.setFont("helvetica", "normal");
+          doc.setTextColor(0, 0, 0);
+          const certText = `${cert.name} - ${cert.issuer}${
+            cert.year ? ` (${cert.year})` : ""
+          }`;
+          doc.text(`• ${certText}`, margin, yPos);
+          yPos += 5;
+        });
+        addSpace();
+      }
+
+      // Hobbies
+      if (resume.hobbies && resume.hobbies.length > 0) {
+        checkPageBreak();
+        addText("HOBBIES & INTERESTS", 11, true, [30, 64, 175]);
+        addText(resume.hobbies.join(" • "), 9);
+      }
+
+      doc.save("resume.pdf");
+    } catch (err) {
+      console.error("PDF export error:", err);
+      alert("Failed to export PDF");
     }
   };
 
-  // Scroll left to a section key
-  const scrollLeftTo = (sectionKey) => {
-    const el = leftRefs.current[sectionKey];
-    if (el && el.scrollIntoView) {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
-      // also ensure parent container shows it nicely
-      if (leftContainerRef.current) {
-        // no-op; scrollIntoView handles most cases
-      }
+  const createResume = () => {
+    if (promptInput !== "") {
+      generateFromPrompt();
+    } else if (resumeInput) {
+      uploadAndGenerate();
     }
+  };
+
+  useEffect(() => {
+    createResume();
+    return () => {};
+  }, []);
+
+  // // Scroll left to a section key
+  // const scrollLeftTo = (sectionKey) => {
+  //   const el = leftRefs.current[sectionKey];
+  //   if (el && el.scrollIntoView) {
+  //     el.scrollIntoView({ behavior: "smooth", block: "start" });
+  //     // also ensure parent container shows it nicely
+  //     if (leftContainerRef.current) {
+  //       // no-op; scrollIntoView handles most cases
+  //     }
+  //   }
+  // };
+
+  const scrollLeftTo = (sectionKey) => {
+    const container = leftContainerRef.current;
+    const el = leftRefs.current[sectionKey];
+
+    if (!container || !el) return;
+
+    const containerTop = container.getBoundingClientRect().top;
+    const elementTop = el.getBoundingClientRect().top;
+
+    const scrollOffset = elementTop - containerTop + container.scrollTop - 20;
+
+    container.scrollTo({
+      top: scrollOffset,
+      behavior: "smooth",
+    });
   };
 
   // Called when clicking a section in preview
   const onPreviewSectionClick = (sectionKey) => {
-    setSelectedSection(sectionKey);
+    setActiveSection(sectionKey);
     scrollLeftTo(sectionKey);
   };
 
-  // Called when clicking left section header
-  const onLeftSectionClick = (sectionKey) => {
-    setSelectedSection(sectionKey);
-    // optionally scroll preview to top or focus - not required
-  };
-
-  useEffect(() => {
-    if (prompt.length > 0) {
-      generate();
-    }
-
-    return () => {};
-  }, []);
-
   return (
-    <div className="h-[calc(100vh-60.8px)] text-black flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 overflow-hidden">
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar - 30% */}
-        <div
-          className="w-[30%] border-r border-slate-200 bg-white/50 backdrop-blur-sm flex flex-col overflow-hidden"
-          ref={leftContainerRef}
-        >
-          <div className="flex-shrink-0 p-3 border-b border-slate-200">
-            {/* AI Prompt Card */}
-            <div className="bg-white text-black rounded-lg shadow-sm border border-slate-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-2">
-                <h3 className="text-white text-xs font-semibold flex items-center gap-1.5">
-                  <Wand2 className="w-3.5 h-3.5" />
-                  Build with AI
-                </h3>
-              </div>
-
-              <div className="p-3">
-                <textarea
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  placeholder="e.g., 'Experienced backend engineer with 4 years Node.js + Prisma, seeking SDE-2 roles'"
-                  className="w-full h-20 outline-none px-2.5 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-xs placeholder:text-slate-400"
-                />
-
-                <button
-                  onClick={generate}
-                  disabled={loading || !prompt}
-                  className="w-full mt-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg text-xs font-medium hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      Generating...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-3.5 h-3.5" />
-                      Generate Resume
-                    </>
-                  )}
-                </button>
-
-                {error && (
-                  <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-red-600 text-xs">
-                    {error}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Section Enhancement - Scrollable */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-3">
-            <h3 className="text-xs font-semibold text-slate-700 px-1 mb-1">
-              Enhance Sections
-            </h3>
-
-            {/* Render ALL sections (Option B) */}
-            {resume &&
-              SECTION_KEYS.map((s) => {
-                // get the data for this section (may be undefined if API excluded)
-                const secData = resume ? resume[s.key] : undefined;
-                // determine removed state: section data missing OR (array and length 0) OR (string null/empty)
-                const isRemoved =
-                  resume &&
-                  (secData === undefined ||
-                    secData === null ||
-                    (Array.isArray(secData) && secData.length === 0) ||
-                    (typeof secData === "string" && secData.trim() === ""));
-
-                return (
-                  <div
-                    key={s.key}
-                    ref={(el) => (leftRefs.current[s.key] = el)}
-                    onClick={() => onLeftSectionClick(s.key)}
-                    className={`transition ${
-                      selectedSection === s.key ? "ring-2 ring-blue-200" : ""
+    <div className="h-[calc(100vh-60.8px)] flex flex-col overflow-hidden">
+      {/* Main Content */}
+      {loading ? (
+        <LoadingState />
+      ) : error ? (
+        <div className="flex flex-col gap-5 items-center justify-center h-full w-full">
+          <p className="text-g-200 font-medium text-sm">
+            Our AI Model is not responding. Please try again later.
+          </p>
+          {error && (
+            <p className="text-red-500 font-medium text-sm">Error - {error}</p>
+          )}
+          <button
+            className={`flex gap-2 items-center text-white px-6 py-3 bg-primary rounded-lg ${
+              !(resume || prompt)
+                ? "cursor-not-allowed opacity-60"
+                : "cursor-pointer hover:bg-primary/90 transition-colors opacity-100"
+            }`}
+            onClick={createResume}
+            disabled={!(resume || prompt)}
+          >
+            <Sparkles size={20} />
+            <span>Try Again</span>
+          </button>
+        </div>
+      ) : (
+        <div className="w-full h-full flex bg-g-700">
+          {/* Left Sidebar - Form Editor */}
+          <div className="w-[30%] flex flex-col">
+            <div className="w-full flex items-center gap-5 p-5 pb-0">
+              {resume && (
+                <>
+                  {/* <button
+                    onClick={() => {
+                      setShowModal(true);
+                      setModalStep("choice");
+                    }}
+                    className={`flex gap-2 items-center text-white px-4 py-2 bg-primary text-sm rounded-lg ${
+                      !(resume || prompt)
+                        ? "cursor-not-allowed opacity-60"
+                        : "cursor-pointer hover:bg-primary/90 transition-colors opacity-100"
                     }`}
                   >
-                    <SectionBox
-                      title={s.title}
-                      icon={s.icon}
-                      sectionKey={s.key}
-                      value={secData}
-                      isRemoved={isRemoved}
-                      onEnhance={(p, setLoading) =>
-                        enhanceSection(s.key, p, setLoading)
-                      }
-                    />
-                  </div>
-                );
-              })}
-          </div>
-        </div>
-
-        {/* Right Preview - 70% */}
-        <div className="flex-1 bg-white overflow-hidden flex flex-col">
-          <div className="flex-shrink-0 bg-gradient-to-r from-slate-50 to-blue-50 px-4 py-2 border-b border-slate-200 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-slate-700">
-              Resume Preview
-            </h2>
-            <div className="flex items-center gap-2.5">
-              {true && (
-                <button
-                  onClick={exportToPDF}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:shadow-lg transition-all hover:scale-105"
-                >
-                  <Download className="w-3 h-3" />
-                  <span className="font-medium">Download as PDF</span>
-                </button>
+                    Edit Prompt
+                  </button> */}
+                  <button
+                    onClick={exportToPDF}
+                    className={`flex gap-2 items-center text-white px-4 py-2 bg-primary text-sm rounded-lg ${
+                      !(resume || prompt)
+                        ? "cursor-not-allowed opacity-60"
+                        : "cursor-pointer hover:bg-primary/90 transition-colors opacity-100"
+                    }`}
+                  >
+                    <Download className="w-4 h-4" />
+                    Download as PDF
+                  </button>
+                </>
               )}
-              <button
-                onClick={() => {
-                  setShowResumeBuilder(false);
-                  resetAll();
-                  dispatch(toggleSidebar());
-                }}
-                className="text-g-200 cursor-pointer hover:text-g-200/90 transition-colors"
-              >
-                <CircleX size={20} />
-              </button>
+            </div>
+            <div
+              className="w-full flex h-full flex-col flex-1 gap-3 p-5 overflow-y-scroll text-g-200"
+              ref={leftContainerRef}
+            >
+              {SECTION_CONFIG.map((section) => (
+                <SectionEditor
+                  key={section.key}
+                  ref={(el) => (leftRefs.current[section.key] = el)}
+                  section={section}
+                  resume={resume}
+                  isActive={activeSection === section.key}
+                  onClick={() =>
+                    setActiveSection(
+                      activeSection === section.key ? null : section.key
+                    )
+                  }
+                  onUpdate={updateResume}
+                  onEnhance={enhanceSection}
+                />
+              ))}
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-6">
-            {loading ? (
-              <LoadingState />
-            ) : (
-              <ResumeView
-                resume={resume}
-                onSectionClick={onPreviewSectionClick}
-                selectedSection={selectedSection}
-              />
-            )}
+          {/* Right Side - Resume Preview */}
+          <div className="w-[70%] p-5 h-full overflow-y-scroll">
+            <ResumePreview
+              resume={resume}
+              onSectionClick={onPreviewSectionClick}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Section Editor Component with Forms
+function SectionEditor({
+  section,
+  resume,
+  isActive,
+  onClick,
+  onUpdate,
+  onEnhance,
+  ref,
+}) {
+  const [enhancePrompt, setEnhancePrompt] = useState("");
+  const [isEnhancing, setIsEnhancing] = useState(false);
+
+  const handleEnhance = async () => {
+    if (!enhancePrompt.trim()) return;
+
+    setIsEnhancing(true);
+    try {
+      await onEnhance(section.key, enhancePrompt);
+      setEnhancePrompt("");
+    } finally {
+      setIsEnhancing(false);
+    }
+  };
+
+  return (
+    <div className="rounded-lg overflow-hidden bg-g-500 shrink-0" ref={ref}>
+      <button
+        onClick={onClick}
+        className="w-full px-4 py-3 flex items-center justify-between hover:bg-g-400 transition-colors text-g-200 font-semibold border-b border-g-600"
+      >
+        <span className="leading-6">{section.title}</span>
+
+        {isActive ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+      </button>
+
+      {isActive && (
+        <div className="p-4">
+          <div>
+            <SectionForm
+              sectionKey={section.key}
+              data={resume[section.key]}
+              onUpdate={(newData) => {
+                const updatedResume = { ...resume, [section.key]: newData };
+                onUpdate(updatedResume);
+              }}
+            />
+          </div>
+          <div className="flex items-center gap-4 mt-4">
+            <input
+              type="text"
+              value={enhancePrompt}
+              onChange={(e) => setEnhancePrompt(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleEnhance()}
+              placeholder="Give prompt"
+              className="flex-1 px-4 py-3 text-sm leading-5 outline-none bg-g-700 text-g-300 rounded-lg "
+            />
+            <button
+              onClick={handleEnhance}
+              disabled={!enhancePrompt.trim() || isEnhancing}
+              className="px-4 py-3 text-sm leading-5 outline-none bg-primary rounded-lg hover:bg-primary/75 transition-colors disabled:opacity-75  text-white disabled:cursor-not-allowed flex items-center gap-2 font-medium"
+            >
+              {isEnhancing ? (
+                <Loader2 size={20} className="animate-spin" />
+              ) : (
+                <>
+                  <Sparkles size={20} />
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Section Form Component
+function SectionForm({ sectionKey, data, onUpdate }) {
+  const inputClass =
+    "w-full px-4 py-3 text-sm text-g-300 leading-5 hide-scrollbar bg-g-700 rounded-lg outline-none";
+  const labelClass = "block text-xs font-medium text-g-200 leading-4 mb-1";
+
+  // Personal Details Form
+  if (sectionKey === "personalDetails") {
+    const handleChange = (field, value) => {
+      onUpdate({ ...data, [field]: value });
+    };
+
+    return (
+      <div className="space-y-3">
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className={labelClass}>First Name</label>
+            <input
+              type="text"
+              value={data?.firstName || ""}
+              onChange={(e) => handleChange("firstName", e.target.value)}
+              className={inputClass}
+              placeholder="John"
+            />
+          </div>
+          <div>
+            <label className={labelClass}>Last Name</label>
+            <input
+              type="text"
+              value={data?.lastName || ""}
+              onChange={(e) => handleChange("lastName", e.target.value)}
+              className={inputClass}
+              placeholder="Doe"
+            />
+          </div>
+        </div>
+        <div>
+          <label className={labelClass}>Job Title</label>
+          <input
+            type="text"
+            value={data?.jobTitle || ""}
+            onChange={(e) => handleChange("jobTitle", e.target.value)}
+            className={inputClass}
+            placeholder="Full Stack Developer"
+          />
+        </div>
+        <div>
+          <label className={labelClass}>Email</label>
+          <input
+            type="email"
+            value={data?.email || ""}
+            onChange={(e) => handleChange("email", e.target.value)}
+            className={inputClass}
+            placeholder="john@example.com"
+          />
+        </div>
+        <div>
+          <label className={labelClass}>Phone</label>
+          <input
+            type="tel"
+            value={data?.phone || ""}
+            onChange={(e) => handleChange("phone", e.target.value)}
+            className={inputClass}
+            placeholder="+1 234 567 8900"
+          />
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className={labelClass}>City</label>
+            <input
+              type="text"
+              value={data?.city || ""}
+              onChange={(e) => handleChange("city", e.target.value)}
+              className={inputClass}
+              placeholder="New York"
+            />
+          </div>
+          <div>
+            <label className={labelClass}>State</label>
+            <input
+              type="text"
+              value={data?.state || ""}
+              onChange={(e) => handleChange("state", e.target.value)}
+              className={inputClass}
+              placeholder="NY"
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className={labelClass}>Country</label>
+            <input
+              type="text"
+              value={data?.country || ""}
+              onChange={(e) => handleChange("country", e.target.value)}
+              className={inputClass}
+              placeholder="USA"
+            />
+          </div>
+          <div>
+            <label className={labelClass}>Zip Code</label>
+            <input
+              type="text"
+              value={data?.zipCode || ""}
+              onChange={(e) => handleChange("zipCode", e.target.value)}
+              className={inputClass}
+              placeholder="10001"
+            />
           </div>
         </div>
       </div>
+    );
+  }
+
+  // Social Links Form
+  if (sectionKey === "socialLinks") {
+    const links = Array.isArray(data) ? data : [];
+
+    const addLink = () => {
+      onUpdate([...links, { platform: "", url: "", label: "" }]);
+    };
+
+    const removeLink = (index) => {
+      onUpdate(links.filter((_, i) => i !== index));
+    };
+
+    const updateLink = (index, field, value) => {
+      const newLinks = [...links];
+      newLinks[index] = { ...newLinks[index], [field]: value };
+      onUpdate(newLinks);
+    };
+
+    return (
+      <div className="space-y-3">
+        {links.map((link, index) => (
+          <div
+            key={index}
+            className="p-3 border border-slate-200 rounded-lg space-y-2"
+          >
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-xs font-medium text-slate-700">
+                Link {index + 1}
+              </span>
+              <button
+                onClick={() => removeLink(index)}
+                className="p-1 hover:bg-red-50 rounded text-red-600"
+              >
+                <Trash2 className="w-3 h-3" />
+              </button>
+            </div>
+            <div>
+              <label className={labelClass}>Platform</label>
+              <input
+                type="text"
+                value={link.platform || ""}
+                onChange={(e) => updateLink(index, "platform", e.target.value)}
+                className={inputClass}
+                placeholder="LinkedIn"
+              />
+            </div>
+            <div>
+              <label className={labelClass}>URL</label>
+              <input
+                type="url"
+                value={link.url || ""}
+                onChange={(e) => updateLink(index, "url", e.target.value)}
+                className={inputClass}
+                placeholder="https://linkedin.com/in/johndoe"
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Label (Optional)</label>
+              <input
+                type="text"
+                value={link.label || ""}
+                onChange={(e) => updateLink(index, "label", e.target.value)}
+                className={inputClass}
+                placeholder="LinkedIn"
+              />
+            </div>
+          </div>
+        ))}
+        <button
+          onClick={addLink}
+          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-blue-500 hover:text-primary transition-colors flex items-center justify-center gap-2"
+        >
+          <Plus className="w-4 h-4" />
+          Add Link
+        </button>
+      </div>
+    );
+  }
+
+  // Professional Summary Form
+  if (sectionKey === "professionalSummary") {
+    return (
+      <div>
+        <textarea
+          value={data || ""}
+          onChange={(e) => onUpdate(e.target.value)}
+          className={`${inputClass} min-h-[120px] resize-none`}
+          placeholder="Write a compelling professional summary..."
+        />
+      </div>
+    );
+  }
+
+  // Work Experience Form
+  if (sectionKey === "workExperience") {
+    const experiences = Array.isArray(data) ? data : [];
+
+    const addExperience = () => {
+      onUpdate([
+        ...experiences,
+        {
+          company: "",
+          position: "",
+          startDate: "",
+          endDate: "",
+          highlights: [""],
+        },
+      ]);
+    };
+
+    const removeExperience = (index) => {
+      onUpdate(experiences.filter((_, i) => i !== index));
+    };
+
+    const updateExperience = (index, field, value) => {
+      const newExp = [...experiences];
+      newExp[index] = { ...newExp[index], [field]: value };
+      onUpdate(newExp);
+    };
+
+    const addHighlight = (expIndex) => {
+      const newExp = [...experiences];
+      newExp[expIndex].highlights = [...newExp[expIndex].highlights, ""];
+      onUpdate(newExp);
+    };
+
+    const removeHighlight = (expIndex, hlIndex) => {
+      const newExp = [...experiences];
+      newExp[expIndex].highlights = newExp[expIndex].highlights.filter(
+        (_, i) => i !== hlIndex
+      );
+      onUpdate(newExp);
+    };
+
+    const updateHighlight = (expIndex, hlIndex, value) => {
+      const newExp = [...experiences];
+      newExp[expIndex].highlights[hlIndex] = value;
+      onUpdate(newExp);
+    };
+
+    return (
+      <div className="space-y-3">
+        {experiences.map((exp, expIndex) => (
+          <div
+            key={expIndex}
+            className="p-3 border border-slate-200 rounded-lg space-y-2"
+          >
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-xs font-medium text-slate-700">
+                Experience {expIndex + 1}
+              </span>
+              <button
+                onClick={() => removeExperience(expIndex)}
+                className="p-1 hover:bg-red-50 rounded text-red-600"
+              >
+                <Trash2 className="w-3 h-3" />
+              </button>
+            </div>
+            <div>
+              <label className={labelClass}>Company</label>
+              <input
+                type="text"
+                value={exp.company || ""}
+                onChange={(e) =>
+                  updateExperience(expIndex, "company", e.target.value)
+                }
+                className={inputClass}
+                placeholder="Company Name"
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Position</label>
+              <input
+                type="text"
+                value={exp.position || ""}
+                onChange={(e) =>
+                  updateExperience(expIndex, "position", e.target.value)
+                }
+                className={inputClass}
+                placeholder="Job Title"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className={labelClass}>Start Date</label>
+                <input
+                  type="text"
+                  value={exp.startDate || ""}
+                  onChange={(e) =>
+                    updateExperience(expIndex, "startDate", e.target.value)
+                  }
+                  className={inputClass}
+                  placeholder="2020-01"
+                />
+              </div>
+              <div>
+                <label className={labelClass}>End Date</label>
+                <input
+                  type="text"
+                  value={exp.endDate || ""}
+                  onChange={(e) =>
+                    updateExperience(expIndex, "endDate", e.target.value)
+                  }
+                  className={inputClass}
+                  placeholder="Present or 2021-12"
+                />
+              </div>
+            </div>
+            <div>
+              <label className={labelClass}>Highlights</label>
+              <div className="space-y-2">
+                {exp.highlights &&
+                  exp.highlights.map((highlight, hlIndex) => (
+                    <div key={hlIndex} className="flex gap-2">
+                      <input
+                        type="text"
+                        value={highlight}
+                        onChange={(e) =>
+                          updateHighlight(expIndex, hlIndex, e.target.value)
+                        }
+                        className={inputClass}
+                        placeholder="Achievement or responsibility..."
+                      />
+                      <button
+                        onClick={() => removeHighlight(expIndex, hlIndex)}
+                        className="p-2 hover:bg-red-50 rounded text-red-600"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                <button
+                  onClick={() => addHighlight(expIndex)}
+                  className="w-full px-3 py-1.5 border border-dashed border-slate-300 rounded text-xs text-slate-600 hover:border-blue-500 hover:text-primary"
+                >
+                  + Add Highlight
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+        <button
+          onClick={addExperience}
+          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-blue-500 hover:text-primary transition-colors flex items-center justify-center gap-2"
+        >
+          <Plus className="w-4 h-4" />
+          Add Experience
+        </button>
+      </div>
+    );
+  }
+
+  // Skills Form
+  if (sectionKey === "skills") {
+    const skills = Array.isArray(data) ? data : [];
+
+    const addSkill = () => {
+      onUpdate([...skills, ""]);
+    };
+
+    const removeSkill = (index) => {
+      onUpdate(skills.filter((_, i) => i !== index));
+    };
+
+    const updateSkill = (index, value) => {
+      const newSkills = [...skills];
+      newSkills[index] = value;
+      onUpdate(newSkills);
+    };
+
+    return (
+      <div className="space-y-2">
+        {skills.map((skill, index) => (
+          <div key={index} className="flex gap-2">
+            <input
+              type="text"
+              value={skill}
+              onChange={(e) => updateSkill(index, e.target.value)}
+              className={inputClass}
+              placeholder="Skill name"
+            />
+            <button
+              onClick={() => removeSkill(index)}
+              className="p-2 hover:bg-red-50 rounded text-red-600"
+            >
+              <Trash2 className="w-3 h-3" />
+            </button>
+          </div>
+        ))}
+        <button
+          onClick={addSkill}
+          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-blue-500 hover:text-primary transition-colors flex items-center justify-center gap-2"
+        >
+          <Plus className="w-4 h-4" />
+          Add Skill
+        </button>
+      </div>
+    );
+  }
+
+  // Projects Form
+  if (sectionKey === "projects") {
+    const projects = Array.isArray(data) ? data : [];
+
+    const addProject = () => {
+      onUpdate([
+        ...projects,
+        {
+          name: "",
+          highlights: [""],
+          link: "",
+          startDate: "",
+          endDate: "",
+        },
+      ]);
+    };
+
+    const removeProject = (index) => {
+      onUpdate(projects.filter((_, i) => i !== index));
+    };
+
+    const updateProject = (index, field, value) => {
+      const newProjects = [...projects];
+      newProjects[index] = { ...newProjects[index], [field]: value };
+      onUpdate(newProjects);
+    };
+
+    const addHighlight = (expIndex) => {
+      const newExp = [...projects];
+      newExp[expIndex].highlights = [...newExp[expIndex].highlights, ""];
+      onUpdate(newExp);
+    };
+
+    const removeHighlight = (expIndex, hlIndex) => {
+      const newExp = [...projects];
+      newExp[expIndex].highlights = newExp[expIndex].highlights.filter(
+        (_, i) => i !== hlIndex
+      );
+      onUpdate(newExp);
+    };
+
+    const updateHighlight = (expIndex, hlIndex, value) => {
+      const newExp = [...projects];
+      newExp[expIndex].highlights[hlIndex] = value;
+      onUpdate(newExp);
+    };
+
+    return (
+      <div className="space-y-3">
+        {projects.map((project, index) => (
+          <div
+            key={index}
+            className="p-3 border border-slate-200 rounded-lg space-y-2"
+          >
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-xs font-medium text-slate-700">
+                Project {index + 1}
+              </span>
+              <button
+                onClick={() => removeProject(index)}
+                className="p-1 hover:bg-red-50 rounded text-red-600"
+              >
+                <Trash2 className="w-3 h-3" />
+              </button>
+            </div>
+            <div>
+              <label className={labelClass}>Project Name</label>
+              <input
+                type="text"
+                value={project.name || ""}
+                onChange={(e) => updateProject(index, "name", e.target.value)}
+                className={inputClass}
+                placeholder="Project Name"
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Highlights</label>
+              <div className="space-y-2">
+                {project.highlights &&
+                  project.highlights.map((highlight, hlIndex) => (
+                    <div key={hlIndex} className="flex gap-2">
+                      <input
+                        type="text"
+                        value={highlight}
+                        onChange={(e) =>
+                          updateHighlight(index, hlIndex, e.target.value)
+                        }
+                        className={inputClass}
+                        placeholder="Achievement or responsibility..."
+                      />
+                      <button
+                        onClick={() => removeHighlight(index, hlIndex)}
+                        className="p-2 hover:bg-red-50 rounded text-red-600"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                <button
+                  onClick={() => addHighlight(index)}
+                  className="w-full px-3 py-1.5 border border-dashed border-slate-300 rounded text-xs text-slate-600 hover:border-blue-500 hover:text-primary"
+                >
+                  + Add Highlight
+                </button>
+              </div>
+            </div>
+            <div>
+              <label className={labelClass}>Link (Optional)</label>
+              <input
+                type="url"
+                value={project.link || ""}
+                onChange={(e) => updateProject(index, "link", e.target.value)}
+                className={inputClass}
+                placeholder="https://github.com/..."
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className={labelClass}>Start Date</label>
+                <input
+                  type="text"
+                  value={project.startDate || ""}
+                  onChange={(e) =>
+                    updateProject(index, "startDate", e.target.value)
+                  }
+                  className={inputClass}
+                  placeholder="2023-01"
+                />
+              </div>
+              <div>
+                <label className={labelClass}>End Date</label>
+                <input
+                  type="text"
+                  value={project.endDate || ""}
+                  onChange={(e) =>
+                    updateProject(index, "endDate", e.target.value)
+                  }
+                  className={inputClass}
+                  placeholder="2023-06"
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+        <button
+          onClick={addProject}
+          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-blue-500 hover:text-primary transition-colors flex items-center justify-center gap-2"
+        >
+          <Plus className="w-4 h-4" />
+          Add Project
+        </button>
+      </div>
+    );
+  }
+
+  // Education Form
+  if (sectionKey === "education") {
+    const education = Array.isArray(data) ? data : [];
+
+    const addEducation = () => {
+      onUpdate([
+        ...education,
+        {
+          institution: "",
+          degree: "",
+          field: "",
+          startYear: null,
+          endYear: null,
+          highlights: [""],
+        },
+      ]);
+    };
+
+    const removeEducation = (index) => {
+      onUpdate(education.filter((_, i) => i !== index));
+    };
+
+    const updateEducation = (index, field, value) => {
+      const newEdu = [...education];
+      newEdu[index] = { ...newEdu[index], [field]: value };
+      onUpdate(newEdu);
+    };
+
+    const addHighlight = (expIndex) => {
+      const newExp = [...education];
+      newExp[expIndex].highlights = [...newExp[expIndex].highlights, ""];
+      onUpdate(newExp);
+    };
+
+    const removeHighlight = (expIndex, hlIndex) => {
+      const newExp = [...education];
+      newExp[expIndex].highlights = newExp[expIndex].highlights.filter(
+        (_, i) => i !== hlIndex
+      );
+      onUpdate(newExp);
+    };
+
+    const updateHighlight = (expIndex, hlIndex, value) => {
+      const newExp = [...education];
+      newExp[expIndex].highlights[hlIndex] = value;
+      onUpdate(newExp);
+    };
+
+    return (
+      <div className="space-y-3">
+        {education.map((edu, index) => (
+          <div
+            key={index}
+            className="p-3 border border-slate-200 rounded-lg space-y-2"
+          >
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-xs font-medium text-slate-700">
+                Education {index + 1}
+              </span>
+              <button
+                onClick={() => removeEducation(index)}
+                className="p-1 hover:bg-red-50 rounded text-red-600"
+              >
+                <Trash2 className="w-3 h-3" />
+              </button>
+            </div>
+            <div>
+              <label className={labelClass}>Institution</label>
+              <input
+                type="text"
+                value={edu.institution || ""}
+                onChange={(e) =>
+                  updateEducation(index, "institution", e.target.value)
+                }
+                className={inputClass}
+                placeholder="University Name"
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Degree</label>
+              <input
+                type="text"
+                value={edu.degree || ""}
+                onChange={(e) =>
+                  updateEducation(index, "degree", e.target.value)
+                }
+                className={inputClass}
+                placeholder="Bachelor's in Computer Science"
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Field of Study</label>
+              <input
+                type="text"
+                value={edu.field || ""}
+                onChange={(e) =>
+                  updateEducation(index, "field", e.target.value)
+                }
+                className={inputClass}
+                placeholder="Computer Science"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className={labelClass}>Start Year</label>
+                <input
+                  type="number"
+                  value={edu.startYear || ""}
+                  onChange={(e) =>
+                    updateEducation(
+                      index,
+                      "startYear",
+                      e.target.value ? parseInt(e.target.value) : null
+                    )
+                  }
+                  className={inputClass}
+                  placeholder="2015"
+                />
+              </div>
+              <div>
+                <label className={labelClass}>End Year</label>
+                <input
+                  type="number"
+                  value={edu.endYear || ""}
+                  onChange={(e) =>
+                    updateEducation(
+                      index,
+                      "endYear",
+                      e.target.value ? parseInt(e.target.value) : null
+                    )
+                  }
+                  className={inputClass}
+                  placeholder="2019"
+                />
+              </div>
+              <div className="col-span-2">
+                <label className={labelClass}>Highlights</label>
+                <div className="space-y-2">
+                  {edu.highlights &&
+                    edu.highlights.map((highlight, hlIndex) => (
+                      <div key={hlIndex} className="flex gap-2">
+                        <input
+                          type="text"
+                          value={highlight}
+                          onChange={(e) =>
+                            updateHighlight(index, hlIndex, e.target.value)
+                          }
+                          className={inputClass}
+                          placeholder="Achievement or responsibility..."
+                        />
+                        <button
+                          onClick={() => removeHighlight(index, hlIndex)}
+                          className="p-2 hover:bg-red-50 rounded text-red-600"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  <button
+                    onClick={() => addHighlight(index)}
+                    className="w-full px-3 py-1.5 border border-dashed border-slate-300 rounded text-xs text-slate-600 hover:border-blue-500 hover:text-primary"
+                  >
+                    + Add Highlight
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+        <button
+          onClick={addEducation}
+          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-blue-500 hover:text-primary transition-colors flex items-center justify-center gap-2"
+        >
+          <Plus className="w-4 h-4" />
+          Add Education
+        </button>
+      </div>
+    );
+  }
+
+  // Certifications Form
+  if (sectionKey === "certifications") {
+    const certifications = Array.isArray(data) ? data : [];
+
+    const addCertification = () => {
+      onUpdate([
+        ...certifications,
+        {
+          name: "",
+          issuer: "",
+          year: null,
+          credentialId: "",
+          url: "",
+        },
+      ]);
+    };
+
+    const removeCertification = (index) => {
+      onUpdate(certifications.filter((_, i) => i !== index));
+    };
+
+    const updateCertification = (index, field, value) => {
+      const newCerts = [...certifications];
+      newCerts[index] = { ...newCerts[index], [field]: value };
+      onUpdate(newCerts);
+    };
+
+    return (
+      <div className="space-y-3">
+        {certifications.map((cert, index) => (
+          <div
+            key={index}
+            className="p-3 border border-slate-200 rounded-lg space-y-2"
+          >
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-xs font-medium text-slate-700">
+                Certification {index + 1}
+              </span>
+              <button
+                onClick={() => removeCertification(index)}
+                className="p-1 hover:bg-red-50 rounded text-red-600"
+              >
+                <Trash2 className="w-3 h-3" />
+              </button>
+            </div>
+            <div>
+              <label className={labelClass}>Certification Name</label>
+              <input
+                type="text"
+                value={cert.name || ""}
+                onChange={(e) =>
+                  updateCertification(index, "name", e.target.value)
+                }
+                className={inputClass}
+                placeholder="AWS Certified Solutions Architect"
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Issuer</label>
+              <input
+                type="text"
+                value={cert.issuer || ""}
+                onChange={(e) =>
+                  updateCertification(index, "issuer", e.target.value)
+                }
+                className={inputClass}
+                placeholder="Amazon Web Services"
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Year</label>
+              <input
+                type="number"
+                value={cert.year || ""}
+                onChange={(e) =>
+                  updateCertification(
+                    index,
+                    "year",
+                    e.target.value ? parseInt(e.target.value) : null
+                  )
+                }
+                className={inputClass}
+                placeholder="2023"
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Credential ID (Optional)</label>
+              <input
+                type="text"
+                value={cert.credentialId || ""}
+                onChange={(e) =>
+                  updateCertification(index, "credentialId", e.target.value)
+                }
+                className={inputClass}
+                placeholder="ABC123XYZ"
+              />
+            </div>
+            <div>
+              <label className={labelClass}>URL (Optional)</label>
+              <input
+                type="url"
+                value={cert.url || ""}
+                onChange={(e) =>
+                  updateCertification(index, "url", e.target.value)
+                }
+                className={inputClass}
+                placeholder="https://..."
+              />
+            </div>
+          </div>
+        ))}
+        <button
+          onClick={addCertification}
+          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-blue-500 hover:text-primary transition-colors flex items-center justify-center gap-2"
+        >
+          <Plus className="w-4 h-4" />
+          Add Certification
+        </button>
+      </div>
+    );
+  }
+
+  // Hobbies Form
+  if (sectionKey === "hobbies") {
+    const hobbies = Array.isArray(data) ? data : [];
+
+    const addHobby = () => {
+      onUpdate([...hobbies, ""]);
+    };
+
+    const removeHobby = (index) => {
+      onUpdate(hobbies.filter((_, i) => i !== index));
+    };
+
+    const updateHobby = (index, value) => {
+      const newHobbies = [...hobbies];
+      newHobbies[index] = value;
+      onUpdate(newHobbies);
+    };
+
+    return (
+      <div className="space-y-2">
+        {hobbies.map((hobby, index) => (
+          <div key={index} className="flex gap-2">
+            <input
+              type="text"
+              value={hobby}
+              onChange={(e) => updateHobby(index, e.target.value)}
+              className={inputClass}
+              placeholder="Hobby or interest"
+            />
+            <button
+              onClick={() => removeHobby(index)}
+              className="p-2 hover:bg-red-50 rounded text-red-600"
+            >
+              <Trash2 className="w-3 h-3" />
+            </button>
+          </div>
+        ))}
+        <button
+          onClick={addHobby}
+          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-blue-500 hover:text-primary transition-colors flex items-center justify-center gap-2"
+        >
+          <Plus className="w-4 h-4" />
+          Add Hobby
+        </button>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+// Resume Preview Component - Every element is clickable
+function ResumePreview({ resume, onSectionClick }) {
+  if (!resume)
+    return (
+      <div className="flex flex-col items-center gap-2 justify-center w-full h-full">
+        <p className="text-g-200 font-medium text-xs">
+          Your NextGen AI Curated Resume Preview.
+        </p>
+        <p className="text-g-200 font-medium text-xs">Not available!</p>
+      </div>
+    );
+
+  const pd = resume.personalDetails;
+  const fullName = pd
+    ? `${pd.firstName || ""} ${pd.lastName || ""}`.trim()
+    : "Your Name";
+  const location = pd
+    ? [pd.city, pd.state, pd.country, pd.zipCode].filter(Boolean).join(", ")
+    : null;
+
+  return (
+    <div className="bg-white p-8">
+      {/* Header Section - Clickable */}
+      <div
+        onClick={() => onSectionClick("personalDetails")}
+        className="cursor-pointer hover:bg-light-blue flex flex-col items-center justify-center mb-1 transition-colors group"
+      >
+        <h1 className="text-3xl text-g-400 group-hover:text-primary font-semibold transition-colors mb-2 leading-8">
+          {fullName}
+        </h1>
+        {pd?.jobTitle && (
+          <p className="text-sm leading-5 text-g-300 font-medium group-hover:text-primary transition-colors">
+            {pd.jobTitle}
+          </p>
+        )}
+        <div className="flex flex-wrap gap-4 mt-1 text-xs leading-5 text-g-300">
+          {location && (
+            <div className="flex items-center gap-1.5 group-hover:text-primary transition-colors">
+              <MapPin className="w-3 h-3" />
+              <span>{location}</span>
+            </div>
+          )}
+          {pd?.email && (
+            <div className="flex items-center gap-1.5 group-hover:text-primary transition-colors">
+              <Mail className="w-3 h-3" />
+              <span>{pd.email}</span>
+            </div>
+          )}
+          {pd?.phone && (
+            <div className="flex items-center gap-1.5 group-hover:text-primary transition-colors">
+              <Phone className="w-3 h-3" />
+              <span>{pd.phone}</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Social Links - Clickable */}
+      {resume.socialLinks && resume.socialLinks.length > 0 && (
+        <div
+          onClick={() => onSectionClick("socialLinks")}
+          className="cursor-pointer hover:bg-light-blue mb-5 transition-colors group"
+        >
+          <div className="flex items-center justify-center flex-wrap gap-4">
+            {resume.socialLinks.map((link, i) => (
+              <a
+                key={i}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-primary hover:text-blue-700 hover:underline leading-5"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {link.label || link.platform}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Professional Summary - Clickable */}
+      {resume.professionalSummary && (
+        <div className="mb-5">
+          <h2 className="w-full text-sm font-semibold text-g-400 mb-3 border-b-2 border-g-400 pb-1.5 inline-block">
+            SUMMARY
+          </h2>
+          <p
+            className="text-sm leading-5 text-g-300 cursor-pointer hover:bg-light-blue transition-colors"
+            onClick={() => onSectionClick("professionalSummary")}
+          >
+            {resume.professionalSummary}
+          </p>
+        </div>
+      )}
+
+      {/* Work Experience - Every item clickable */}
+      {resume.workExperience && resume.workExperience.length > 0 && (
+        <div onClick={() => onSectionClick("workExperience")} className="mb-5">
+          <h2 className="w-full text-sm font-semibold text-g-400 mb-3 border-b-2 border-g-400 pb-1.5 inline-block">
+            EXPERIENCE
+          </h2>
+          <div className="space-y-3">
+            {resume.workExperience.map((exp, i) => (
+              <div
+                key={i}
+                className="cursor-pointer hover:bg-light-blue transition-colors"
+              >
+                <h3 className="font-semibold text-g-400 leading-5 text-sm mb-1">
+                  {exp.position}
+                </h3>
+                <div className="flex justify-between items-center mb-2">
+                  <p className="font-medium text-g-400 leading-5 text-sm">
+                    {exp.company}
+                  </p>
+                  <span className="font-medium text-g-400 leading-5 text-sm">
+                    {exp.startDate} — {exp.endDate || "Present"}
+                  </span>
+                </div>
+                {exp.highlights && exp.highlights.length > 0 && (
+                  <ul className="list-disc ps-7 text-g-300 text-sm">
+                    {exp.highlights.map((highlight, j) => (
+                      <li key={j} className="leading-5">
+                        {highlight}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Projects - Every item clickable */}
+      {resume.projects && resume.projects.length > 0 && (
+        <div onClick={() => onSectionClick("projects")} className="mb-5">
+          <h2 className="w-full text-sm font-semibold text-g-400 mb-3 border-b-2 border-g-400 pb-1.5 inline-block">
+            PROJECTS
+          </h2>
+          <div className="space-y-4">
+            {resume.projects.map((pro, i) => (
+              <div
+                key={i}
+                className="cursor-pointer hover:bg-light-blue transition-colors"
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <p className="font-medium text-g-400 flex items-center gap-1.5 leading-5 text-sm">
+                    {pro.name}
+                    {pro.link && (
+                      <a
+                        className="text-xs leading-5 text-primary hover:underline"
+                        href={pro.link}
+                      >
+                        (Live Link)
+                      </a>
+                    )}
+                  </p>
+                  <span className="font-medium text-g-400 leading-5 text-sm">
+                    {pro.startDate} — {pro.endDate || "Present"}
+                  </span>
+                </div>
+                {pro.highlights && pro.highlights.length > 0 && (
+                  <ul className="list-disc ps-7 text-g-300 text-sm">
+                    {pro.highlights.map((highlight, j) => (
+                      <li key={j} className="leading-5">
+                        {highlight}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Skills - Every item clickable */}
+      {resume.skills && resume.skills.length > 0 && (
+        <div onClick={() => onSectionClick("skills")} className="mb-5">
+          <h2 className="w-full text-sm font-semibold text-g-400 mb-3 border-b-2 border-g-400 pb-1.5 inline-block">
+            SKILLS
+          </h2>
+          <ul className="list-disc ps-7 text-g-300 text-sm grid grid-cols-3 cursor-pointer hover:bg-light-blue transition-colors">
+            {resume.skills.map((skill, j) => (
+              <li key={j} className="leading-5">
+                {skill}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Education - Every item clickable */}
+      {resume.education && resume.education.length > 0 && (
+        <div onClick={() => onSectionClick("education")} className="mb-5">
+          <h2 className="w-full text-sm font-semibold text-g-400 mb-3 border-b-2 border-g-400 pb-1.5 inline-block">
+            EDUCATION
+          </h2>
+          <div className="space-y-4">
+            {resume.education.map((edu, i) => (
+              <div
+                key={i}
+                className="cursor-pointer hover:bg-light-blue transition-colors"
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <p className="font-medium text-g-400 flex items-center gap-1.5 leading-5 text-sm">
+                    {edu.degree}
+                    {" in " + edu.field}
+                    {", " + edu.institution}
+                  </p>
+                  <span className="font-medium text-g-400 leading-5 text-sm">
+                    {edu.startYear} — {edu.endYear || "Present"}
+                  </span>
+                </div>
+                {edu.highlights && edu.highlights.length > 0 && (
+                  <ul className="list-disc ps-7 text-g-300 text-sm">
+                    {edu.highlights.map((highlight, j) => (
+                      <li key={j} className="leading-5">
+                        {highlight}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Certifications - Every item clickable */}
+      {resume.certifications && resume.certifications.length > 0 && (
+        <div onClick={() => onSectionClick("certifications")} className="mb-5">
+          <h2 className="w-full text-sm font-semibold text-g-400 mb-3 border-b-2 border-g-400 pb-1.5 inline-block">
+            CERTIFICATIONS
+          </h2>
+          <div className="space-y-4">
+            {resume.certifications.map((cert, i) => (
+              <div
+                key={i}
+                className="cursor-pointer hover:bg-light-blue transition-colors"
+              >
+                <div className="flex justify-between items-center mb-1">
+                  <p className="font-medium text-g-400 flex items-center gap-1.5 leading-5 text-sm">
+                    {cert.name}
+                    {cert.url && (
+                      <a
+                        className="text-xs leading-5 text-primary hover:underline"
+                        href={cert.url}
+                      >
+                        (Certificate Link)
+                      </a>
+                    )}
+                  </p>
+
+                  <span className="font-medium text-g-400 leading-5 text-sm">
+                    {cert.year}
+                  </span>
+                </div>
+                <p className="font-regular text-g-400 flex items-center gap-1.5 leading-5 text-xs">
+                  Issuer - {cert.issuer} | Credential ID - {cert.credentialId}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Hobbies - Every item clickable */}
+      {resume.hobbies && resume.hobbies.length > 0 && (
+        <div onClick={() => onSectionClick("hobbies")} className="mb-5">
+          <h2 className="w-full text-sm font-semibold text-g-400 mb-3 border-b-2 border-g-400 pb-1.5 inline-block">
+            HOBBIES
+          </h2>
+          {resume.hobbies && resume.hobbies.length > 0 && (
+            <ul className="list-disc ps-7 text-g-300 text-sm grid grid-cols-3 cursor-pointer hover:bg-light-blue transition-colors">
+              {resume.hobbies.map((hobby, j) => (
+                <li key={j} className="leading-5">
+                  {hobby}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -463,512 +2089,14 @@ export default function ResumeBuilder({
 // Loading State Component (unchanged)
 function LoadingState() {
   return (
-    <div className="flex flex-col items-center justify-center h-full">
+    <div className="flex flex-col items-center justify-center h-full w-full">
       <div className="relative">
-        <div className="w-16 h-16 border-4 border-blue-200 rounded-full"></div>
-        <div className="w-16 h-16 border-4 border-blue-600 rounded-full animate-spin border-t-transparent absolute top-0 left-0"></div>
+        <div className="w-16 h-16"></div>
+        <div className="w-16 h-16 border-4 border-primary rounded-full animate-spin border-t-white absolute top-0 left-0"></div>
       </div>
-      <p className="mt-4 text-slate-600 font-medium text-sm">
-        Crafting your resume...
+      <p className="mt-5 text-g-200 font-medium text-sm">
+        Please wait! Crafting your resume with our NextGen AI
       </p>
-      <p className="text-xs text-slate-400 mt-1">
-        AI is analyzing your experience
-      </p>
-    </div>
-  );
-}
-
-// Resume View Component - Dynamic & clickable sections
-function ResumeView({ resume, onSectionClick, selectedSection }) {
-  if (!resume) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full text-center">
-        <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mb-4">
-          <Sparkles className="w-8 h-8 text-blue-600" />
-        </div>
-        <h3 className="text-base font-semibold text-slate-700 mb-1">
-          No Resume Yet
-        </h3>
-        <p className="text-slate-500 text-xs max-w-md">
-          Enter your details and click "Generate Resume"
-        </p>
-      </div>
-    );
-  }
-
-  // helper to render clickable container wrapper
-  const SectionWrapper = ({ id, children }) => (
-    <div
-      onClick={() => onSectionClick(id)}
-      className={`cursor-pointer ${
-        selectedSection === id ? "bg-slate-50 rounded-md p-2" : ""
-      }`}
-    >
-      {children}
-    </div>
-  );
-
-  return (
-    <div className="max-w-4xl mx-auto space-y-4 text-xs">
-      {/* Header - uses personalInfo now */}
-      <div className="text-center pb-3 border-b border-slate-200">
-        <h1 className="text-xl font-bold text-slate-800 mb-1">
-          {resume.personalInfo?.fullName || "Your Name"}
-        </h1>
-        <div className="flex items-center justify-center gap-3 text-[10px] text-slate-600 flex-wrap">
-          {resume.personalInfo?.email && (
-            <div className="flex items-center gap-1">
-              <Mail className="w-2.5 h-2.5 text-blue-600" />
-              {resume.personalInfo.email}
-            </div>
-          )}
-          {resume.contact?.phone && (
-            <div className="flex items-center gap-1">
-              <Phone className="w-2.5 h-2.5 text-blue-600" />
-              {resume.contact.phone}
-            </div>
-          )}
-          {(resume.personalInfo?.location || resume.contact?.location) && (
-            <div className="flex items-center gap-1">
-              <MapPin className="w-2.5 h-2.5 text-blue-600" />
-              {resume.personalInfo?.location || resume.contact?.location}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Summary */}
-      {resume.summary && (
-        <SectionWrapper id="summary">
-          <section>
-            <h2 className="text-xs font-bold text-slate-800 mb-1.5 flex items-center gap-1.5 uppercase tracking-wide">
-              <div className="w-0.5 h-4 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full"></div>
-              Professional Summary
-            </h2>
-            <p className="text-slate-700 leading-relaxed">{resume.summary}</p>
-          </section>
-        </SectionWrapper>
-      )}
-
-      {/* Skills */}
-      {resume.skills && resume.skills.length > 0 && (
-        <SectionWrapper id="skills">
-          <section>
-            <h2 className="text-xs font-bold text-slate-800 mb-1.5 flex items-center gap-1.5 uppercase tracking-wide">
-              <div className="w-0.5 h-4 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full"></div>
-              Skills
-            </h2>
-            <div className="flex flex-wrap gap-1.5">
-              {resume.skills.map((skill, i) => (
-                <span
-                  key={i}
-                  className="px-2 py-0.5 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 text-blue-700 rounded text-[10px] font-medium"
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </section>
-        </SectionWrapper>
-      )}
-
-      {/* Work Experience */}
-      {resume.workExperience && resume.workExperience.length > 0 && (
-        <SectionWrapper id="workExperience">
-          <section>
-            <h2 className="text-xs font-bold text-slate-800 mb-2 flex items-center gap-1.5 uppercase tracking-wide">
-              <div className="w-0.5 h-4 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full"></div>
-              Work Experience
-            </h2>
-            <div className="space-y-3">
-              {resume.workExperience.map((work, i) => (
-                <div key={i} className="relative pl-3 border-l border-blue-200">
-                  <div className="absolute -left-[3px] top-0.5 w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
-                  <div className="flex justify-between items-start mb-1">
-                    <div>
-                      <h3 className="text-xs font-semibold text-slate-800">
-                        {work.position}
-                      </h3>
-                      <p className="text-blue-600 font-medium text-[10px]">
-                        {work.company}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-0.5 text-[9px] text-slate-500 bg-slate-50 px-1.5 py-0.5 rounded-full whitespace-nowrap ml-2">
-                      <Calendar className="w-2 h-2" />
-                      {work.startDate} — {work.endDate || "Present"}
-                    </div>
-                  </div>
-                  <ul className="space-y-0.5 mt-1">
-                    {work.highlights?.map((highlight, j) => (
-                      <li
-                        key={j}
-                        className="text-slate-700 flex gap-1.5 leading-tight"
-                      >
-                        <span className="text-blue-600 text-[10px] mt-0.5">
-                          •
-                        </span>
-                        <span className="text-[10px]">{highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </section>
-        </SectionWrapper>
-      )}
-
-      {/* Education */}
-      {resume.education && resume.education.length > 0 && (
-        <SectionWrapper id="education">
-          <section>
-            <h2 className="text-xs font-bold text-slate-800 mb-2 flex items-center gap-1.5 uppercase tracking-wide">
-              <div className="w-0.5 h-4 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full"></div>
-              Education
-            </h2>
-            <div className="space-y-2">
-              {resume.education.map((edu, i) => (
-                <div
-                  key={i}
-                  className="bg-slate-50 rounded-lg p-2 border border-slate-200"
-                >
-                  <div className="flex items-start gap-2">
-                    <div className="bg-blue-100 p-1 rounded">
-                      <GraduationCap className="w-3 h-3 text-blue-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-slate-800 text-[10px]">
-                        {edu.degree}
-                      </h3>
-                      <p className="text-slate-600 text-[9px]">
-                        {edu.institution}
-                      </p>
-                      {(edu.startYear || edu.endYear) && (
-                        <p className="text-[9px] text-slate-500 mt-0.5">
-                          {edu.startYear} - {edu.endYear}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        </SectionWrapper>
-      )}
-
-      {/* Projects */}
-      {resume.projects && resume.projects.length > 0 && (
-        <SectionWrapper id="projects">
-          <section>
-            <h2 className="text-xs font-bold text-slate-800 mb-2 flex items-center gap-1.5 uppercase tracking-wide">
-              <div className="w-0.5 h-4 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full"></div>
-              Projects
-            </h2>
-            <div className="space-y-2">
-              {resume.projects.map((p, i) => (
-                <div
-                  key={i}
-                  className="p-2 border border-slate-100 rounded bg-white"
-                >
-                  <h3 className="font-semibold text-[10px] text-slate-800">
-                    {p.name}
-                  </h3>
-                  <p className="text-[9px] text-slate-600 mt-0.5">
-                    {p.description}
-                  </p>
-                  {p.link && (
-                    <a
-                      className="text-[9px] text-blue-600 mt-1 inline-block"
-                      href={p.link}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {p.link}
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-        </SectionWrapper>
-      )}
-
-      {/* Certifications */}
-      {resume.certifications && resume.certifications.length > 0 && (
-        <SectionWrapper id="certifications">
-          <section>
-            <h2 className="text-xs font-bold text-slate-800 mb-2 flex items-center gap-1.5 uppercase tracking-wide">
-              <div className="w-0.5 h-4 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full"></div>
-              Certifications
-            </h2>
-            <div className="space-y-1">
-              {resume.certifications.map((c, i) => (
-                <div key={i} className="text-[10px] text-slate-700">
-                  <div className="font-medium">{c.name}</div>
-                  <div className="text-[9px] text-slate-500">
-                    {c.issuer}
-                    {c.year ? ` • ${c.year}` : ""}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        </SectionWrapper>
-      )}
-
-      {/* Additional */}
-      {resume.additional && (
-        <SectionWrapper id="additional">
-          <section>
-            <h2 className="text-xs font-bold text-slate-800 mb-1.5 flex items-center gap-1.5 uppercase tracking-wide">
-              <div className="w-0.5 h-4 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full"></div>
-              Additional
-            </h2>
-            <p className="text-slate-700 text-[10px]">{resume.additional}</p>
-          </section>
-        </SectionWrapper>
-      )}
-    </div>
-  );
-}
-
-// Section Box Component (left) - shows full data for the section and supports enhancement
-function SectionBox({ title, icon, sectionKey, value, isRemoved, onEnhance }) {
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  // Render full value of section (not a summary)
-  const renderValue = () => {
-    if (!value || isRemoved) {
-      return (
-        <div className="text-[10px] text-slate-400">
-          {/* &lt;section removed&gt; */}
-          Not available!
-        </div>
-      );
-    }
-
-    // Different rendering by sectionKey
-    if (sectionKey === "personalInfo") {
-      return (
-        <div className="text-[11px] text-slate-700 space-y-0.5">
-          <div>
-            <strong className="text-[10px] text-slate-600">Name:</strong>{" "}
-            {value.fullName || "-"}
-          </div>
-          <div>
-            <strong className="text-[10px] text-slate-600">Email:</strong>{" "}
-            {value.email || "-"}
-          </div>
-          <div>
-            <strong className="text-[10px] text-slate-600">Location:</strong>{" "}
-            {value.location || "-"}
-          </div>
-        </div>
-      );
-    }
-
-    if (sectionKey === "skills") {
-      return (
-        <div className="flex flex-wrap gap-1">
-          {Array.isArray(value) && value.length > 0 ? (
-            value.map((s, i) => (
-              <span
-                key={i}
-                className="px-2 py-0.5 bg-slate-50 text-[10px] rounded border border-slate-200"
-              >
-                {s}
-              </span>
-            ))
-          ) : (
-            <div className="text-[10px] text-slate-400">&lt;no skills&gt;</div>
-          )}
-        </div>
-      );
-    }
-
-    if (sectionKey === "workExperience") {
-      return (
-        <div className="space-y-2">
-          {Array.isArray(value) && value.length > 0 ? (
-            value.map((w, i) => (
-              <div
-                key={i}
-                className="text-[10px] border border-slate-100 rounded p-2 bg-white"
-              >
-                <div className="font-medium text-[11px]">
-                  {w.position || "-"}
-                </div>
-                <div className="text-[9px] text-slate-500">
-                  {w.company || ""} • {w.startDate || ""} -{" "}
-                  {w.endDate || "Present"}
-                </div>
-                <ul className="mt-1 text-[10px] list-disc pl-4">
-                  {(w.highlights || []).map((h, j) => (
-                    <li key={j}>{h}</li>
-                  ))}
-                </ul>
-              </div>
-            ))
-          ) : (
-            <div className="text-[10px] text-slate-400">
-              &lt;no work experience&gt;
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    if (sectionKey === "education") {
-      return (
-        <div className="space-y-2">
-          {Array.isArray(value) && value.length > 0 ? (
-            value.map((e, i) => (
-              <div
-                key={i}
-                className="text-[10px] border border-slate-100 rounded p-2 bg-white"
-              >
-                <div className="font-medium text-[11px]">{e.degree || "-"}</div>
-                <div className="text-[9px] text-slate-500">
-                  {e.institution || ""}
-                </div>
-                <div className="text-[9px] text-slate-500">
-                  {e.startYear || ""} - {e.endYear || ""}
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-[10px] text-slate-400">
-              &lt;no education&gt;
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    if (sectionKey === "projects") {
-      return (
-        <div className="space-y-2">
-          {Array.isArray(value) && value.length > 0 ? (
-            value.map((p, i) => (
-              <div
-                key={i}
-                className="text-[10px] border border-slate-100 rounded p-2 bg-white"
-              >
-                <div className="font-medium text-[11px]">{p.name || "-"}</div>
-                <div className="text-[9px] text-slate-500">
-                  {p.description || ""}
-                </div>
-                {p.link && (
-                  <div className="text-[9px] text-blue-600">{p.link}</div>
-                )}
-              </div>
-            ))
-          ) : (
-            <div className="text-[10px] text-slate-400">
-              &lt;no projects&gt;
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    if (sectionKey === "certifications") {
-      return (
-        <div className="space-y-1">
-          {Array.isArray(value) && value.length > 0 ? (
-            value.map((c, i) => (
-              <div key={i} className="text-[10px]">
-                <div className="font-medium text-[11px]">{c.name}</div>
-                <div className="text-[9px] text-slate-500">
-                  {c.issuer}
-                  {c.year ? ` • ${c.year}` : ""}
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-[10px] text-slate-400">
-              &lt;no certifications&gt;
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    if (sectionKey === "contact") {
-      return (
-        <div className="text-[11px] text-slate-700">
-          <div>
-            <strong className="text-[10px] text-slate-600">Email:</strong>{" "}
-            {value?.email || "-"}
-          </div>
-          <div>
-            <strong className="text-[10px] text-slate-600">Phone:</strong>{" "}
-            {value?.phone || "-"}
-          </div>
-          <div>
-            <strong className="text-[10px] text-slate-600">Location:</strong>{" "}
-            {value?.location || "-"}
-          </div>
-        </div>
-      );
-    }
-
-    if (sectionKey === "additional") {
-      return <div className="text-[10px] text-slate-700">{value || "-"}</div>;
-    }
-
-    // fallback: JSON dump
-    return (
-      <pre className="text-[10px] whitespace-pre-wrap">
-        {JSON.stringify(value, null, 2)}
-      </pre>
-    );
-  };
-
-  const submit = async () => {
-    if (!input || !input.trim()) return;
-    onEnhance(input, setLoading);
-  };
-
-  return (
-    <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
-      <div className="px-2.5 py-2 bg-slate-50 border-b border-slate-200">
-        <div className="flex items-center gap-1.5 justify-between">
-          <div className="flex items-center gap-1.5">
-            <div className="text-blue-600">{icon}</div>
-            <span className="font-medium text-slate-700 text-xs">{title}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="p-2.5 space-y-2">
-        <div className="text-[10px] text-slate-600 bg-slate-50 p-2 rounded max-h-32 overflow-auto leading-tight">
-          {renderValue()}
-        </div>
-
-        <div className="flex gap-1.5">
-          <input
-            placeholder={`Enhance ${title.toLowerCase()}...`}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && submit()}
-            className="flex-1 px-2 py-1.5 border border-slate-200 rounded text-[10px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-          <button
-            onClick={submit}
-            disabled={loading || !input.trim()}
-            className="px-2.5 py-1.5 bg-blue-600 text-white rounded text-[10px] font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 transition-colors"
-          >
-            {loading ? (
-              <Loader2 className="w-3 h-3 animate-spin" />
-            ) : (
-              <Wand2 className="w-3 h-3" />
-            )}
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
