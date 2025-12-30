@@ -67,7 +67,7 @@ export default function CandidateFilter({
   };
 
   const handleReset = () => {
-    setSelectedContractType("regular");
+    setSelectedContractType("TEMPORARY");
     setSelectedRemotePolicy("onsite");
     setMinSalary("");
     setMaxSalary("");
@@ -79,7 +79,7 @@ export default function CandidateFilter({
       experienceRange: [0, 3],
       skills: [],
       salaryRange: [0, 0],
-      contractType: "regular",
+      contractType: "TEMPORARY",
       remotePolicy: "onsite",
     });
     dispatch(asyncGetCandidates());
