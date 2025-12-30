@@ -15,6 +15,7 @@ function Wrapper({ children }) {
   const { user, isLoading } = useSelector((state) => state.auth);
   const authPages = [
     "/signin",
+    "/blogs",
     "/signup",
     "/auth",
     "/",
@@ -27,6 +28,7 @@ function Wrapper({ children }) {
   const dynamicAuthPages = ["/reset-password/"];
   const NavPages = [
     "/",
+    "/blogs",
     "/privacy-policy",
     "/terms-and-conditions",
     "/job-seeker",

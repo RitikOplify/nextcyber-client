@@ -1,8 +1,8 @@
-import InDev from "@/components/InDev";
+import NotificationsPanel from "@/components/NotificationsPanel";
 import React from "react";
 
 function NotificationsPage() {
-  return <InDev />;
+  return <NotificationsPanel />;
 }
 
 export default NotificationsPage;

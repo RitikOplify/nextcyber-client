@@ -16,9 +16,15 @@ import {
   Upload,
   X,
 } from "lucide-react";
+import QuillEditor from "../QuillEditor";
+import { Controller } from "react-hook-form";
 
 export default function JobDescription({ form }) {
-  const { register } = form;
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = form;
 
   const handleFile = (e) => {
     const f = e.target.files?.[0];
@@ -29,58 +35,37 @@ export default function JobDescription({ form }) {
     }
   };
 
-
   return (
     <div className="space-y-6">
-      <div>
-        <label className="block mb-4 text-base leading-6 font-medium text-g-200">
-          Job Description
+      <div className="flex flex-col">
+        <label className="block mb-4 text-sm leading-6 font-medium text-g-200">
+          About Company
         </label>
-        <div className="border px-4 py-5 border-g-600 rounded-lg bg-g-700">
-          <div className=" flex gap-2 border-b pb-5 border-g-600">
-            <button type="button" title="Bold">
-              <Bold size={16} />
-            </button>
-            <button type="button" title="Italic">
-              <Italic size={16} />
-            </button>
-            <button type="button" title="Underline">
-              <Underline size={16} />
-            </button>
-            <button type="button" title="List">
-              <List size={16} />
-            </button>
-            <button type="button" title="Align Left">
-              <AlignLeft size={16} />
-            </button>
-            <button type="button" title="Align Center">
-              <AlignCenter size={16} />
-            </button>
-            <button type="button" title="Align Right">
-              <AlignRight size={16} />
-            </button>
-            <button type="button" title="Link">
-              <Link size={16} />
-            </button>
-            <button type="button" title="Image">
-              <Image size={16} />
-            </button>
-            <button type="button" title="File">
-              <FileText size={16} />
-            </button>
-            <button type="button" title="Attach">
-              <Paperclip size={16} />
-            </button>
-          </div>
 
-          <textarea
-            {...register("jobDescription", {
-              maxLength: { value: 4000, message: "Too long" },
-            })}
-            placeholder="Enter Text Here..."
-            className="w-full pt-5 h-48 bg-transparent text-gray-100 border-0 outline-none"
-          />
-        </div>
+        <Controller
+          name="jobDescription"
+          control={control}
+          rules={{
+            required: "Job description is required",
+            validate: (value) =>
+              value && value !== "<p><br></p>"
+                ? true
+                : "Job description is required",
+          }}
+          render={({ field }) => (
+            <QuillEditor
+              value={field.value}
+              onChange={field.onChange}
+              placeholder="Enter description.."
+            />
+          )}
+        />
+
+        {errors.jobDescription && (
+          <p className="text-dark-red text-xs mt-1">
+            {errors.jobDescription.message}
+          </p>
+        )}
       </div>
     </div>
   );

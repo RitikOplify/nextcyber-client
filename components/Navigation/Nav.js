@@ -23,7 +23,7 @@ function Nav() {
         <Link href={"/job-seeker"} className="cursor-pointer">
           For Candidates
         </Link>
-        <Link href={"/"} className="cursor-pointer">
+        <Link href={"/blogs"} className="cursor-pointer">
           Blogs
         </Link>
       </div>

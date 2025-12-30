@@ -73,7 +73,7 @@ export default function NextCybrProfile() {
         />
 
         {errors.about && (
-          <p className="text-red-500 text-xs mt-1">{errors.about.message}</p>
+          <p className="text-dark-red text-xs mt-1">{errors.about.message}</p>
         )}
       </div>
 

@@ -1,8 +1,8 @@
-import InDev from "@/components/InDev";
+import BillingPage from "@/components/BillingPage";
 import React from "react";
 
 function PaymentsPage() {
-  return <InDev />;
+  return <BillingPage />;
 }
 
 export default PaymentsPage;

@@ -13,7 +13,8 @@ body {
 
 @theme {
   --color-primary: #025bcf;
-  --color-primary-2-light: #E8DFFF;
+  --color-primary-2: #7846ef;
+  --color-primary-2-light: #e8dfff;
   --color-accent: #1b6392;
   --color-secondary: #8592a3;
   --color-basewhite: #ffffff;

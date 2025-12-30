@@ -63,6 +63,10 @@ function JobsPage() {
     setJobId(id);
     setJobOpen(true);
   };
+  const truncateChars = (text, limit = 10) => {
+    if (!text) return "";
+    return text.length > limit ? text.slice(0, limit) + "..." : text;
+  };
 
   return (
     <>
@@ -71,15 +75,16 @@ function JobsPage() {
           <div className="flex p-2 border border-g-500 bg-g-700 mx-auto w-fit mb-7.5 gap-1 rounded-full">
             <button
               onClick={() => setActiveTab("Browse Jobs")}
-              className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap ${
-                activeTab === "Browse Jobs" ? " bg-g-500 rounded-full" : ""
-              }`}
+              className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap cursor-pointer
+                 ${
+                   activeTab === "Browse Jobs" ? " bg-g-500 rounded-full" : ""
+                 }`}
             >
               Browse Jobs
             </button>
             <button
               onClick={() => setActiveTab("My Jobs")}
-              className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap ${
+              className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap cursor-pointer ${
                 activeTab === "My Jobs" ? " bg-g-500 rounded-full" : ""
               }`}
             >
@@ -136,18 +141,17 @@ function JobsPage() {
               {jobs.length} Jobs found
             </h3>
             <div className=" flex gap-5">
-              <div className=" flex-1 sm:flex-0 flex flex-col gap-5">
+              <div className="flex-1 sm:flex-0 flex flex-col gap-5">
                 {jobs.length > 0 &&
                   jobs.map((job) => {
                     return (
                       <div
                         key={job.id}
-                        className="bg-g-600 rounded-[10px] p-5 border border-g-500"
+                        className="bg-g-600 rounded-[10px] p-5 border border-g-500 cursor-pointer"
                         onClick={() => {
                           setSelectedJob(job);
                         }}
                       >
-                        {/* Badges */}
                         <div className="flex justify-between items-center mb-6">
                           <div className="flex gap-2">
                             <span className="inline-flex text-xs leading-4 font-semibold items-center gap-1.5 p-1 rounded bg-light-blue text-primary">
@@ -165,13 +169,11 @@ function JobsPage() {
                           </div>
                         </div>
 
-                        {/* Job Title */}
                         <h3 className="text-sm leading-4 font-semibold text-g-200">
                           {job.title}
                         </h3>
                         <p className="text-[#9C9C9D] text-sm">{job.location}</p>
 
-                        {/* Job Details */}
                         <div className="mt-6 mb-2 flex items-center capitalize whitespace-nowrap gap-3 text-g-300 text-xs leading-4">
                           <div className="flex items-center gap-1.5  ">
                             <Clock size={16} />
@@ -194,17 +196,22 @@ function JobsPage() {
                           </div>
                         </div>
 
-                        {/* Posted Date */}
                         <p className="text-g-300 text-xs">
                           Posted on {formatDate(job.createdAt)}
                         </p>
 
-                        {/* Company and Apply Button */}
                         <div className="flex items-center justify-between mt-11 pt-5.5 border-t border-g-500">
                           <div className="flex items-center gap-2 text-[#9C9C9D]">
-                            {/* Google Logo Placeholder */}
-                            <FcGoogle />
-                            Google
+                            <Image
+                              src={job?.company?.profilePicture?.url}
+                              height={24}
+                              width={24}
+                              alt="company-logo"
+                              className=" rounded-full h-6 w-6"
+                            />
+                            <span>
+                              {truncateChars(job?.company?.companyName, 10)}
+                            </span>
                           </div>
                           <button
                             title="Apply Job"
@@ -229,7 +236,8 @@ function JobsPage() {
                     <div className=" flex items-center gap-3">
                       <Image
                         src={
-                          selectedJob?.company?.profilePicture?.url || "/image.png"
+                          selectedJob?.company?.profilePicture?.url ||
+                          "/image.png"
                         }
                         height={60}
                         width={60}
@@ -241,7 +249,6 @@ function JobsPage() {
                       </h4>
                     </div>
                     <div>
-                      {/* Job Details */}
                       <div className="flex items-center gap-3 text-g-200 font-semibold py-4 text-xs leading-4">
                         <div className="flex items-center gap-1.5  ">
                           <Clock size={16} />
