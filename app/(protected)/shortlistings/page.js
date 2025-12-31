@@ -89,6 +89,7 @@ export default function ShortlistingsPage() {
   }, [page, pageLimit, debounceSearchTerm]);
 
   return (
+    <>
     <div className="h-[calc(100vh-125px)] grid grid-rows-[auto_1fr_auto] relative">
       {/* 🔹 Header / Filters (Fixed) */}
       <div className="sticky top-0 z-10 bg-g-800 flex flex-col items-center md:flex-row gap-4 pb-4">
@@ -170,13 +171,13 @@ export default function ShortlistingsPage() {
         </div>
       )}
 
-      {/* 🔹 Filter Modal */}
-      <CandidateFilter
+    </div>
+    <CandidateFilter
         filterData={filterData}
         isOpen={showFilter}
         onClose={handleToggleFilter}
         setFilterData={setFilterData}
       />
-    </div>
+      </>
   );
 }
