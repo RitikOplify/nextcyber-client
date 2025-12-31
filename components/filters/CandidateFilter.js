@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { X, RotateCcw } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { asyncGetCandidates } from "@/store/actions/candidateAction";
+import RangeFilter from "../ui/RangeFilter";
 
 export default function CandidateFilter({
   isOpen,
@@ -23,7 +24,7 @@ export default function CandidateFilter({
     if (filterData) {
       setSelectedContractType(filterData.contractType || "TEMPORARY");
       setSelectedRemotePolicy(filterData.remotePolicy || "onsite");
-      setMinSalary(filterData.salaryRange?.[0] || "");  
+      setMinSalary(filterData.salaryRange?.[0] || "");
       setMaxSalary(filterData.salaryRange?.[1] || "");
       setExperienceRange(filterData.experienceRange);
     }
@@ -99,9 +100,12 @@ export default function CandidateFilter({
     const params = {
       contractType: selectedContractType?.toUpperCase(),
       remotePolicy: selectedRemotePolicy?.toUpperCase(),
-      salary: (minSalary && maxSalary) ? `${minSalary ? parseInt(minSalary.replace(/\D/g, "")) : 0}-${
-        maxSalary ? parseInt(maxSalary.replace(/\D/g, "")) : 0
-      }` : null,
+      salary:
+        minSalary && maxSalary
+          ? `${minSalary ? parseInt(minSalary.replace(/\D/g, "")) : 0}-${
+              maxSalary ? parseInt(maxSalary.replace(/\D/g, "")) : 0
+            }`
+          : null,
       experience: `${experienceRange[0]}-${experienceRange[1]}`,
       skills: filterData.skills.join(",") || [],
     };
@@ -212,63 +216,14 @@ export default function CandidateFilter({
         {/* Experience Range - Fixed & Improved */}
         <div className="mb-8">
           <h3 className="text-sm font-medium mb-4">Experience</h3>
-
-          {/* Current Values Display */}
-          <div className="flex justify-between text-sm text-gray-300 mb-5">
-            <span>
-              {minExp === 0
-                ? "Fresher"
-                : `${minExp} year${minExp > 1 ? "s" : ""}`}
-            </span>
-            <span>
-              {maxExp === 10
-                ? "10+ years"
-                : `${maxExp} year${maxExp > 1 ? "s" : ""}`}
-            </span>
-          </div>
-
-          {/* Slider Container */}
-          <div className="relative h-10 px-1">
-            {/* Track Background */}
-            <div className="absolute inset-x-0 top-4 h-1.5 bg-neutral-700 rounded-full"></div>
-
-            {/* Selected Range Highlight */}
-            <div
-              className="absolute top-4 h-1.5 bg-blue-600 rounded-full transition-all"
-              style={{
-                left: `${(minExp / 10) * 100}%`,
-                right: `${100 - (maxExp / 10) * 100}%`,
-              }}
-            />
-
-            {/* Min Thumb */}
-            <input
-              type="range"
-              min="0"
-              max="10"
-              value={minExp}
-              onChange={(e) => handleExperienceChange(0, e.target.value)}
-              className="absolute w-full h-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-g-900 [&::-webkit-slider-thumb]:cursor-pointer focus:[&::-webkit-slider-thumb]:ring-4 focus:[&::-webkit-slider-thumb]:ring-primaborder-primary/30"
-              style={{ zIndex: minExp > maxExp - 1 ? 3 : 2 }}
-            />
-
-            {/* Max Thumb */}
-            <input
-              type="range"
-              min="0"
-              max="10"
-              value={maxExp}
-              onChange={(e) => handleExperienceChange(1, e.target.value)}
-              className="absolute w-full h-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-g-900 [&::-webkit-slider-thumb]:cursor-pointer focus:[&::-webkit-slider-thumb]:ring-4 focus:[&::-webkit-slider-thumb]:ring-primaborder-primary/30"
-              style={{ zIndex: maxExp < minExp + 1 ? 3 : 2 }}
-            />
-          </div>
-
-          {/* Scale Labels */}
-          <div className="flex justify-between mt-4 text-xs text-gray-500">
-            <span>0 yrs</span>
-            <span>10+ yrs</span>
-          </div>
+          <RangeFilter
+            min={0}
+            max={10}
+            step={1}
+            onChange={({ min, max }) =>
+              handleExperienceChange(0, min) || handleExperienceChange(1, max)
+            }
+          />
         </div>
 
         {/* Skills */}

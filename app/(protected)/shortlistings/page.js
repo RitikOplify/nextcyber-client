@@ -5,13 +5,12 @@ import LocationSearchInput from "@/components/helper/LocationSearchInput";
 import StudentCard from "@/components/cards/StudentCard";
 import {
   asyncAddCandidateToFavorite,
-  asyncGetCandidates,
   asyncRemoveCandidateFromFavorite,
   asyncShortlistedCandidates,
 } from "@/store/actions/candidateAction";
 import { useDispatch, useSelector } from "react-redux";
 import CandidateFilter from "@/components/filters/CandidateFilter";
-import Pagination from "@/components/Pagination";
+import AdvancePagination from "@/components/ui/AdvancePagination";
 
 export default function ShortlistingsPage() {
   const { user } = useSelector((state) => state.auth);
@@ -138,7 +137,7 @@ export default function ShortlistingsPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
           {loading ? (
             <div className="flex justify-center items-center col-span-full py-10">
               <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
@@ -168,12 +167,10 @@ export default function ShortlistingsPage() {
           )}
         </div>
         {shortlistedCandidates?.length > 0 && !loading && (
-          <Pagination
-            page={page}
-            setPage={setPage}
-            pageSize={pageLimit}
-            setPageSize={setPageLimit}
+          <AdvancePagination
+            currentPage={page}
             totalPages={totalPages}
+            onPageChange={(page) => setPage(page)}
           />
         )}
       </div>
