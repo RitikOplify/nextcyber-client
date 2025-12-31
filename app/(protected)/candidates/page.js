@@ -10,7 +10,6 @@ import {
 } from "@/store/actions/candidateAction";
 import { useDispatch, useSelector } from "react-redux";
 import CandidateFilter from "@/components/filters/CandidateFilter";
-import Pagination from "@/components/Pagination";
 import toast from "react-hot-toast";
 import AdvancePagination from "@/components/ui/AdvancePagination";
 
@@ -18,7 +17,6 @@ export default function CandidatesPage() {
   const { user } = useSelector((state) => state.auth);
   const { candidates, totalPages } = useSelector((state) => state.candidate);
   const [page, setPage] = useState(1);
-  const [pageLimit, setPageLimit] = useState(10);
 
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -50,15 +48,15 @@ export default function CandidatesPage() {
   const buildParams = useCallback(() => {
     const params = {
       page,
-      limit: pageLimit,
       ...Object.fromEntries(
         Object.entries({
           search: debounceSearchTerm, // Use debounced search term
+          location: locationSearch,
         }).filter(([_, value]) => value !== "")
       ),
     };
     return params;
-  }, [page, pageLimit, debounceSearchTerm]);
+  }, [page, debounceSearchTerm, locationSearch]);
 
   const handleFetchCandidates = (params) => {
     setLoading(true);
@@ -101,7 +99,7 @@ export default function CandidatesPage() {
     } else {
       handleFetchCandidates(params);
     }
-  }, [debounceSearchTerm, page, pageLimit]);
+  }, [debounceSearchTerm, page, locationSearch]);
 
   return (
     <>
@@ -132,7 +130,7 @@ export default function CandidatesPage() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={handleFetchCandidates}
+              onClick={() => handleSearchCandidates(buildParams())}
               className="bg-primary rounded-lg px-8 py-3.5 text-gray-300"
             >
               Search
