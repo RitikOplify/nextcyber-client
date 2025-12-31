@@ -222,9 +222,11 @@ export default function ResumeBuilder({
   });
   const [error, setError] = useState(null);
   const [activeSection, setActiveSection] = useState(null);
+  const [expandedSubItems, setExpandedSubItems] = useState({});
 
   const leftRefs = useRef({});
   const leftContainerRef = useRef(null);
+  const leftSubItemRefs = useRef({}); // NEW: For sub-items
   const fileInputRef = useRef();
 
   // Open modal on mount if no resume
@@ -668,39 +670,64 @@ export default function ResumeBuilder({
     return () => {};
   }, []);
 
-  // // Scroll left to a section key
+  // final working code is below
   // const scrollLeftTo = (sectionKey) => {
+  //   const container = leftContainerRef.current;
   //   const el = leftRefs.current[sectionKey];
-  //   if (el && el.scrollIntoView) {
-  //     el.scrollIntoView({ behavior: "smooth", block: "start" });
-  //     // also ensure parent container shows it nicely
-  //     if (leftContainerRef.current) {
-  //       // no-op; scrollIntoView handles most cases
-  //     }
-  //   }
+  // Updated scroll function to handle both sections and sub-items
+  //   if (!container || !el) return;
+  //   // Use requestAnimationFrame to wait for layout update
+  //   requestAnimationFrame(() => {
+  //     const containerTop = container.getBoundingClientRect().top;
+  //     const elementTop = el.getBoundingClientRect().top;
+  //     const scrollOffset = elementTop - containerTop + container.scrollTop;
+  //     container.scrollTo({
+  //       top: scrollOffset,
+  //       behavior: "smooth",
+  //     });
+  //   });
+  // };
+  // const onPreviewSectionClick = (sectionKey) => {
+  //   setActiveSection(sectionKey);
+  //   scrollLeftTo(sectionKey);
   // };
 
-  const scrollLeftTo = (sectionKey) => {
+  const scrollLeftTo = (sectionKey, subItemIndex = null) => {
     const container = leftContainerRef.current;
-    const el = leftRefs.current[sectionKey];
 
-    if (!container || !el) return;
+    // If subItemIndex is provided, scroll to that specific sub-item
+    const targetRef =
+      subItemIndex !== null
+        ? leftSubItemRefs.current[`${sectionKey}-${subItemIndex}`]
+        : leftRefs.current[sectionKey];
 
-    const containerTop = container.getBoundingClientRect().top;
-    const elementTop = el.getBoundingClientRect().top;
+    if (!container || !targetRef) return;
 
-    const scrollOffset = elementTop - containerTop + container.scrollTop - 20;
+    requestAnimationFrame(() => {
+      const containerTop = container.getBoundingClientRect().top;
+      const elementTop = targetRef.getBoundingClientRect().top;
+      const scrollOffset = elementTop - containerTop + container.scrollTop;
 
-    container.scrollTo({
-      top: scrollOffset,
-      behavior: "smooth",
+      container.scrollTo({
+        top: scrollOffset,
+        behavior: "smooth",
+      });
     });
   };
 
-  // Called when clicking a section in preview
-  const onPreviewSectionClick = (sectionKey) => {
+  // Updated click handler
+  const onPreviewSectionClick = (sectionKey, subItemIndex = null) => {
     setActiveSection(sectionKey);
-    scrollLeftTo(sectionKey);
+    // If clicking on a sub-item, expand only that sub-item
+    if (subItemIndex !== null) {
+      setExpandedSubItems({
+        ...expandedSubItems,
+        [`${sectionKey}-${subItemIndex}`]: true,
+      });
+    }
+    setTimeout(() => {
+      scrollLeftTo(sectionKey, subItemIndex);
+    }, 0);
   };
 
   return (
@@ -733,22 +760,9 @@ export default function ResumeBuilder({
         <div className="w-full h-full flex bg-g-700">
           {/* Left Sidebar - Form Editor */}
           <div className="w-[30%] flex flex-col">
-            <div className="w-full flex items-center gap-5 p-5 pb-0">
+            <div className="w-full flex items-center gap-5 p-5 pb-0 mb-5">
               {resume && (
                 <>
-                  {/* <button
-                    onClick={() => {
-                      setShowModal(true);
-                      setModalStep("choice");
-                    }}
-                    className={`flex gap-2 items-center text-white px-4 py-2 bg-primary text-sm rounded-lg ${
-                      !(resume || prompt)
-                        ? "cursor-not-allowed opacity-60"
-                        : "cursor-pointer hover:bg-primary/90 transition-colors opacity-100"
-                    }`}
-                  >
-                    Edit Prompt
-                  </button> */}
                   <button
                     onClick={exportToPDF}
                     className={`flex gap-2 items-center text-white px-4 py-2 bg-primary text-sm rounded-lg ${
@@ -764,7 +778,7 @@ export default function ResumeBuilder({
               )}
             </div>
             <div
-              className="w-full flex h-full flex-col flex-1 gap-3 p-5 overflow-y-scroll text-g-200"
+              className="w-full flex h-full flex-col flex-1 gap-3 p-5 pt-0 overflow-y-scroll text-g-200"
               ref={leftContainerRef}
             >
               {SECTION_CONFIG.map((section) => (
@@ -781,6 +795,9 @@ export default function ResumeBuilder({
                   }
                   onUpdate={updateResume}
                   onEnhance={enhanceSection}
+                  leftSubItemRefs={leftSubItemRefs}
+                  expandedSubItems={expandedSubItems} // ADD THIS
+                  setExpandedSubItems={setExpandedSubItems} // ADD THIS
                 />
               ))}
             </div>
@@ -808,6 +825,9 @@ function SectionEditor({
   onUpdate,
   onEnhance,
   ref,
+  leftSubItemRefs,
+  expandedSubItems, // ADD THIS
+  setExpandedSubItems, // ADD THIS
 }) {
   const [enhancePrompt, setEnhancePrompt] = useState("");
   const [isEnhancing, setIsEnhancing] = useState(false);
@@ -845,6 +865,9 @@ function SectionEditor({
                 const updatedResume = { ...resume, [section.key]: newData };
                 onUpdate(updatedResume);
               }}
+              leftSubItemRefs={leftSubItemRefs}
+              expandedSubItems={expandedSubItems} // ADD THIS
+              setExpandedSubItems={setExpandedSubItems} // ADD THIS
             />
           </div>
           <div className="flex items-center gap-4 mt-4">
@@ -877,7 +900,14 @@ function SectionEditor({
 }
 
 // Section Form Component
-function SectionForm({ sectionKey, data, onUpdate }) {
+function SectionForm({
+  sectionKey,
+  data,
+  onUpdate,
+  leftSubItemRefs,
+  expandedSubItems, // ADD THIS
+  setExpandedSubItems, // ADD THIS
+}) {
   const inputClass =
     "w-full px-4 py-3 text-sm text-g-300 leading-5 hide-scrollbar bg-g-700 rounded-lg outline-none";
   const labelClass = "block text-xs font-medium text-g-200 leading-4 mb-1";
@@ -1132,105 +1162,142 @@ function SectionForm({ sectionKey, data, onUpdate }) {
 
     return (
       <div className="space-y-3">
-        {experiences.map((exp, expIndex) => (
-          <div
-            key={expIndex}
-            className="p-3 border border-slate-200 rounded-lg space-y-2"
-          >
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-xs font-medium text-slate-700">
-                Experience {expIndex + 1}
-              </span>
-              <button
-                onClick={() => removeExperience(expIndex)}
-                className="p-1 hover:bg-red-50 rounded text-red-600"
-              >
-                <Trash2 className="w-3 h-3" />
-              </button>
-            </div>
-            <div>
-              <label className={labelClass}>Company</label>
-              <input
-                type="text"
-                value={exp.company || ""}
-                onChange={(e) =>
-                  updateExperience(expIndex, "company", e.target.value)
-                }
-                className={inputClass}
-                placeholder="Company Name"
-              />
-            </div>
-            <div>
-              <label className={labelClass}>Position</label>
-              <input
-                type="text"
-                value={exp.position || ""}
-                onChange={(e) =>
-                  updateExperience(expIndex, "position", e.target.value)
-                }
-                className={inputClass}
-                placeholder="Job Title"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className={labelClass}>Start Date</label>
-                <input
-                  type="text"
-                  value={exp.startDate || ""}
-                  onChange={(e) =>
-                    updateExperience(expIndex, "startDate", e.target.value)
-                  }
-                  className={inputClass}
-                  placeholder="2020-01"
-                />
-              </div>
-              <div>
-                <label className={labelClass}>End Date</label>
-                <input
-                  type="text"
-                  value={exp.endDate || ""}
-                  onChange={(e) =>
-                    updateExperience(expIndex, "endDate", e.target.value)
-                  }
-                  className={inputClass}
-                  placeholder="Present or 2021-12"
-                />
-              </div>
-            </div>
-            <div>
-              <label className={labelClass}>Highlights</label>
-              <div className="space-y-2">
-                {exp.highlights &&
-                  exp.highlights.map((highlight, hlIndex) => (
-                    <div key={hlIndex} className="flex gap-2">
-                      <input
-                        type="text"
-                        value={highlight}
-                        onChange={(e) =>
-                          updateHighlight(expIndex, hlIndex, e.target.value)
-                        }
-                        className={inputClass}
-                        placeholder="Achievement or responsibility..."
-                      />
-                      <button
-                        onClick={() => removeHighlight(expIndex, hlIndex)}
-                        className="p-2 hover:bg-red-50 rounded text-red-600"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </button>
-                    </div>
-                  ))}
+        {experiences.map((exp, expIndex) => {
+          const isExpanded = expandedSubItems[`workExperience-${expIndex}`];
+
+          return (
+            <div
+              key={expIndex}
+              className="p-3 border border-slate-200 rounded-lg space-y-2"
+              ref={(el) =>
+                (leftSubItemRefs.current[`workExperience-${expIndex}`] = el)
+              }
+            >
+              <div className="flex justify-between items-center mb-2">
+                <div className="flex items-center gap-2 flex-1">
+                  <button
+                    onClick={() =>
+                      setExpandedSubItems({
+                        ...expandedSubItems,
+                        [`workExperience-${expIndex}`]: !isExpanded,
+                      })
+                    }
+                    className="p-1 hover:bg-gray-100 rounded"
+                  >
+                    {isExpanded ? (
+                      <ChevronUp size={16} />
+                    ) : (
+                      <ChevronDown size={16} />
+                    )}
+                  </button>
+                  <span className="text-xs font-medium text-slate-700">
+                    Experience {expIndex + 1}
+                    {exp.position && ` - ${exp.position}`}
+                  </span>
+                </div>
                 <button
-                  onClick={() => addHighlight(expIndex)}
-                  className="w-full px-3 py-1.5 border border-dashed border-slate-300 rounded text-xs text-slate-600 hover:border-blue-500 hover:text-primary"
+                  onClick={() => removeExperience(expIndex)}
+                  className="p-1 hover:bg-red-50 rounded text-red-600"
                 >
-                  + Add Highlight
+                  <Trash2 className="w-3 h-3" />
                 </button>
               </div>
+              {isExpanded && (
+                <>
+                  <div>
+                    <label className={labelClass}>Company</label>
+                    <input
+                      type="text"
+                      value={exp.company || ""}
+                      onChange={(e) =>
+                        updateExperience(expIndex, "company", e.target.value)
+                      }
+                      className={inputClass}
+                      placeholder="Company Name"
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Position</label>
+                    <input
+                      type="text"
+                      value={exp.position || ""}
+                      onChange={(e) =>
+                        updateExperience(expIndex, "position", e.target.value)
+                      }
+                      className={inputClass}
+                      placeholder="Job Title"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className={labelClass}>Start Date</label>
+                      <input
+                        type="text"
+                        value={exp.startDate || ""}
+                        onChange={(e) =>
+                          updateExperience(
+                            expIndex,
+                            "startDate",
+                            e.target.value
+                          )
+                        }
+                        className={inputClass}
+                        placeholder="2020-01"
+                      />
+                    </div>
+                    <div>
+                      <label className={labelClass}>End Date</label>
+                      <input
+                        type="text"
+                        value={exp.endDate || ""}
+                        onChange={(e) =>
+                          updateExperience(expIndex, "endDate", e.target.value)
+                        }
+                        className={inputClass}
+                        placeholder="Present or 2021-12"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className={labelClass}>Highlights</label>
+                    <div className="space-y-2">
+                      {exp.highlights &&
+                        exp.highlights.map((highlight, hlIndex) => (
+                          <div key={hlIndex} className="flex gap-2">
+                            <input
+                              type="text"
+                              value={highlight}
+                              onChange={(e) =>
+                                updateHighlight(
+                                  expIndex,
+                                  hlIndex,
+                                  e.target.value
+                                )
+                              }
+                              className={inputClass}
+                              placeholder="Achievement or responsibility..."
+                            />
+                            <button
+                              onClick={() => removeHighlight(expIndex, hlIndex)}
+                              className="p-2 hover:bg-red-50 rounded text-red-600"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      <button
+                        onClick={() => addHighlight(expIndex)}
+                        className="w-full px-3 py-1.5 border border-dashed border-slate-300 rounded text-xs text-slate-600 hover:border-blue-500 hover:text-primary"
+                      >
+                        + Add Highlight
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
         <button
           onClick={addExperience}
           className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-blue-500 hover:text-primary transition-colors flex items-center justify-center gap-2"
@@ -1904,6 +1971,10 @@ function ResumePreview({ resume, onSectionClick }) {
               <div
                 key={i}
                 className="cursor-pointer hover:bg-light-blue transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent parent click
+                  onSectionClick("workExperience", i); // Pass the index
+                }}
               >
                 <h3 className="font-semibold text-g-400 leading-5 text-sm mb-1">
                   {exp.position}
@@ -1942,6 +2013,10 @@ function ResumePreview({ resume, onSectionClick }) {
               <div
                 key={i}
                 className="cursor-pointer hover:bg-light-blue transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent parent click
+                  onSectionClick("projects", i); // Pass the index
+                }}
               >
                 <div className="flex justify-between items-center mb-2">
                   <p className="font-medium text-g-400 flex items-center gap-1.5 leading-5 text-sm">
@@ -2001,6 +2076,10 @@ function ResumePreview({ resume, onSectionClick }) {
               <div
                 key={i}
                 className="cursor-pointer hover:bg-light-blue transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent parent click
+                  onSectionClick("education", i); // Pass the index
+                }}
               >
                 <div className="flex justify-between items-center mb-2">
                   <p className="font-medium text-g-400 flex items-center gap-1.5 leading-5 text-sm">
@@ -2038,6 +2117,10 @@ function ResumePreview({ resume, onSectionClick }) {
               <div
                 key={i}
                 className="cursor-pointer hover:bg-light-blue transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent parent click
+                  onSectionClick("certifications", i); // Pass the index
+                }}
               >
                 <div className="flex justify-between items-center mb-1">
                   <p className="font-medium text-g-400 flex items-center gap-1.5 leading-5 text-sm">
