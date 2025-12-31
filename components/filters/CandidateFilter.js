@@ -79,21 +79,13 @@ export default function CandidateFilter({
       ...filterData,
       contractType: selectedContractType,
       remotePolicy: selectedRemotePolicy,
-      salaryRange: [
-        minSalary ? parseInt(minSalary.replace(/\D/g, "")) || 0 : 0,
-        maxSalary ? parseInt(maxSalary.replace(/\D/g, "")) || 0 : 0,
-      ],
+      salaryRange: [minSalary, maxSalary],
       experienceRange,
     });
     const params = {
       contractType: selectedContractType?.toUpperCase(),
       remotePolicy: selectedRemotePolicy?.toUpperCase(),
-      salary:
-        minSalary && maxSalary
-          ? `${minSalary ? parseInt(minSalary.replace(/\D/g, "")) : 0}-${
-              maxSalary ? parseInt(maxSalary.replace(/\D/g, "")) : 0
-            }`
-          : null,
+      salary: (minSalary && maxSalary) ? `${minSalary}-${maxSalary}` : null,
       experience: `${experienceRange.min}-${experienceRange.max}`,
       skills: filterData.skills.join(",") || [],
     };
