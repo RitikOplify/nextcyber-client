@@ -99,7 +99,12 @@ export default function Pricing() {
   };
 
   if (error) {
-    return <Retry error={""} onRetry={retryHandler} />;
+    return (
+      <Retry
+        error={"Something went wrong. Please try again."}
+        onRetry={retryHandler}
+      />
+    );
   }
 
   if (!plans || plans.length === 0) {

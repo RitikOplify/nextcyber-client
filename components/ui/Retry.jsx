@@ -14,7 +14,7 @@ export default function Retry({ error, onRetry }) {
           </h3>
 
           <p className="text-g-200 text-base leading-6 text-center">
-            {error || "We couldn’t load the pricing plans."}
+            {error || "Something went wrong. Please try again."}
           </p>
         </div>
 
