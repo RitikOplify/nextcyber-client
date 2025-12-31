@@ -104,7 +104,7 @@ export default function CandidatesPage() {
   }, [debounceSearchTerm, page, pageLimit]);
 
   return (
-    <div className="h-[calc(100vh-195px)] grid grid-rows-[auto_1fr_auto] relative">
+    <div className="h-[calc(100vh-125px)] grid grid-rows-[auto_1fr_auto] relative">
       {/* 🔹 Header / Filters (Fixed) */}
       <div className="sticky top-0 z-10 bg-g-800 flex flex-col items-center md:flex-row gap-4 pb-4">
         <div className="relative w-full md:w-2/5">
