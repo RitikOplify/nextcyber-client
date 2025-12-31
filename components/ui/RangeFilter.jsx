@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
 
-const RangeFilter = ({ min = 0, max = 10, step = 1, onChange }) => {
-  const [minValue, setMinValue] = useState(min);
-  const [maxValue, setMaxValue] = useState(max);
+const RangeFilter = ({ min = 0, max = 10, step = 1, value, onChange }) => {
+  const [minValue, setMinValue] = useState(value?.min || min);
+  const [maxValue, setMaxValue] = useState(value?.max || max);
 
   const handleMinChange = (e) => {
     const value = Math.min(Number(e.target.value), maxValue - step);

@@ -33,7 +33,7 @@ export default function CandidatesPage() {
     skills: [],
     salaryRange: [0, 0],
     contractType: "",
-    experienceRange: [0, 1],
+    experienceRange: { min: 0, max: 10},
   });
 
   useEffect(() => {

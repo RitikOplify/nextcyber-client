@@ -16,7 +16,7 @@ export default function CandidateFilter({
   const [skillInput, setSkillInput] = useState("");
   const [minSalary, setMinSalary] = useState("");
   const [maxSalary, setMaxSalary] = useState("");
-  const [experienceRange, setExperienceRange] = useState([0, 1]); // [min, max] in years
+  const [experienceRange, setExperienceRange] = useState({ min: 0, max: 10 }); // [min, max] in years
   const dispatch = useDispatch();
 
   // Sync with external filterData
@@ -55,29 +55,17 @@ export default function CandidateFilter({
     setFilterData({ ...filterData, skills: updatedSkills });
   };
 
-  const handleExperienceChange = (index, value) => {
-    const newRange = [...experienceRange];
-    newRange[index] = parseInt(value);
-
-    // Ensure min <= max
-    if (index === 0 && newRange[0] > newRange[1]) newRange[1] = newRange[0];
-    if (index === 1 && newRange[1] < newRange[0]) newRange[0] = newRange[1];
-
-    setExperienceRange(newRange);
-    setFilterData({ ...filterData, experienceRange: newRange });
-  };
-
   const handleReset = () => {
     setSelectedContractType("TEMPORARY");
     setSelectedRemotePolicy("onsite");
     setMinSalary("");
     setMaxSalary("");
-    setExperienceRange([0, 3]);
+    setExperienceRange({ min: 0, max: 10 });
     setSkillInput("");
 
     setFilterData({
       location: "",
-      experienceRange: [0, 3],
+      experienceRange: { min: 0, max: 10 },
       skills: [],
       salaryRange: [0, 0],
       contractType: "TEMPORARY",
@@ -106,17 +94,15 @@ export default function CandidateFilter({
               maxSalary ? parseInt(maxSalary.replace(/\D/g, "")) : 0
             }`
           : null,
-      experience: `${experienceRange[0]}-${experienceRange[1]}`,
+      experience: `${experienceRange.min}-${experienceRange.max}`,
       skills: filterData.skills.join(",") || [],
     };
+    console.log("Applying filters with params:", params);
     dispatch(asyncGetCandidates(params));
     onClose();
   };
 
   if (!isOpen) return null;
-
-  const minExp = experienceRange[0];
-  const maxExp = experienceRange[1];
 
   return (
     <div className="absolute top-0 right-0 z-50 w-full max-w-[360px] backdrop-blur-[40px] bg-g-900/40 text-g-100 max-h-screen p-6 flex flex-col">
@@ -220,9 +206,12 @@ export default function CandidateFilter({
             min={0}
             max={10}
             step={1}
-            onChange={({ min, max }) =>
-              handleExperienceChange(0, min) || handleExperienceChange(1, max)
-            }
+            value={experienceRange}
+            onChange={(newRange) => {
+              console.log("Updated Experience Range:", newRange);
+              setExperienceRange(newRange);
+              setFilterData({ ...filterData, experienceRange: newRange });
+            }}
           />
         </div>
 
