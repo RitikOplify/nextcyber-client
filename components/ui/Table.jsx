@@ -1,15 +1,14 @@
 "use client";
 import { Loader2 } from "lucide-react";
 
-export default function Table({ columns, data, actions, NotFound, maxHeight }) {
-  if (!data) {
-    return (
-      <div className="w-full h-48 flex items-center justify-center">
-        <Loader2 className="animate-spin text-primary" />
-      </div>
-    );
-  }
-
+export default function Table({
+  columns,
+  data,
+  actions,
+  NotFound,
+  maxHeight,
+  loading,
+}) {
   return (
     <div className="w-full bg-g-600">
       <div className={`overflow-y-auto`} style={{ maxHeight }}>
@@ -19,7 +18,9 @@ export default function Table({ columns, data, actions, NotFound, maxHeight }) {
               {columns.map((col, index) => (
                 <th
                   key={index}
-                  className="px-5 py-3 font-medium text-left border-y border-r border-g-500"
+                  className={`px-5 py-3 font-medium text-left border-y border-g-500 ${
+                    index == columns.length - 1 ? " border-r-0" : "border-r"
+                  } }`}
                 >
                   {col.label}
                 </th>
@@ -61,12 +62,24 @@ export default function Table({ columns, data, actions, NotFound, maxHeight }) {
                 </tr>
               ))
             ) : (
-              <tr>
-                <td
-                  colSpan={columns.length + (actions ? 2 : 1)}
-                  className="text-center py-5 text-g-300 bg-g-700"
-                >
-                  {NotFound ? <NotFound /> : "No data found."}
+              <tr className="bg-g-700">
+                <td colSpan={columns.length + (actions ? 2 : 1)}>
+                  {loading ? (
+                    <div className="w-full py-15 flex items-center justify-center">
+                      <Loader2
+                        className="animate-spin text-primary"
+                        size={25}
+                      />
+                    </div>
+                  ) : !data || data.length === 0 ? (
+                    NotFound ? (
+                      <NotFound />
+                    ) : (
+                      <p className="text-center text-g-300 py-5">
+                        No data found.
+                      </p>
+                    )
+                  ) : null}
                 </td>
               </tr>
             )}

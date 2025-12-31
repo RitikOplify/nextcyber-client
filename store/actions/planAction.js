@@ -7,27 +7,22 @@ const getErrorMessage = (error) =>
   error?.message ||
   "Something went wrong. Please try again.";
 
-export const asyncGetStudentPlans = (setIsLoading) => async (dispatch) => {
-  if (typeof setIsLoading === "function") setIsLoading(true);
-
+export const asyncGetStudentPlans = (setError) => async (dispatch) => {
   try {
     const { data } = await getStudentPlansApi();
     dispatch(setPlans(data.plans));
   } catch (error) {
+    setError?.(getErrorMessage(error));
     toast.error(getErrorMessage(error));
-  } finally {
-    if (typeof setIsLoading === "function") setIsLoading(false);
   }
 };
 
-export const asyncGetCompanyPlans = (setIsLoading) => async (dispatch) => {
-  if (typeof setIsLoading === "function") setIsLoading(true);
+export const asyncGetCompanyPlans = (setError) => async (dispatch) => {
   try {
     const { data } = await getCompanyPlansApi();
     dispatch(setPlans(data.plans));
   } catch (error) {
+    setError?.(getErrorMessage(error));
     toast.error(getErrorMessage(error));
-  } finally {
-    if (typeof setIsLoading === "function") setIsLoading(false);
   }
 };

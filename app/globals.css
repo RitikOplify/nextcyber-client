@@ -224,6 +224,7 @@ body {
 
 .ql-editor {
   background-color: var(--color-g-700) !important;
+  min-height: 240px !important;
 }
 
 .ql-toolbar {

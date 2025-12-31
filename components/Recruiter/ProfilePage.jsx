@@ -10,9 +10,10 @@ export default function RecruiterProfilePage() {
   const [activeTab, setActiveTab] = useState("company");
 
   return (
-    <div className="min-h-screen ">
-      <ProfileTabs active={activeTab} onChange={setActiveTab} />
-
+    <div className="overflow-x-hidden">
+      <div className=" overflow-x-auto">
+        <ProfileTabs active={activeTab} onChange={setActiveTab} />
+      </div>
       {activeTab === "company" && <CompanyDetails />}
       {activeTab === "profile" && <Profile />}
       {activeTab === "nextcybr" && <NextCybrProfile />}

@@ -1,12 +1,74 @@
 "use client";
-import { ChevronDown } from "lucide-react";
 import Pagination from "./Pagination";
+import Search from "./ui/Search";
+import Filter from "./ui/Filter";
+import Table from "./ui/Table";
+import { useState } from "react";
+import { ArrowRight } from "lucide-react";
 
 export default function BillingPage() {
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [status, setStatus] = useState("");
+  const [totalPages, setTotalPages] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const invoices = Array.from({ length: 6 }).map((_, i) => ({
+    id: i,
+    invoice: "Invoice-2024-xd912c",
+    status: i === 0 ? "upcoming" : "paid",
+    date: "July 25, 2025",
+    amount: "$99.00",
+  }));
+
+  const columns = [
+    {
+      label: "Invoice",
+      key: "invoice",
+      render: (row) => <span className="text-g-200">{row.invoice}</span>,
+    },
+    {
+      label: "Status",
+      key: "status",
+      render: (row) => (
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-medium text-basewhite
+          ${row.status === "upcoming" ? "bg-dark-yellow" : "bg-dark-green"}`}
+        >
+          {row.status}
+        </span>
+      ),
+    },
+    {
+      label: "Date",
+      key: "date",
+      render: (row) => <span className="text-g-300">{row.date}</span>,
+    },
+    {
+      label: "Amount",
+      key: "amount",
+      render: (row) => <span className="text-g-300">{row.amount}</span>,
+    },
+    {
+      label: "Action",
+      key: "action",
+      render: (row) =>
+        row.status === "upcoming" ? (
+          <span className="px-3 py-1 rounded bg-bg text-xs text-g-300">
+            None
+          </span>
+        ) : (
+          <button className="flex items-center gap-2 px-3 py-1 rounded bg-primary-2-light text-primary-2 text-xs font-medium">
+            Download
+          </button>
+        ),
+    },
+  ];
+
   return (
     <div className="space-y-5">
-      <div className="flex gap-5">
-        <div className="w-[554px] rounded-xl bg-g-600">
+      <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="rounded-primary bg-g-600">
           <div className="flex items-center justify-between px-5 py-4 border-b border-g-700">
             <div className="flex items-center gap-3">
               <h3 className="text-g-100 text-base font-medium">Pro Plan</h3>
@@ -16,7 +78,7 @@ export default function BillingPage() {
             </div>
 
             <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary-2 text-white text-xs font-medium">
-              Change Plan →
+              Change Plan <ArrowRight size={20} />
             </button>
           </div>
 
@@ -33,7 +95,7 @@ export default function BillingPage() {
           </div>
         </div>
 
-        <div className="w-[554px] rounded-xl bg-g-600">
+        <div className="rounded-primary bg-g-600">
           <div className="px-5 py-4 border-b border-g-700">
             <h3 className="text-g-100 text-base font-medium">
               Billing Details
@@ -58,68 +120,33 @@ export default function BillingPage() {
 
       <div className="rounded-xl border border-g-500 overflow-hidden">
         <div className="flex justify-between items-center p-5 bg-g-600">
-          <input
-            className="w-[320px] px-4 py-3 rounded-lg bg-g-700 border border-g-500 text-sm text-g-300 outline-none"
-            placeholder="  Search job"
+          <Search
+            placeholder="Search by job title or ID"
+            value={search}
+            setValue={(val) => {
+              setPage(1);
+              setSearch(val);
+            }}
           />
 
-          <div className="w-[200px] px-4 py-3 rounded-lg bg-g-700 border border-g-500 text-sm text-g-300 flex justify-between">
-            Status <ChevronDown size={20} />
-          </div>
+          <Filter
+            placeholder="Status"
+            options={["Open", "Closed", "Draft"]}
+            onChange={(value) => {
+              setPage(1);
+              setStatus(value || "");
+            }}
+          />
         </div>
-        <table className="w-full border-t border-g-500 text-sm">
-          <thead className="bg-g-600 text-g-200 border-b border-g-500">
-            <tr>
-              {["Invoice", "Status", "Date", "Amount", "Action"].map((h) => (
-                <th
-                  key={h}
-                  className="text-left font-medium px-5 py-3 border-r last:border-r-0 border-g-500"
-                >
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
 
-          <tbody>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <tr key={i} className="bg-g-700 border-b border-g-500">
-                <td className="px-5 py-4 text-g-200">Invoice-2024-xd912c</td>
-
-                <td className="px-5 py-4">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium text-basewhite
-              ${i === 0 ? "bg-dark-yellow" : "bg-dark-green"}`}
-                  >
-                    {i === 0 ? "upcoming" : "paid"}
-                  </span>
-                </td>
-
-                <td className="px-5 py-4 text-g-300">July 25, 2025</td>
-                <td className="px-5 py-4 text-g-300">$99.00</td>
-
-                <td className="px-5 py-4">
-                  {i === 0 ? (
-                    <span className="px-3 py-1 rounded bg-bg text-xs text-g-300">
-                      None
-                    </span>
-                  ) : (
-                    <button className="flex items-center gap-2 px-3 py-1 rounded bg-primary-2-light text-primary-2 text-xs font-medium">
-                      Download
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <Table columns={columns} data={invoices} />
 
         <Pagination
-          page={1}
-          setPage={() => {}}
-          pageSize={10}
-          setPageSize={() => {}}
-          totalPages={1}
+          page={page}
+          setPage={setPage}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
+          totalPages={totalPages}
         />
       </div>
     </div>

@@ -83,7 +83,7 @@ export default function CompanyDetails() {
           General
         </h2>
 
-        <div className="grid grid-cols-2 gap-x-5 gap-y-7.5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-7.5">
           <Input
             label="Company Name"
             placeholder="Enter company name"
@@ -144,7 +144,7 @@ export default function CompanyDetails() {
           Social
         </h2>
 
-        <div className="grid grid-cols-2 gap-x-5 gap-y-7.5">
+        <div className="grid grid-cols-1 md:grid-cols-2  gap-x-5 gap-y-7.5">
           <Input
             label="Facebook URL"
             placeholder="Enter Facebook URL"

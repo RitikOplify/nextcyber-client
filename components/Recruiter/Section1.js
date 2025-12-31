@@ -4,7 +4,6 @@ import React from "react";
 function Section1() {
   return (
     <div className="relative bg-g-900 pb-50 pt-35 overflow-hidden">
-      {/* Content */}
       <img
         src="/recruiter/organization-bg.svg"
         alt="jobseeker-bg"

@@ -1,7 +1,7 @@
 "use client";
+import Retry from "@/components/ui/Retry";
 import {
   asyncGetCompanyPlans,
-  asyncGetPlans,
   asyncGetStudentPlans,
 } from "@/store/actions/planAction";
 import { buySubscriptionAPIHandler } from "@/store/actions/subscriptionAction";
@@ -10,10 +10,6 @@ import {
   Rocket,
   Atom,
   CheckCircle2,
-  ArrowBigDownIcon,
-  Cross,
-  ChevronDown,
-  ChevronUp,
   Minus,
   Plus,
   Loader2,
@@ -24,24 +20,34 @@ import { useDispatch, useSelector } from "react-redux";
 export default function Pricing() {
   const [openItems, setOpenItems] = useState(new Set([]));
   const { user } = useSelector((state) => state.auth);
+  const [error, setError] = useState(null);
+
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const { plans } = useSelector((state) => state.plans);
 
-  // ⭐ Added: Billing type toggle state
   const [billingType, setBillingType] = useState("MONTHLY");
+  const retryHandler = () => {
+    setError(null);
+
+    if (user.role === "STUDENT") {
+      dispatch(asyncGetStudentPlans(setError));
+    } else {
+      dispatch(asyncGetCompanyPlans(setError));
+    }
+  };
 
   useEffect(() => {
     if (!user) return;
     if (plans.length > 0) return;
 
     if (user.role === "STUDENT") {
-      dispatch(asyncGetStudentPlans(setLoading));
+      dispatch(asyncGetStudentPlans(setError));
     } else {
-      dispatch(asyncGetCompanyPlans(setLoading));
+      dispatch(asyncGetCompanyPlans(setError));
     }
-  }, [user, plans.length]);
+  }, [user, plans.length, dispatch]);
 
   const faqItems = [
     {
@@ -92,17 +98,20 @@ export default function Pricing() {
     setOpenItems(newOpenItems);
   };
 
-  if (loading) {
+  if (error) {
+    return <Retry error={""} onRetry={retryHandler} />;
+  }
+
+  if (!plans || plans.length === 0) {
     return (
-      <div className=" h-[calc(100vh-60.67px)] flex justify-center items-center">
-        <Loader2 className=" animate-spin" />
+      <div className="h-[calc(100vh-100.67px)] flex justify-center items-center">
+        <Loader2 className="animate-spin" />
       </div>
     );
   }
 
-  // ⭐ Filter logic for monthly / yearly plans
   const filteredPlans = plans.filter(
-    (p) => p.billingCycle === billingType || p.price === 0 // free plan always visible
+    (p) => p.billingCycle === billingType || p.price === 0
   );
 
   const buySubscriptionHandler = (payload) => {
@@ -122,11 +131,10 @@ export default function Pricing() {
           Save 15% on yearly plan!
         </p>
 
-        {/* ⭐ Monthly / Yearly toggle */}
         <div className="inline-flex mt-2.5 rounded-full bg-g-700 p-2 space-x-2 border border-g-500">
           <button
             onClick={() => setBillingType("MONTHLY")}
-            className={`px-4 py-2 text-xs leading-4 font-semibold rounded-full ${
+            className={`px-4 py-2 text-xs leading-4 font-semibold rounded-full cursor-pointer ${
               billingType === "MONTHLY"
                 ? "bg-g-500 text-g-200"
                 : "bg-g-700 text-g-200"
@@ -137,7 +145,7 @@ export default function Pricing() {
 
           <button
             onClick={() => setBillingType("YEARLY")}
-            className={`px-4 py-2 text-xs leading-4 font-semibold rounded-full ${
+            className={`px-4 py-2 text-xs leading-4 font-semibold rounded-full cursor-pointer ${
               billingType === "YEARLY"
                 ? "bg-g-500 text-g-200"
                 : "bg-g-700 text-g-200"
@@ -148,7 +156,6 @@ export default function Pricing() {
         </div>
       </div>
 
-      {/* Pricing Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 max-w-5xl mx-auto mt-5">
         {filteredPlans.map((plan, index) => {
           const currentSubs =
@@ -240,14 +247,14 @@ export default function Pricing() {
               >
                 <button
                   onClick={() => toggleItem(item.id)}
-                  className="w-full text-left flex items-start justify-between gap-2.5"
+                  className="w-full text-left flex items-start justify-between gap-2.5 cursor-pointer"
                 >
                   <span className="text-g-200 font-medium text-base leading-6">
                     {item.question}
                   </span>
 
                   <div className="btn-gradient overflow-hidden shrink-0">
-                    <div className=" p-2.5 bg-g-600 rounded-[calc(100%-2px)] whitespace-nowrap text-g-200">
+                    <div className=" p-2.5 bg-g-600 rounded-[calc(100%-2px)] whitespace-nowrap text-g-200 cursor-pointer">
                       {openItems.has(item.id) ? (
                         <Minus size={16} />
                       ) : (

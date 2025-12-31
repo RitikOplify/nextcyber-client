@@ -3,39 +3,73 @@
 import { useForm, Controller } from "react-hook-form";
 import { Input } from "@/components/ui/Input";
 import { SaveButton } from "@/components/ui/SaveButton";
-import { ImageUp } from "lucide-react";
+import { ImageUp, Info } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SelectField from "@/components/SelectField";
 import { updateCompanyApi } from "@/api/companyApi";
 import { getErrorMessage } from "@/utils/errMessage";
+import validateImage from "@/helper/validateImage";
 import toast from "react-hot-toast";
+import TipsCard from "@/components/TipsCard";
 
-function UploadBox({ title, onChange, error }) {
+function UploadBox({ title, onChange, error, validationRules, tips }) {
   const inputRef = useRef(null);
+  const tipRef = useRef(null);
 
-  const handleFile = (file) => {
+  const [localError, setLocalError] = useState(null);
+  const [tipOpen, setTipOpen] = useState(false);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (tipRef.current && !tipRef.current.contains(e.target)) {
+        setTipOpen(false);
+      }
+    }
+
+    if (tipOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [tipOpen]);
+
+  const handleFile = async (file) => {
     if (!file) return;
 
-    if (!["image/png", "image/jpeg"].includes(file.type)) {
-      alert("Only PNG or JPG allowed");
+    const validationError = await validateImage(file, validationRules);
+
+    if (validationError) {
+      setLocalError(validationError);
+      onChange(null);
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert("Max file size is 5MB");
-      return;
-    }
+    setLocalError(null);
 
     const previewUrl = URL.createObjectURL(file);
-
     onChange({ file, preview: previewUrl });
   };
 
   return (
-    <div className="flex flex-col gap-4 w-full">
-      <p className="text-[#CDCECE] font-medium">{title}</p>
-
+    <div className="flex flex-col w-full">
+      <div className=" flex gap-2 items-center mb-4 relative">
+        <p className="text-[#CDCECE] font-medium ">{title}</p>
+        <Info
+          size={16}
+          className=" text-g-200 cursor-pointer"
+          onClick={() => {
+            setTipOpen(true);
+          }}
+        />
+        {tipOpen && (
+          <div ref={tipRef} className=" relative z-50 ml-1">
+            <TipsCard tips={tips} />
+          </div>
+        )}
+      </div>
       <div
         onClick={() => inputRef.current.click()}
         onDragOver={(e) => e.preventDefault()}
@@ -45,24 +79,25 @@ function UploadBox({ title, onChange, error }) {
         }}
         className={`h-46 border border-dashed rounded-lg
         bg-[#1B1C1E] flex items-center justify-center text-sm flex-col gap-2.5 cursor-pointer
-        ${error ? "border-red-500" : "border-[#2F3031]"}`}
+        ${error || localError ? "border-dark-red" : "border-[#2F3031]"}`}
       >
         <ImageUp className="text-accent-color-1" size={20} />
         <div className="text-g-200 text-center">
           <span className="text-accent-color-1">Upload a file</span> or drag and
-          drop <br /> PNG, JPG up to 5MB
+          drop
         </div>
 
         <input
           ref={inputRef}
           type="file"
           hidden
-          accept="image/png,image/jpeg"
+          accept={validationRules.formats.join(",")}
           onChange={(e) => handleFile(e.target.files[0])}
         />
       </div>
-
-      {error && <p className="text-dark-red text-xs mt-1">{error}</p>}
+      {(error || localError) && (
+        <p className="text-dark-red text-xs mt-1">{error || localError}</p>
+      )}
     </div>
   );
 }
@@ -122,7 +157,7 @@ export default function Profile() {
       onSubmit={handleSubmit(onSubmit)}
       className="max-w-5xl mx-auto mt-10 flex flex-col gap-10"
     >
-      <div className="grid grid-cols-2 gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <div className="flex flex-col gap-4">
           <Controller
             name="profileImage"
@@ -130,9 +165,26 @@ export default function Profile() {
             rules={{ required: "Profile picture is required" }}
             render={({ field }) => (
               <UploadBox
-                title="Profile Picture"
+                title="Company Logo"
                 {...field}
                 error={errors.profileImage?.message}
+                validationRules={{
+                  maxSizeMB: 1,
+                  minWidth: 200,
+                  minHeight: 200,
+                  aspectRatio: 1,
+                  formats: [
+                    "image/png",
+                    "image/jpeg",
+                    "image/jpg",
+                    "image/svg+xml",
+                  ],
+                }}
+                tips={[
+                  "Upload official company logo only",
+                  "Keep it centered and not stretched",
+                  "Prefer transparent background",
+                ]}
               />
             )}
           />
@@ -155,9 +207,26 @@ export default function Profile() {
             rules={{ required: "Banner image is required" }}
             render={({ field }) => (
               <UploadBox
-                title="Banner Image"
+                title="Company Banner"
                 {...field}
                 error={errors.bannerImage?.message}
+                validationRules={{
+                  maxSizeMB: 3,
+                  minWidth: 1200,
+                  minHeight: 300,
+                  aspectRatio: 4,
+                  formats: [
+                    "image/png",
+                    "image/jpeg",
+                    "image/jpg",
+                    "image/webp",
+                  ],
+                }}
+                tips={[
+                  "Use a clear, recent photo of yourself",
+                  "Face should be centered and visible",
+                  "No group photos, filters, or logos",
+                ]}
               />
             )}
           />
@@ -174,7 +243,7 @@ export default function Profile() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-x-5 gap-y-7.5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-7.5">
         <Input
           label="First Name"
           placeholder="First name"
@@ -221,14 +290,14 @@ export default function Profile() {
                     type="button"
                     key={g}
                     onClick={() => field.onChange(g)}
-                    className={`px-4 py-2 rounded-full border text-sm cursor-pointer
+                    className={`px-4 py-2 rounded-full border text-sm cursor-pointer capitalize
                     ${
                       field.value === g
                         ? "border-primary text-[#E6E6E6]"
                         : "border-[#434345] text-[#9C9C9D]"
                     }`}
                   >
-                    {g}
+                    {g.replaceAll("_", " ").toLowerCase()}
                   </button>
                 ))}
               </div>

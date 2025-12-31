@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, Search, X } from "lucide-react";
 import { useFormContext, Controller } from "react-hook-form";
 
 const SelectField = ({
@@ -14,13 +14,10 @@ const SelectField = ({
   value: externalValue,
   error,
   showErrors = true,
-
-  /* ✅ NEW (non-breaking) */
   isSearch = true,
   optionLabel = "label",
   optionValue = "value",
 }) => {
-  // Always call hook unconditionally
   const formContext = useFormContext();
 
   const [open, setOpen] = useState(false);
@@ -30,9 +27,6 @@ const SelectField = ({
 
   const isUsingRHF = formContext && formContext.control && name;
 
-  /* ----------------------------------------
-     Normalize options (string | object)
-  ---------------------------------------- */
   const normalizedOptions = options.map((opt) => {
     if (typeof opt === "string") {
       return { label: opt, value: opt };
@@ -43,18 +37,12 @@ const SelectField = ({
     };
   });
 
-  /* ----------------------------------------
-     Filter options
-  ---------------------------------------- */
   const filteredOptions = isSearch
     ? normalizedOptions.filter((opt) =>
         opt.label?.toLowerCase().includes(search.toLowerCase())
       )
     : normalizedOptions;
 
-  /* ----------------------------------------
-     Close dropdown on outside click
-  ---------------------------------------- */
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -65,18 +53,12 @@ const SelectField = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  /* ----------------------------------------
-     Sync external value
-  ---------------------------------------- */
   useEffect(() => {
     if (externalValue !== undefined) {
       setInternalValue(externalValue);
     }
   }, [externalValue]);
 
-  /* ----------------------------------------
-     Select handler
-  ---------------------------------------- */
   const handleSelect = (option, currentValue, changeFn) => {
     let newValue;
 
@@ -130,7 +112,7 @@ const SelectField = ({
         </div>
 
         {open && (
-          <div className="absolute z-50 mt-1 w-full bg-g-700 border border-g-600 rounded-lg overflow-hidden">
+          <div className="absolute z-50 mt-1 w-full bg-g-700 border border-g-500 rounded-lg overflow-hidden">
             {isSearch && (
               <div className="flex items-center gap-2 px-4 py-3 border-b border-g-500">
                 <Search size={16} className="text-g-300" />
@@ -150,14 +132,14 @@ const SelectField = ({
                   <li
                     key={option.value}
                     onClick={() => handleSelect(option, currentValue, onChange)}
-                    className={`px-4 py-2 cursor-pointer text-g-200 hover:text-white last:border-b-0 border-b border-g-300/50 ${
+                    className={`px-4 py-2 cursor-pointer text-g-200 hover:text-white last:border-b-0 border-b border-g-500/50 ${
                       multiple
                         ? currentValue?.includes(option.value)
-                          ? `bg-primary/80 text-white hover:bg-primary/25 `
+                          ? `bg-primary/80 text-white `
                           : "hover:bg-g-700"
                         : currentValue === option.value
                         ? "bg-primary/80 text-white"
-                        : "hover:bg-g-700 "
+                        : "hover:bg-g-600"
                     }`}
                   >
                     {option.label}
@@ -172,14 +154,11 @@ const SelectField = ({
           </div>
         )}
 
-        {error && <p className="mt-1 text-sm text-red-400">{error}</p>}
+        {error && <p className="mt-1 text-sm text-dark-red">{error}</p>}
       </div>
     );
   };
 
-  /* ======================================================
-     REACT HOOK FORM MODE
-  ====================================================== */
   if (isUsingRHF) {
     return (
       <Controller
@@ -200,7 +179,7 @@ const SelectField = ({
 
             <div
               onClick={() => setOpen(!open)}
-              className="w-full py-4 px-5 text-sm leading-5 rounded-lg border border-g-600 bg-g-700 text-g-300 text-left min-h-[48px] flex items-center justify-between cursor-pointer"
+              className="w-full py-4 px-5 text-sm leading-5 rounded-lg border border-g-500 bg-g-700 text-g-300 text-left min-h-[48px] flex items-center justify-between cursor-pointer"
             >
               <div className="flex flex-wrap gap-2">
                 {!multiple && value ? (
@@ -223,10 +202,10 @@ const SelectField = ({
             </div>
 
             {open && (
-              <div className="absolute z-50 mt-1 w-full bg-g-700 border border-g-600 rounded-lg overflow-hidden">
+              <div className="absolute z-50 mt-1 w-full bg-g-700 border border-g-500 rounded-lg overflow-hidden">
                 {isSearch && (
-                  <div className="flex items-center gap-2 px-4 py-3 border-b border-g-500">
-                    <Search size={16} className="text-g-300" />
+                  <div className="flex items-center gap-2 px-4 py-3 border-b border-g-600">
+                    <Search size={16} className="text-g-200" />
                     <input
                       type="text"
                       placeholder="Search..."
@@ -234,6 +213,13 @@ const SelectField = ({
                       onChange={(e) => setSearch(e.target.value)}
                       className="w-full bg-transparent outline-none text-sm text-g-300 placeholder-g-300"
                     />
+                    {search && (
+                      <X
+                        size={16}
+                        className=" text-g-200 cursor-pointer hover:text-g-100 shrink-0"
+                        onClick={() => setSearch("")}
+                      />
+                    )}
                   </div>
                 )}
 
@@ -257,21 +243,21 @@ const SelectField = ({
                           rhfOnChange(newValue);
                           onChange?.(newValue);
                         }}
-                        className={`px-4 py-2 cursor-pointer text-g-200 hover:text-white ${
+                        className={`px-4 py-2 cursor-pointer text-g-200 hover:text-white last:border-b-0 border-b border-g-500/50 ${
                           multiple
                             ? value?.includes(option.value)
-                              ? `bg-primary/80 text-white hover:bg-primary/25 border-b border-g-300/50`
+                              ? `bg-primary/80 text-white `
                               : "hover:bg-g-600"
                             : value === option.value
-                            ? "bg-primary/80"
-                            : "hover:bg-g-600 "
+                            ? "bg-primary/80 text-white"
+                            : "hover:bg-g-600"
                         }`}
                       >
                         {option.label}
                       </li>
                     ))
                   ) : (
-                    <li className="px-4 py-2 text-sm text-g-300 text-center">
+                    <li className="px-4 py-2.5 text-sm text-g-200 text-center">
                       No results found
                     </li>
                   )}
@@ -280,7 +266,7 @@ const SelectField = ({
             )}
 
             {rhfError && showErrors && (
-              <p className="mt-1 text-sm text-red-400">{rhfError.message}</p>
+              <p className="mt-1 text-sm text-dark-red">{rhfError.message}</p>
             )}
           </div>
         )}

@@ -8,7 +8,7 @@ export default function ProfileTabs({ active, onChange }) {
   ];
 
   return (
-    <div className="flex items-center gap-1 p-2 bg-g-700 border border-g-500 rounded-full w-fit mx-auto">
+    <div className="flex items-center gap-1 p-2 bg-g-700 border border-g-500 rounded-full mx-auto w-fit whitespace-nowrap">
       {tabs.map((tab) => {
         const isActive = active === tab.key;
         return (

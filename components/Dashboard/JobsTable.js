@@ -29,7 +29,7 @@ function JobsTable() {
   );
 
   return (
-    <div className="bg-gradient-to-b from-g-500 to-g-600 p-0.5 rounded-[10px] overflow-hidden">
+    <div className="bg-gradient-to-b from-g-500 to-g-600 p-0.5 rounded-primary overflow-hidden">
       <div className="bg-g-600 rounded-lg overflow-hidden p-5">
         <div className="flex justify-between">
           <div>
@@ -59,20 +59,18 @@ function JobsTable() {
           <tbody>
             {jobs.length === 0 ? (
               <tr>
-                <td
-                  colSpan={5}
-                  className="text-center py-5 text-g-200 border border-g-500"
-                >
-                  No jobs found.
+                <td colSpan={5}>
+                  <div className="text-center py-4 text-g-200 rounded-lg border border-g-500">
+                    No jobs found.
+                  </div>
                 </td>
               </tr>
             ) : jobsWithApplications.length === 0 ? (
               <tr>
-                <td
-                  colSpan={5}
-                  className="text-center py-5 text-g-200 border border-g-500"
-                >
-                  No recent applications found.
+                <td colSpan={5}>
+                  <div className="text-center py-4 text-g-200 rounded-lg border border-g-500">
+                    No recent applications found.
+                  </div>
                 </td>
               </tr>
             ) : (
