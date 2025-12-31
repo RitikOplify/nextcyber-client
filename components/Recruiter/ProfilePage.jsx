@@ -10,7 +10,7 @@ export default function RecruiterProfilePage() {
   const [activeTab, setActiveTab] = useState("company");
 
   return (
-    <div className="overflow-x-hidden">
+    <div className="overflow-x-hidden min-h-[calc(100vh-100.67px)]">
       <div className=" overflow-x-auto">
         <ProfileTabs active={activeTab} onChange={setActiveTab} />
       </div>

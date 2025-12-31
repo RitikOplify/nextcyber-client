@@ -197,7 +197,7 @@ function ProtectedLayout({ children }) {
         <section
           className={`${
             pathname === "/resume-builder" ? "p-0" : "p-5"
-          } bg-background h-[calc(100vh-60.84px)] flex-1 overflow-auto`}
+          } bg-background h-[calc(100vh-60.67px)] flex-1 overflow-auto`}
         >
           {children}
         </section>
