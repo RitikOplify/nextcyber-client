@@ -14,8 +14,9 @@ export default function CompanyDetails() {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useForm();
+
   const { companyProfile } = useSelector((state) => state.auth.user);
 
   useEffect(() => {
@@ -45,25 +46,53 @@ export default function CompanyDetails() {
 
   const onSubmit = async (data) => {
     try {
-      const socialLinks = [
-        data.facebook && { platform: "Facebook", url: data.facebook },
-        data.linkedin && { platform: "LinkedIn", url: data.linkedin },
-        data.x && { platform: "Twitter", url: data.x },
-        data.instagram && { platform: "Instagram", url: data.instagram },
-        data.glassdoor && { platform: "Glassdoor", url: data.glassdoor },
-      ].filter(Boolean);
+      const payload = {};
 
-      const payload = {
-        ...data,
-        socialLinks,
-      };
+      if (dirtyFields.companyName) payload.companyName = data.companyName;
 
-      delete payload.facebook;
-      delete payload.linkedin;
-      delete payload.x;
-      delete payload.instagram;
-      delete payload.glassdoor;
-      console.log(payload);
+      if (dirtyFields.companyEmail) payload.companyEmail = data.companyEmail;
+
+      if (dirtyFields.companyWebsiteLink)
+        payload.companyWebsiteLink = data.companyWebsiteLink;
+
+      if (dirtyFields.headquarter) payload.headquarter = data.headquarter;
+
+      if (dirtyFields.founded) payload.founded = data.founded;
+
+      if (dirtyFields.companySize) payload.companySize = data.companySize;
+
+      if (dirtyFields.industry) payload.industry = data.industry;
+
+      const socialLinks = [];
+
+      if (dirtyFields.facebook && data.facebook) {
+        socialLinks.push({ platform: "Facebook", url: data.facebook });
+      }
+
+      if (dirtyFields.linkedin && data.linkedin) {
+        socialLinks.push({ platform: "LinkedIn", url: data.linkedin });
+      }
+
+      if (dirtyFields.x && data.x) {
+        socialLinks.push({ platform: "Twitter", url: data.x });
+      }
+
+      if (dirtyFields.instagram && data.instagram) {
+        socialLinks.push({ platform: "Instagram", url: data.instagram });
+      }
+
+      if (dirtyFields.glassdoor && data.glassdoor) {
+        socialLinks.push({ platform: "Glassdoor", url: data.glassdoor });
+      }
+
+      if (socialLinks.length > 0) {
+        payload.socialLinks = socialLinks;
+      }
+
+      if (Object.keys(payload).length === 0) {
+        toast("No changes detected");
+        return;
+      }
 
       const { data: res } = await updateCompanyApi(payload);
       toast.success("Company details updated successfully");
@@ -144,7 +173,7 @@ export default function CompanyDetails() {
           Social
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2  gap-x-5 gap-y-7.5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-7.5">
           <Input
             label="Facebook URL"
             placeholder="Enter Facebook URL"

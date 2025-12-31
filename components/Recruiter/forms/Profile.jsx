@@ -12,6 +12,7 @@ import { getErrorMessage } from "@/utils/errMessage";
 import validateImage from "@/helper/validateImage";
 import toast from "react-hot-toast";
 import TipsCard from "@/components/TipsCard";
+import { useSelector } from "react-redux";
 
 function UploadBox({ title, onChange, error, validationRules, tips }) {
   const inputRef = useRef(null);
@@ -48,7 +49,6 @@ function UploadBox({ title, onChange, error, validationRules, tips }) {
     }
 
     setLocalError(null);
-
     const previewUrl = URL.createObjectURL(file);
     onChange({ file, preview: previewUrl });
   };
@@ -60,9 +60,7 @@ function UploadBox({ title, onChange, error, validationRules, tips }) {
         <Info
           size={16}
           className=" text-g-200 cursor-pointer"
-          onClick={() => {
-            setTipOpen(true);
-          }}
+          onClick={() => setTipOpen(true)}
         />
         {tipOpen && (
           <div ref={tipRef} className=" relative z-50 ml-1">
@@ -70,6 +68,7 @@ function UploadBox({ title, onChange, error, validationRules, tips }) {
           </div>
         )}
       </div>
+
       <div
         onClick={() => inputRef.current.click()}
         onDragOver={(e) => e.preventDefault()}
@@ -95,6 +94,7 @@ function UploadBox({ title, onChange, error, validationRules, tips }) {
           onChange={(e) => handleFile(e.target.files[0])}
         />
       </div>
+
       {(error || localError) && (
         <p className="text-dark-red text-xs mt-1">{error || localError}</p>
       )}
@@ -108,49 +108,75 @@ export default function Profile() {
     handleSubmit,
     control,
     watch,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      profileImage: null,
-      bannerImage: null,
-      gender: "Male",
-    },
-  });
+    reset,
+    formState: { errors, dirtyFields },
+  } = useForm();
+
+  const { user } = useSelector((state) => state.auth);
+  const company = user?.companyProfile;
+
   const [roleWithCompany, setRoleWithCompany] = useState("");
+
   const profileImage = watch("profileImage");
   const bannerImage = watch("bannerImage");
+
+  useEffect(() => {
+    if (!user || !company) return;
+
+    reset({
+      firstName: user.firstName || "",
+      lastName: user.lastName || "",
+      gender: company.gender || "MALE",
+      profileImage: company.profilePicture
+        ? { preview: company.profilePicture.url }
+        : null,
+      bannerImage: company.profileBanner
+        ? { preview: company.profileBanner.url }
+        : null,
+    });
+
+    setRoleWithCompany(company.roleWithCompany || "");
+  }, [user, company, reset]);
 
   const onSubmit = async (data) => {
     const formData = new FormData();
 
-    if (data.profileImage?.file) {
+    if (dirtyFields.profileImage && data.profileImage?.file) {
       formData.append("profilePicture", data.profileImage.file);
     }
 
-    if (data.bannerImage?.file) {
+    if (dirtyFields.bannerImage && data.bannerImage?.file) {
       formData.append("profileBanner", data.bannerImage.file);
     }
 
-    formData.append("roleWithCompany", roleWithCompany);
-    formData.append("firstName", data.firstName);
-    formData.append("lastName", data.lastName);
-    formData.append("gender", data.gender);
+    if (dirtyFields.firstName) {
+      formData.append("firstName", data.firstName);
+    }
+
+    if (dirtyFields.lastName) {
+      formData.append("lastName", data.lastName);
+    }
+
+    if (dirtyFields.gender) {
+      formData.append("gender", data.gender);
+    }
+
+    if (roleWithCompany !== company?.roleWithCompany) {
+      formData.append("roleWithCompany", roleWithCompany);
+    }
+
+    if ([...formData.entries()].length === 0) {
+      toast("No changes detected");
+      return;
+    }
 
     try {
-      const { data: res } = await updateCompanyApi(data);
+      await updateCompanyApi(formData);
       toast.success("Company details updated successfully");
-      console.log(res);
     } catch (error) {
-      toast.error(getErrorMessage(error || "Failed to update company details"));
+      toast.error(getErrorMessage(error));
     }
   };
-
-  const pillClass = (isActive) =>
-    `px-2 py-1 rounded-full border transition text-xs leading-4 font-medium ${
-      isActive
-        ? "bg-primary text-white border-primary"
-        : "bg-g-600 text-g-200 border-g-500 hover:bg-g-700"
-    }`;
 
   return (
     <form
@@ -162,7 +188,6 @@ export default function Profile() {
           <Controller
             name="profileImage"
             control={control}
-            rules={{ required: "Profile picture is required" }}
             render={({ field }) => (
               <UploadBox
                 title="Company Logo"
@@ -204,7 +229,6 @@ export default function Profile() {
           <Controller
             name="bannerImage"
             control={control}
-            rules={{ required: "Banner image is required" }}
             render={({ field }) => (
               <UploadBox
                 title="Company Banner"
@@ -265,21 +289,20 @@ export default function Profile() {
         <div>
           <SelectField
             label="Role within the company"
-            name="roleWithCompany"
             placeholder="Search"
-            options={["FOUNDER", "CEO", "HR_MANAGER"]}
+            options={[
+              { value: "FOUNDER", label: "Founder" },
+              { value: "CEO", label: "Ceo" },
+              { value: "HR_MANAGER", label: "Hr Manager" },
+            ]}
+            value={roleWithCompany}
             onChange={(role) => setRoleWithCompany(role)}
           />
-          {roleWithCompany && (
-            <button className={`${pillClass()} mt-4 capitalize`}>
-              {roleWithCompany.toLowerCase()}
-            </button>
-          )}
         </div>
+
         <Controller
           name="gender"
           control={control}
-          rules={{ required: "Gender is required" }}
           render={({ field }) => (
             <div className="flex flex-col gap-4">
               <p className="text-[#CDCECE] font-medium">Gender</p>
@@ -301,14 +324,11 @@ export default function Profile() {
                   </button>
                 ))}
               </div>
-
-              {errors.gender && (
-                <p className="text-red-500 text-xs">{errors.gender.message}</p>
-              )}
             </div>
           )}
         />
       </div>
+
       <div className="flex justify-end">
         <SaveButton type="submit" />
       </div>

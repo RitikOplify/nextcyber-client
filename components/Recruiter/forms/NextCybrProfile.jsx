@@ -1,4 +1,5 @@
 "use client";
+
 import { useForm, Controller } from "react-hook-form";
 import QuillEditor from "@/components/QuillEditor";
 import { Input } from "@/components/ui/Input";
@@ -6,13 +7,16 @@ import { SaveButton } from "@/components/ui/SaveButton";
 import { updateCompanyApi } from "@/api/companyApi";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/utils/errMessage";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 export default function NextCybrProfile() {
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    reset,
+    formState: { errors, dirtyFields },
   } = useForm({
     defaultValues: {
       companyTagline: "",
@@ -20,9 +24,35 @@ export default function NextCybrProfile() {
     },
   });
 
+  const { companyProfile } = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    if (!companyProfile) return;
+
+    reset({
+      companyTagline: companyProfile.companyTagline || "",
+      about: companyProfile.about || "",
+    });
+  }, [companyProfile, reset]);
+
   const onSubmit = async (data) => {
     try {
-      const { data: res } = await updateCompanyApi(data);
+      const payload = {};
+
+      if (dirtyFields.companyTagline) {
+        payload.companyTagline = data.companyTagline;
+      }
+
+      if (dirtyFields.about) {
+        payload.about = data.about;
+      }
+
+      if (Object.keys(payload).length === 0) {
+        toast("No changes detected");
+        return;
+      }
+
+      const { data: res } = await updateCompanyApi(payload);
       toast.success("Company details updated successfully");
       console.log(res);
     } catch (error) {
