@@ -103,9 +103,9 @@ export default function CandidatesPage() {
 
   return (
     <>
-      <div className="h-[calc(100vh-101px)] grid grid-rows-[auto_1fr_auto] relative">
+      <div className="h-[calc(100vh-100.6px)] grid grid-rows-[auto_1fr_auto] relative overflow-y-hidden!">
         {/* 🔹 Header / Filters (Fixed) */}
-        <div className="sticky top-0 z-10  flex flex-col items-center md:flex-row gap-4">
+        <div className="sticky top-0 z-10 flex flex-col items-center md:flex-row gap-4">
           <div className="relative w-full md:w-2/5">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-g w-5 h-5" />
             <input
@@ -130,7 +130,7 @@ export default function CandidatesPage() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => handleSearchCandidates(buildParams())}
+              onClick={handleFetchCandidates}
               className="bg-primary rounded-lg px-8 py-3.5 text-gray-300"
             >
               Search
@@ -146,8 +146,7 @@ export default function CandidatesPage() {
           </div>
         </div>
 
-        {/* 🔹 Scrollable Candidate Grid */}
-        <div className="overflow-y-auto min-h-0 pt-6">
+        <div className="overflow-y-auto max-h-full mt-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {loading ? (
               <div className="flex justify-center items-center col-span-full py-10">
@@ -173,9 +172,8 @@ export default function CandidatesPage() {
           </div>
         </div>
 
-        {/* 🔹 Pagination (Fixed Bottom) */}
         {candidates?.length > 0 && !loading && (
-          <div className="flex justify-center">
+          <div className="sticky bottom-0 flex justify-center mt-5">
             <AdvancePagination
               currentPage={page}
               totalPages={totalPages}
@@ -184,7 +182,6 @@ export default function CandidatesPage() {
           </div>
         )}
       </div>
-
       <CandidateFilter
         filterData={filterData}
         isOpen={showFilter}
