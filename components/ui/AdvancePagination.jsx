@@ -51,7 +51,7 @@ export default function AdvancePagination({
   const pages = getPageNumbers();
 
   return (
-      <div className="flex items-center justify-center gap-2 my-8">
+      <div className="flex items-center justify-center gap-2">
         {/* Previous button */}
         <button
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}

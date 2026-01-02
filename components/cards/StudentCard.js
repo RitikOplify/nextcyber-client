@@ -20,10 +20,10 @@ const StudentCard = ({
     <>
       <div
         key={candidate.id}
-        className={`flex flex-col justify-between bg-g-600 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all ${className}`}
+        className={`flex flex-col justify-between bg-g-600 border border-g-800 rounded-xl p-5 hover:border-g-400 transition-all ${className}`}
         style={style}
       >
-        <div>
+        <div className="mb-4">
           <div className="flex justify-between items-start mb-4">
             <img
               src={
