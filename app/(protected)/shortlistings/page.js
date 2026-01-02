@@ -94,11 +94,11 @@ export default function ShortlistingsPage() {
         {/* 🔹 Header / Filters (Fixed) */}
         <div className="sticky top-0 z-10 flex flex-col items-center md:flex-row gap-4">
           <div className="relative w-full md:w-2/5">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-g w-5 h-5" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-g w-5 h-5 text-g-300" />
             <input
               type="text"
               placeholder="Search for candidates, skills..."
-              className="w-full rounded-lg py-3.5 pl-12 pr-4 bg-g-700 border border-g-500 outline-none"
+              className="w-full rounded-lg py-3.5 pl-12 pr-4 bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C]"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

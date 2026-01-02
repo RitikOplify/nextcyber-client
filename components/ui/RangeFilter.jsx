@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const RangeFilter = ({ min = 0, max = 10, step = 1, value, onChange }) => {
   const [minValue, setMinValue] = useState(value?.min || min);
@@ -18,6 +18,11 @@ const RangeFilter = ({ min = 0, max = 10, step = 1, value, onChange }) => {
   };
 
   const getPercentage = (value) => ((value - min) / (max - min)) * 100;
+
+  useEffect(() => { 
+    setMinValue(value?.min || min);
+    setMaxValue(value?.max || max);
+  }, [value, min, max]);
 
   return (
     <div className="w-full max-w-md mx-auto rounded-lg shadow-lg">

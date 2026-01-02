@@ -116,7 +116,7 @@ export default function LocationSearchInput({ onPlaceSelected }) {
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
         onFocus={() => searchValue && setDropdownVisible(true)}
-        className="w-full rounded-lg px-4 py-3.5 bg-g-700 border border-g-500 outline-none"
+        className="w-full rounded-lg px-4 py-3.5 bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C]"
       />
 
       <ChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
