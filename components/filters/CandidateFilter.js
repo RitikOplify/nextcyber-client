@@ -217,7 +217,7 @@ export default function CandidateFilter({
             value={skillInput}
             onChange={(e) => setSkillInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAddSkill()}
-            className="w-full bg-g-700 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primaborder-primary mb-3"
+            className="w-full rounded-lg px-3 py-2.5 text-sm bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C] focus:outline-none mb-3"
           />
           <div className="flex flex-wrap gap-2">
             {filterData?.skills?.map((skill, index) => (
