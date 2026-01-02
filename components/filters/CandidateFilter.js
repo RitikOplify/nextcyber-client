@@ -72,6 +72,7 @@ export default function CandidateFilter({
       remotePolicy: "onsite",
     });
     dispatch(asyncGetCandidates());
+    console.log("Filters have been reset", experienceRange);
   };
 
   const handleApply = () => {
