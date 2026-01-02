@@ -247,9 +247,9 @@ export default function Profile() {
                   ],
                 }}
                 tips={[
-                  "Use a clear, recent photo of yourself",
-                  "Face should be centered and visible",
-                  "No group photos, filters, or logos",
+                  "Use high-quality branding or culture images",
+                  "Keep text/logo in the center area",
+                  "Avoid low-quality or stretched images",
                 ]}
               />
             )}
