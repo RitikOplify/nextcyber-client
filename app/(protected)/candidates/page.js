@@ -103,7 +103,7 @@ export default function CandidatesPage() {
 
   return (
     <>
-      <div className="h-[calc(100vh-125px)] grid grid-rows-[auto_1fr_auto] relative">
+      <div className="h-[calc(100vh-101px)] grid grid-rows-[auto_1fr_auto] relative">
         {/* 🔹 Header / Filters (Fixed) */}
         <div className="sticky top-0 z-10  flex flex-col items-center md:flex-row gap-4">
           <div className="relative w-full md:w-2/5">
@@ -175,7 +175,7 @@ export default function CandidatesPage() {
 
         {/* 🔹 Pagination (Fixed Bottom) */}
         {candidates?.length > 0 && !loading && (
-          <div className="py-4 flex justify-center">
+          <div className="flex justify-center">
             <AdvancePagination
               currentPage={page}
               totalPages={totalPages}

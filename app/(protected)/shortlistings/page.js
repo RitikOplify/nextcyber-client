@@ -90,7 +90,7 @@ export default function ShortlistingsPage() {
 
   return (
     <>
-    <div className="h-[calc(100vh-125px)] grid grid-rows-[auto_1fr_auto] relative">
+    <div className="h-[calc(100vh-101px)] grid grid-rows-[auto_1fr_auto] relative">
       {/* 🔹 Header / Filters (Fixed) */}
       <div className="sticky top-0 z-10 flex flex-col items-center md:flex-row gap-4">
         <div className="relative w-full md:w-2/5">
@@ -134,7 +134,7 @@ export default function ShortlistingsPage() {
       </div>
 
       {/* 🔹 Scrollable Candidate Grid */}
-      <div className="overflow-y-auto min-h-0 pt-6">
+      <div className="overflow-y-auto pt-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
           {loading ? (
             <div className="flex justify-center items-center col-span-full py-10">
@@ -162,7 +162,7 @@ export default function ShortlistingsPage() {
 
       {/* 🔹 Pagination (Fixed Bottom) */}
       {shortlistedCandidates?.length > 0 && !loading && (
-        <div className="py-4 flex justify-center">
+        <div className="flex justify-center">
           <AdvancePagination
             currentPage={page}
             totalPages={totalPages}
