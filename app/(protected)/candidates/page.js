@@ -31,6 +31,7 @@ export default function CandidatesPage() {
     skills: [],
     salaryRange: [0, 0],
     contractType: "",
+    remotePolicy: "",
     experienceRange: { min: 0, max: 10 },
   });
 
@@ -58,19 +59,16 @@ export default function CandidatesPage() {
     return params;
   }, [page, debounceSearchTerm, locationSearch]);
 
-  const handleFetchCandidates = (params) => {
-    setLoading(true);
-
-    dispatch(asyncGetCandidates(params)).then(() => {
-      setLoading(false);
-    });
-  };
-
   const handleSearchCandidates = (params) => {
     setLoading(true);
     dispatch(asyncGetCandidates(params)).then(() => {
       setLoading(false);
     });
+  };
+
+  const handleFetchCandidates = (params) => {
+    setLoading(true);
+    handleSearchCandidates(params);
   };
 
   const handleFavoriteToggle = async (candidate) => {
@@ -130,7 +128,7 @@ export default function CandidatesPage() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={handleFetchCandidates}
+              onClick={() => handleFetchCandidates(buildParams())}
               className="bg-primary rounded-lg px-8 py-3.5 text-gray-300"
             >
               Search

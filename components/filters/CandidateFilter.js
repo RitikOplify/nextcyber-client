@@ -14,8 +14,8 @@ export default function CandidateFilter({
   const [selectedContractType, setSelectedContractType] = useState("TEMPORARY");
   const [selectedRemotePolicy, setSelectedRemotePolicy] = useState("onsite");
   const [skillInput, setSkillInput] = useState("");
-  const [minSalary, setMinSalary] = useState("");
-  const [maxSalary, setMaxSalary] = useState("");
+  const [minSalary, setMinSalary] = useState(filterData.salaryRange?.[0] || "");
+  const [maxSalary, setMaxSalary] = useState(filterData.salaryRange?.[1] || "");
   const [experienceRange, setExperienceRange] = useState({ min: 0, max: 10 }); // [min, max] in years
   const dispatch = useDispatch();
 
@@ -24,20 +24,18 @@ export default function CandidateFilter({
     if (filterData) {
       setSelectedContractType(filterData.contractType || "TEMPORARY");
       setSelectedRemotePolicy(filterData.remotePolicy || "onsite");
-      setMinSalary(filterData.salaryRange?.[0] || "");
-      setMaxSalary(filterData.salaryRange?.[1] || "");
       setExperienceRange(filterData.experienceRange);
     }
   }, [filterData]);
 
   const handleContractTypeChange = (type) => {
     setSelectedContractType(type);
-    setFilterData({ ...filterData, contractType: type });
+    setFilterData((prev) => ({ ...prev, contractType: type }));
   };
 
   const handleRemotePolicyChange = (policy) => {
     setSelectedRemotePolicy(policy);
-    setFilterData({ ...filterData, remotePolicy: policy });
+    setFilterData((prev) => ({ ...prev, remotePolicy: policy }));
   };
 
   const handleAddSkill = () => {
@@ -86,7 +84,7 @@ export default function CandidateFilter({
     const params = {
       contractType: selectedContractType?.toUpperCase(),
       remotePolicy: selectedRemotePolicy?.toUpperCase(),
-      salary: (minSalary && maxSalary) ? `${minSalary}-${maxSalary}` : null,
+      salary: minSalary && maxSalary ? `${minSalary}-${maxSalary}` : null,
       experience: `${experienceRange.min}-${experienceRange.max}`,
       skills: filterData.skills.join(",") || [],
     };
@@ -176,7 +174,7 @@ export default function CandidateFilter({
                 value={minSalary}
                 onChange={(e) => setMinSalary(e.target.value)}
                 placeholder="e.g. 50,000"
-                className="w-full bg-g-700 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primaborder-primary"
+                className="w-full rounded-lg px-3 py-2.5 text-sm bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C] focus:outline-none mb-3"
               />
             </div>
             <div>
@@ -186,7 +184,7 @@ export default function CandidateFilter({
                 value={maxSalary}
                 onChange={(e) => setMaxSalary(e.target.value)}
                 placeholder="e.g. 150,000"
-                className="w-full bg-g-700 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primaborder-primary"
+                className="w-full rounded-lg px-3 py-2.5 text-sm bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C] focus:outline-none mb-3"
               />
             </div>
           </div>
@@ -201,7 +199,6 @@ export default function CandidateFilter({
             step={1}
             value={experienceRange}
             onChange={(newRange) => {
-              console.log("Updated Experience Range:", newRange);
               setExperienceRange(newRange);
               setFilterData({ ...filterData, experienceRange: newRange });
             }}

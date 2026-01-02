@@ -33,6 +33,7 @@ export default function ShortlistingsPage() {
     skills: [],
     salaryRange: [0, 0],
     contractType: "",
+    remotePolicy: "", 
     experienceRange: [0, 1],
   });
 
