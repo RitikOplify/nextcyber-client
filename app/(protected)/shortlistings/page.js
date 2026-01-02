@@ -150,6 +150,10 @@ export default function ShortlistingsPage() {
                   isFavorite={candidate?.favoritedBy
                     ?.map(({ company }) => company.id)
                     .includes(user?.companyProfile.id)}
+                    style={{
+                      background: "radial-gradient(150.01% 100% at 50% 0%, rgba(2, 91, 207, 0.22) 0%, #1B1C1E 42%)"
+                    }}
+                    className="hover:border-[#025BCF]!"
                 />
               ))
             ) : (
