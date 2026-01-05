@@ -204,16 +204,16 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
             href={item.href}
             title={collapsed ? item.label : ""}
             className={clsx(
-              "flex items-center py-4 pr-2.5 gap-4 whitespace-nowrap transition-colors font-semibold text-sm leading-[150%] text-g-100 hover:bg-g-600",
+              "flex items-center py-4 pr-2.5 gap-4 whitespace-nowrap transition-colors font-semibold text-sm leading-[150%] text-g-100 hover:bg-g-600 rounded-lg mt-1",
               isActive
-                ? "bg-gradient-to-r  from-g-500 to-primary"
-                : "hover:bg-background",
+                ? "bg-primary hover:bg-primary"
+                : "hover:bg-background ",
               collapsed ? "justify-center pl-2.5" : "pl-6"
             )}
           >
             <IconComponent
               size={20}
-              className={isActive ? "text-primary" : ""}
+              className={isActive ? "text-g-100" : ""}
             />
             {!collapsed && (
               <span className="text-sm font-medium">{item.label}</span>
@@ -231,7 +231,7 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
         <div
           className={clsx(
             "bg-g-800 text-heading-secondary text-sm font-medium h-full flex flex-col justify-between transition-all duration-300",
-            collapseSidebar ? "w-20 items-start" : "w-60"
+            collapseSidebar ? "w-20 items-start" : "w-62"
           )}
         >
           <div
@@ -262,11 +262,11 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
             </button>
           </div>
 
-          <div className="flex-grow scrollbar overflow-y-auto overflow-x-hidden flex flex-col w-full bg-g-800 border-r border-g-500">
+          <div className="flex-grow scrollbar overflow-y-auto overflow-x-hidden flex flex-col w-full bg-g-800 border-r border-g-500 px-2">
             <SidebarNavLinks items={navItems} collapsed={collapseSidebar} />
           </div>
 
-          <div className="border-g-500 w-full bg-g-800 border-r">
+          <div className="border-g-500 w-full bg-g-800 border-r px-2">
             <SidebarNavLinks
               items={bottomNavItem}
               collapsed={collapseSidebar}
