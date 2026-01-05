@@ -14,10 +14,10 @@ import React, { useEffect } from "react";
 import { FaLinkedin } from "react-icons/fa6";
 import { BadgeCheck } from "lucide-react";
 import Link from "next/link";
-import ProfileTabs from "@/components/Dashboard/Tabs";
+import ProfileTabs from "@/components/dashboard/Tabs";
 import { useDispatch, useSelector } from "react-redux";
-import JobsTable from "@/components/Dashboard/JobsTable";
-import RecruitmentPipeline from "@/components/Dashboard/RecruitmentPipeline";
+import JobsTable from "@/components/dashboard/JobsTable";
+import RecruitmentPipeline from "@/components/dashboard/RecruitmentPipeline";
 import { asyncGetAppliedJob } from "@/store/actions/jobActions";
 
 function DashboardPage() {

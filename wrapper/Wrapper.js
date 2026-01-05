@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import Nav from "@/components/Navigation/Nav";
+import Nav from "@/components/navigation/Nav";
 import Footer from "@/components/Footer";
 import { usePathname, useRouter } from "next/navigation";
 import { asyncCurrentUser } from "@/store/actions/authActions";

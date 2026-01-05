@@ -1,6 +1,6 @@
 "use client";
-import JobTable from "@/components/Jobs/MyJob";
-import JobApplyModel from "@/components/Modal/JobApply";
+import JobTable from "@/components/jobs/MyJob";
+import JobApplyModel from "@/components/modal/JobApply";
 import { asyncGetAppliedJob, asyncGetJobs } from "@/store/actions/jobActions";
 import instance from "@/utils/axios";
 import {
@@ -37,12 +37,12 @@ function JobsPage() {
   const [jobId, setJobId] = useState(null);
   const { user } = useSelector((state) => state.auth);
   const { jobs } = useSelector((state) => state.jobs);
-  const [selectedJob, setSelectedJob] = useState(jobs[0]);
+  const [selectedJob, setSelectedJob] = useState(jobs?.[0]);
   const dispatch = useDispatch();
   const { appliedJob } = useSelector((state) => state.jobs);
 
   useEffect(() => {
-    if (jobs.length == 0) dispatch(asyncGetJobs());
+    if (jobs?.length == 0) dispatch(asyncGetJobs());
   }, []);
 
   useEffect(() => {
@@ -67,7 +67,7 @@ function JobsPage() {
     if (!text) return "";
     return text.length > limit ? text.slice(0, limit) + "..." : text;
   };
-
+  
   return (
     <>
       <div className="max-w-[1440px] mx-auto">
@@ -138,12 +138,12 @@ function JobsPage() {
               </div>
             </div>
             <h3 className=" text-sm font-semibold text-g-200 leading-4 pb-2">
-              {jobs.length} Jobs found
+              {jobs?.length} Jobs found
             </h3>
             <div className=" flex gap-5">
               <div className="flex-1 sm:flex-0 flex flex-col gap-5">
-                {jobs.length > 0 &&
-                  jobs.map((job) => {
+                {jobs?.length > 0 &&
+                  jobs?.map((job) => {
                     return (
                       <div
                         key={job.id}

@@ -1,6 +1,6 @@
 "use client";
 import { getCompanyProfileApi } from "@/api/companyApi";
-import JobApplyModel from "@/components/Modal/JobApply";
+import JobApplyModel from "@/components/modal/JobApply";
 import { asyncGetAppliedJob } from "@/store/actions/jobActions";
 import {
   Bookmark,

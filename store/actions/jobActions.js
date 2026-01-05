@@ -7,7 +7,7 @@ export const asyncGetJobs = (query, setIsLoading) => async (dispatch) => {
   setIsLoading?.(true);
   try {
     const { data } = await getJobsApi(query);
-    dispatch(setJobs(data.data.jobs));
+    dispatch(setJobs(data.data));
   } catch (error) {
     toast.error(getErrorMessage(error, "Failed to fetch Jobs"));
   } finally {

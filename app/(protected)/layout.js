@@ -1,5 +1,5 @@
 "use client";
-import Sidebar from "@/components/Navigation/SideBar";
+import Sidebar from "@/components/navigation/SideBar";
 import ProfileSetting from "@/components/profile/ProfileSetting";
 import { asyncCurrentUser } from "@/store/actions/authActions";
 import { Bell, ChevronRight, Loader2, Menu } from "lucide-react";
