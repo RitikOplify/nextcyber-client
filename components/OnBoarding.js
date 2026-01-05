@@ -1,7 +1,7 @@
 import React from "react";
-import StudentOnBoarding from "./OnBoarding/StudentOnboarding";
+import StudentOnBoarding from "./onBoarding/StudentOnboarding";
 import { useSelector } from "react-redux";
-import RecruiterOnBoarding from "./OnBoarding/RecruiterOnBoarding";
+import RecruiterOnBoarding from "./onBoarding/RecruiterOnBoarding";
 
 function OnBoarding() {
   const { user } = useSelector((state) => state.auth);

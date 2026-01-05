@@ -1,7 +1,7 @@
 "use client";
-import DocumentUploader from "@/components/AIResumeBuillder/DocumentUploader";
-import ResumeBuilder from "@/components/AIResumeBuillder/ResumeBuilder";
-import ResumeBuilderPrev from "@/components/AIResumeBuillder/ResumeBuilderPrev";
+import DocumentUploader from "@/components/aIResumeBuillder/DocumentUploader";
+import ResumeBuilder from "@/components/aIResumeBuillder/ResumeBuilder";
+import ResumeBuilderPrev from "@/components/aIResumeBuillder/ResumeBuilderPrev";
 import { toggleSidebar } from "@/store/slices/appSettingsSlice";
 import {
   ArrowLeft,

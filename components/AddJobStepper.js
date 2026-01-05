@@ -12,8 +12,8 @@ import CandidatePreference from "./addJob/CandidatePref";
 
 import toast from "react-hot-toast";
 import instance from "@/utils/axios";
-import NoJobsPosted from "./Jobs/NoJobsPosted";
-import JobPreview from "./Jobs/JobPreview";
+import NoJobsPosted from "./jobs/NoJobsPosted";
+import JobPreview from "./jobs/JobPreview";
 
 export default function AddJobStepper() {
   const form = useForm({

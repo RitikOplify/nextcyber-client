@@ -1,7 +1,7 @@
 "use client";
 
 import AddJobStepper from "@/components/AddJobStepper";
-import JobsTable from "@/components/Jobs/JobsTable";
+import JobsTable from "@/components/jobs/JobsTable";
 import { useState } from "react";
 
 const AddNewJob = () => {
