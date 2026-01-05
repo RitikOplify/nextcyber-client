@@ -1,6 +1,6 @@
 "use client";
 import { asyncGetCompanies } from "@/store/actions/companiesAction";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Loader2, Search, SlidersHorizontal } from "lucide-react";
 import CompanyCard from "@/components/cards/CompanyCard";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +10,7 @@ import CompanyFilter from "@/components/filters/CompanyFilter";
 
 function CompaniesPage() {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { companies } = useSelector((state) => state.companies);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -53,7 +53,7 @@ function CompaniesPage() {
     const params = buildParams();
     setLoading(true);
     dispatch(asyncGetCompanies(params, setLoading)).then((data) => {
-      setTotalPages(data.totalPages || 1);
+      setTotalPages(data?.totalPages || 1);
     });
   }, [dispatch, buildParams]);
 
@@ -90,14 +90,14 @@ function CompaniesPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => {}}
-              className="bg-primary rounded-lg px-8 py-3.5 text-gray-300"
+              className="bg-primary rounded-lg px-8 py-3.5 text-gray-300 cursor-pointer"
             >
               Search
             </button>
 
             <button
               onClick={handleToggleFilter}
-              className="flex items-center gap-2 bg-g-600 border border-g-600 rounded-lg px-12 py-3.5 text-gray-300"
+              className="flex items-center gap-2 bg-g-600 border border-g-600 rounded-lg px-12 py-3.5 text-gray-300 cursor-pointer"
             >
               <SlidersHorizontal className="w-4 h-4" />
               Filter
@@ -107,7 +107,11 @@ function CompaniesPage() {
 
         <div className="overflow-y-auto max-h-full mt-5">
           <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
-            {companies.length > 0 ? (
+            {loading ? (
+              <div className="flex justify-center items-center col-span-full py-10">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : companies.length > 0 ? (
               companies.map((company, i) => (
                 <CompanyCard company={company} key={i} />
               ))
