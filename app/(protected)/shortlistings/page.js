@@ -119,14 +119,14 @@ export default function ShortlistingsPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={handleFetchCandidates}
-              className="bg-primary rounded-lg px-8 py-3.5 text-gray-300"
+              className="bg-primary rounded-lg px-8 py-3.5 text-gray-300 cursor-pointer"
             >
               Search
             </button>
 
             <button
               onClick={handleToggleFilter}
-              className="flex items-center gap-2 bg-g-600 border border-g-600 rounded-lg px-12 py-3.5 text-gray-300"
+              className="flex items-center gap-2 bg-g-600 border border-g-600 rounded-lg px-12 py-3.5 text-gray-300 cursor-pointer"
             >
               <SlidersHorizontal className="w-4 h-4" />
               Filter
