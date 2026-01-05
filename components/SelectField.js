@@ -82,7 +82,7 @@ const SelectField = ({
     return (
       <div className="w-full relative" ref={dropdownRef}>
         {label && (
-          <label className="block mb-1 text-sm font-medium text-g-200 leading-5">
+          <label className="block mb-2 text-sm font-medium text-g-100 leading-5">
             {label}
           </label>
         )}
@@ -172,7 +172,7 @@ const SelectField = ({
         }) => (
           <div className="w-full relative" ref={dropdownRef}>
             {label && (
-              <label className="block mb-1 text-sm font-medium text-g-200 leading-5">
+              <label className="block mb-2 text-sm font-medium text-g-200 leading-5">
                 {label}
               </label>
             )}

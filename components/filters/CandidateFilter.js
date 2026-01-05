@@ -225,7 +225,7 @@ export default function CandidateFilter({
                 <span>{skill}</span>
                 <button
                   onClick={() => handleRemoveSkill(skill)}
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
