@@ -2,27 +2,19 @@
 import JobTable from "@/components/jobs/MyJob";
 import JobApplyModel from "@/components/modal/JobApply";
 import { asyncGetAppliedJob, asyncGetJobs } from "@/store/actions/jobActions";
-import instance from "@/utils/axios";
 import {
   Bookmark,
-  Briefcase,
   BriefcaseBusiness,
-  Building,
   Calendar,
   Clock,
   DollarSign,
-  File,
   FileSpreadsheet,
   GraduationCap,
   MapPin,
-  MapPinHouse,
   Plus,
   Receipt,
-  Signature,
   Star,
-  User,
   Users,
-  WalletCards,
   Zap,
 } from "lucide-react";
 import Image from "next/image";
@@ -67,46 +59,15 @@ function JobsPage() {
     if (!text) return "";
     return text.length > limit ? text.slice(0, limit) + "..." : text;
   };
-  
+
   return (
     <>
       <div className="max-w-[1440px] mx-auto">
-        <div className="relative">
-          <div className="flex p-2 border border-g-500 bg-g-700 mx-auto w-fit mb-7.5 gap-1 rounded-full">
-            <button
-              onClick={() => setActiveTab("Browse Jobs")}
-              className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap cursor-pointer
-                 ${
-                   activeTab === "Browse Jobs" ? " bg-g-500 rounded-full" : ""
-                 }`}
-            >
-              Browse Jobs
-            </button>
-            <button
-              onClick={() => setActiveTab("My Jobs")}
-              className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap cursor-pointer ${
-                activeTab === "My Jobs" ? " bg-g-500 rounded-full" : ""
-              }`}
-            >
-              My Jobs
-            </button>
-          </div>
-          {user.role == "COMPANY" && (
-            <Link
-              href={"/add-new-job"}
-              className=" px-4 py-2 gap-2 flex items-center rounded-lg bg-g-600 border cursor-pointer absolute right-0 top-0 border-g-500 text-g-200 w-fit"
-            >
-              <Plus size={20} />
-              <span>Post New Job</span>
-            </Link>
-          )}
-        </div>
-
         {activeTab === "Browse Jobs" && (
           <>
-            <div className="flex justify-center pb-5 w-full ">
-              <div className=" overflow-hidden  whitespace-nowrap">
-                <div className="px-5 border border-g-600 bg-g-700 rounded-lg md:w-[480px] mx-auto ">
+            <div className="flex justify-between pb-5 w-full ">
+              <div className="overflow-hidden  whitespace-nowrap">
+                <div className="px-5 border border-g-600 bg-g-700 rounded-lg md:w-[480px]">
                   <input
                     type="text"
                     placeholder="Search for jobs, companies..."
@@ -135,6 +96,36 @@ function JobsPage() {
                     <span>Skills</span>
                   </div>
                 </div>
+              </div>
+              <div className="relative">
+                <div className="flex p-2 border border-g-500 bg-g-700 mx-auto w-fit mb-7.5 gap-1 rounded-full">
+                  <button
+                    onClick={() => setActiveTab("Browse Jobs")}
+                    className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap cursor-pointer
+                 ${
+                   activeTab === "Browse Jobs" ? " bg-g-500 rounded-full" : ""
+                 }`}
+                  >
+                    Browse Jobs
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("My Jobs")}
+                    className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap cursor-pointer ${
+                      activeTab === "My Jobs" ? " bg-g-500 rounded-full" : ""
+                    }`}
+                  >
+                    My Jobs
+                  </button>
+                </div>
+                {user.role == "COMPANY" && (
+                  <Link
+                    href={"/add-new-job"}
+                    className=" px-4 py-2 gap-2 flex items-center rounded-lg bg-g-600 border cursor-pointer absolute right-0 top-0 border-g-500 text-g-200 w-fit"
+                  >
+                    <Plus size={20} />
+                    <span>Post New Job</span>
+                  </Link>
+                )}
               </div>
             </div>
             <h3 className=" text-sm font-semibold text-g-200 leading-4 pb-2">
@@ -336,6 +327,38 @@ function JobsPage() {
               )}
             </div>
           </>
+        )}
+        {activeTab === "My Jobs" && (
+          <div className="flex justify-end relative">
+            <div className="flex p-2 border border-g-500 bg-g-700  w-fit mb-7.5 gap-1 rounded-full">
+              <button
+                onClick={() => setActiveTab("Browse Jobs")}
+                className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap cursor-pointer
+                 ${
+                   activeTab === "Browse Jobs" ? " bg-g-500 rounded-full" : ""
+                 }`}
+              >
+                Browse Jobs
+              </button>
+              <button
+                onClick={() => setActiveTab("My Jobs")}
+                className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap cursor-pointer ${
+                  activeTab === "My Jobs" ? " bg-g-500 rounded-full" : ""
+                }`}
+              >
+                My Jobs
+              </button>
+            </div>
+            {user.role == "COMPANY" && (
+              <Link
+                href={"/add-new-job"}
+                className=" px-4 py-2 gap-2 flex items-center rounded-lg bg-g-600 border cursor-pointer absolute right-0 top-0 border-g-500 text-g-200 w-fit"
+              >
+                <Plus size={20} />
+                <span>Post New Job</span>
+              </Link>
+            )}
+          </div>
         )}
         {activeTab === "My Jobs" && <JobTable />}
       </div>
