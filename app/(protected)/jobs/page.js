@@ -1,26 +1,209 @@
 "use client";
+
+import JobCard from "@/components/cards/JobCard";
+import LocationSearchInput from "@/components/helper/LocationSearchInput";
+// import JobCard from "@/components/cards/JobCard";
+// import JobFilter from "@/components/filters/JobFilter";
+// import LocationSearchInput from "@/components/helper/LocationSearchInput";
+// import JobDetailsModal from "@/components/modal/JobDetailsModal";
+// import AdvancePagination from "@/components/ui/AdvancePagination";
+// import { asyncGetAppliedJob, asyncGetJobs } from "@/store/actions/jobActions";
+// import { Loader2, Search, SlidersHorizontal } from "lucide-react";
+// import { useEffect, useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+
+// const JobsPage = () => {
+//   const [selectedJob, setSelectedJob] = useState(null);
+//   const [showMobileModal, setShowMobileModal] = useState(false);
+
+//   const isSplitView = !!selectedJob; // true when a job is selected
+
+//   const { user } = useSelector((state) => state.auth);
+//   const { jobs } = useSelector((state) => state.jobs);
+//   const { appliedJob } = useSelector((state) => state.jobs);
+
+//   const [loading, setLoading] = useState(true);
+//   const [page, setPage] = useState(1);
+//   const [totalPages, setTotalPages] = useState(1);
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [locationSearch, setLocationSearch] = useState("");
+//   const [filterData, setFilterData] = useState({
+//     location: "",
+//     experience: "",
+//     skills: [],
+//     salaryRange: [0, 0],
+//     contractType: "",
+//     remotePolicy: "",
+//     experienceRange: { min: 0, max: 10 },
+//   });
+//   const [showFilter, setShowFilter] = useState(false);
+
+//   const dispatch = useDispatch();
+
+//   useEffect(() => {
+//     if (jobs?.length === 0) {
+//       dispatch(asyncGetJobs()).then(() => setLoading(false));
+//     } else {
+//       setLoading(false);
+//     }
+//   }, [dispatch, jobs?.length]);
+
+//   useEffect(() => {
+//     if (user?.role === "STUDENT" && appliedJob == null) {
+//       dispatch(asyncGetAppliedJob());
+//     }
+//   }, [dispatch, user?.role, appliedJob]);
+
+//   const handleToggleFilter = () => setShowFilter(!showFilter);
+
+//   const handleJobClick = (job) => {
+//     setSelectedJob(job);
+//     setShowMobileModal(true); // for mobile
+//   };
+
+//   const closeDetails = () => {
+//     setSelectedJob(null);
+//     setShowMobileModal(false);
+//   };
+
+//   return (
+//     <>
+//       <div className="h-[calc(100vh-100.6px)] grid grid-rows-[auto_1fr_auto] overflow-hidden">
+//         {/* Search Bar */}
+//         <div className="sticky top-0 z-10 flex flex-col md:flex-row gap-4 items-center">
+//           <div className="relative w-full md:w-2/5">
+//             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
+//             <input
+//               type="text"
+//               placeholder="Search for jobs, skills..."
+//               className="w-full rounded-lg py-3.5 pl-12 pr-4 bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C]"
+//               value={searchTerm}
+//               onChange={(e) => setSearchTerm(e.target.value)}
+//             />
+//           </div>
+
+//           <div className="relative w-full md:w-2/5">
+//             <LocationSearchInput
+//               selectedPlace={locationSearch}
+//               onPlaceSelected={(locationData) =>
+//                 setLocationSearch(
+//                   `${locationData.city}, ${locationData.state}, ${locationData.country}`
+//                 )
+//               }
+//             />
+//           </div>
+
+//           <div className="flex gap-3">
+//             <button className="bg-primary rounded-lg px-8 py-3.5 text-gray-300">
+//               Search
+//             </button>
+//             <button
+//               onClick={handleToggleFilter}
+//               className="flex items-center gap-2 bg-g-600 rounded-lg px-12 py-3.5 text-gray-300"
+//             >
+//               <SlidersHorizontal className="w-4 h-4" />
+//               Filter
+//             </button>
+//           </div>
+//         </div>
+
+//         {/* Main Content: Dynamic Grid */}
+//         <div className="overflow-y-auto">
+//           <div
+//             className={`
+//               grid gap-5 mt-5
+//               ${
+//                 isSplitView
+//                   ? "grid-cols-1 md:grid-cols-4"
+//                   : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
+//               }
+//             `}
+//           >
+//             {/* Job Cards Column - Takes 1 column when split */}
+//             <div
+//               className={`
+//                 ${isSplitView ? "md:col-span-1" : "md:col-span-full"}
+//                 overflow-y-auto
+//               `}
+//             >
+//               <div
+//                 className={`grid ${
+//                   isSplitView ? "grid-cols-1" : "grid-cols-4"
+//                 } gap-5`}
+//               >
+//                 {loading ? (
+//                   <div className="flex justify-center items-center py-20">
+//                     <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+//                   </div>
+//                 ) : jobs.length > 0 ? (
+//                   jobs.map((job, i) => (
+//                     <JobCard
+//                       key={job._id || i}
+//                       job={job}
+//                       onClick={() => handleJobClick(job)}
+//                       isSelected={selectedJob?._id === job._id}
+//                     />
+//                   ))
+//                 ) : (
+//                   <div className="text-center py-20 text-gray-400">
+//                     No jobs found.
+//                   </div>
+//                 )}
+//               </div>
+//             </div>
+
+//             {/* Job Details Panel - Takes remaining 3 columns when split */}
+//             {isSplitView && (
+//               <div className="hidden md:block md:col-span-3 h-screen sticky top-0 overflow-y-auto bg-g-800 rounded-lg shadow-xl">
+//                 <JobDetailsModal job={selectedJob} onClose={closeDetails} />
+//               </div>
+//             )}
+//           </div>
+//         </div>
+
+//         {/* Pagination */}
+//         {jobs?.length > 0 && !loading && (
+//           <div className="sticky bottom-0 py-4 flex justify-center">
+//             <AdvancePagination
+//               currentPage={page}
+//               totalPages={totalPages}
+//               onPageChange={(page) => setPage(page)}
+//             />
+//           </div>
+//         )}
+//       </div>
+
+//       {/* Mobile Full-Screen Modal */}
+//       {showMobileModal && selectedJob && (
+//         <div className="fixed inset-0 z-50 bg-black/90 flex flex-col md:hidden">
+//           <div className="bg-g-800 flex-1 overflow-y-auto rounded-t-2xl">
+//             <div className="p-6">
+//               <JobDetailsModal job={selectedJob} onClose={closeDetails} />
+//             </div>
+//           </div>
+//         </div>
+//       )}
+
+//       {/* Filter */}
+//       <JobFilter
+//         isOpen={showFilter}
+//         onClose={handleToggleFilter}
+//         filterData={filterData}
+//         setFilterData={setFilterData}
+//       />
+//     </>
+//   );
+// };
+
+// export default JobsPage;
+
 import JobTable from "@/components/jobs/MyJob";
 import JobApplyModel from "@/components/modal/JobApply";
+import JobDetailsModal from "@/components/modal/JobDetailsModal";
 import { asyncGetAppliedJob, asyncGetJobs } from "@/store/actions/jobActions";
-import {
-  Bookmark,
-  BriefcaseBusiness,
-  Calendar,
-  Clock,
-  DollarSign,
-  FileSpreadsheet,
-  GraduationCap,
-  MapPin,
-  Plus,
-  Receipt,
-  Star,
-  Users,
-  Zap,
-} from "lucide-react";
-import Image from "next/image";
+import { Plus, Search, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { FcGoogle } from "react-icons/fc";
 import { useDispatch, useSelector } from "react-redux";
 
 function JobsPage() {
@@ -32,6 +215,10 @@ function JobsPage() {
   const [selectedJob, setSelectedJob] = useState(jobs?.[0]);
   const dispatch = useDispatch();
   const { appliedJob } = useSelector((state) => state.jobs);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [locationSearch, setLocationSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+  const handleToggleFilter = () => {};
 
   useEffect(() => {
     if (jobs?.length == 0) dispatch(asyncGetJobs());
@@ -62,267 +249,77 @@ function JobsPage() {
 
   return (
     <>
-      <div className="max-w-[1440px] mx-auto">
+      <div className="mx-auto max-h-[calc(100vh-100.6px)] overflow-auto">
         {activeTab === "Browse Jobs" && (
           <>
-            <div className="flex justify-between pb-5 w-full ">
-              <div className="overflow-hidden  whitespace-nowrap">
-                <div className="px-5 border border-g-600 bg-g-700 rounded-lg md:w-[480px]">
-                  <input
-                    type="text"
-                    placeholder="Search for jobs, companies..."
-                    className="py-4 outline-none"
-                  />
-                </div>
-                <div className=" pt-5 flex gap-5 overflow-x-auto scrollbar pb-1">
-                  <div className=" px-4 py-2 gap-2 flex items-center rounded-lg bg-g-600 border border-g-500 text-g-200 w-fit">
-                    <MapPin size={20} />
-                    <span>Location</span>
-                  </div>
-                  <div className=" px-4 py-2 gap-2 flex items-center rounded-lg bg-g-600 border border-g-500 text-g-200 w-fit">
-                    <FileSpreadsheet size={20} />
-                    <span>Contract Type</span>
-                  </div>
-                  <div className=" px-4 py-2 gap-2 flex items-center rounded-lg bg-g-600 border border-g-500 text-g-200 w-fit">
-                    <Receipt size={20} />
-                    <span>Salary</span>
-                  </div>
-                  <div className=" px-4 py-2 gap-2 flex items-center rounded-lg bg-g-600 border border-g-500 text-g-200 w-fit">
-                    <BriefcaseBusiness size={20} />
-                    <span>Experience</span>
-                  </div>
-                  <div className=" px-4 py-2 gap-2 flex items-center rounded-lg bg-g-600 border border-g-500 text-g-200 w-fit">
-                    <GraduationCap size={20} />
-                    <span>Skills</span>
-                  </div>
-                </div>
+            <div className="sticky top-0 z-10 flex flex-col md:flex-row gap-4 items-center">
+              <div className="relative w-full md:w-2/5">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Search for jobs, skills..."
+                  className="w-full rounded-lg py-3.5 pl-12 pr-4 bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C]"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
               </div>
-              <div className="relative">
-                <div className="flex p-2 border border-g-500 bg-g-700 mx-auto w-fit mb-7.5 gap-1 rounded-full">
-                  <button
-                    onClick={() => setActiveTab("Browse Jobs")}
-                    className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap cursor-pointer
-                 ${
-                   activeTab === "Browse Jobs" ? " bg-g-500 rounded-full" : ""
-                 }`}
-                  >
-                    Browse Jobs
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("My Jobs")}
-                    className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap cursor-pointer ${
-                      activeTab === "My Jobs" ? " bg-g-500 rounded-full" : ""
-                    }`}
-                  >
-                    My Jobs
-                  </button>
-                </div>
-                {user.role == "COMPANY" && (
-                  <Link
-                    href={"/add-new-job"}
-                    className=" px-4 py-2 gap-2 flex items-center rounded-lg bg-g-600 border cursor-pointer absolute right-0 top-0 border-g-500 text-g-200 w-fit"
-                  >
-                    <Plus size={20} />
-                    <span>Post New Job</span>
-                  </Link>
-                )}
+
+              <div className="relative w-full md:w-2/5">
+                <LocationSearchInput
+                  selectedPlace={locationSearch}
+                  onPlaceSelected={(locationData) =>
+                    setLocationSearch(
+                      `${locationData.city}, ${locationData.state}, ${locationData.country}`
+                    )
+                  }
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <button className="bg-primary rounded-lg px-8 py-3.5 text-gray-300">
+                  Search
+                </button>
+                <button
+                  onClick={handleToggleFilter}
+                  className="flex items-center gap-2 bg-g-600 rounded-lg px-12 py-3.5 text-gray-300"
+                >
+                  <SlidersHorizontal className="w-4 h-4" />
+                  Filter
+                </button>
               </div>
             </div>
-            <h3 className=" text-sm font-semibold text-g-200 leading-4 pb-2">
-              {jobs?.length} Jobs found
-            </h3>
-            <div className=" flex gap-5">
-              <div className="flex-1 sm:flex-0 flex flex-col gap-5">
-                {jobs?.length > 0 &&
-                  jobs?.map((job) => {
-                    return (
-                      <div
-                        key={job.id}
-                        className="bg-g-600 rounded-[10px] p-5 border border-g-500 cursor-pointer"
-                        onClick={() => {
-                          setSelectedJob(job);
-                        }}
-                      >
-                        <div className="flex justify-between items-center mb-6">
-                          <div className="flex gap-2">
-                            <span className="inline-flex text-xs leading-4 font-semibold items-center gap-1.5 p-1 rounded bg-light-blue text-primary">
-                              <Star size={12} />
-                              Featured
-                            </span>
 
-                            <span className="inline-flex text-xs leading-4 font-semibold items-center gap-1.5 p-1 rounded  bg-light-blue text-primary">
-                              <Zap size={12} />
-                              Urgent
-                            </span>
-                          </div>
-                          <div className="bg-g-500 p-1.5 rounded">
-                            <Bookmark size={16} className=" text-g-300" />
-                          </div>
-                        </div>
-
-                        <h3 className="text-sm leading-4 font-semibold text-g-200">
-                          {job.title}
-                        </h3>
-                        <p className="text-[#9C9C9D] text-sm">{job.location}</p>
-
-                        <div className="mt-6 mb-2 flex items-center capitalize whitespace-nowrap gap-3 text-g-300 text-xs leading-4">
-                          <div className="flex items-center gap-1.5  ">
-                            <Clock size={16} />
-                            <span>
-                              {job.contractType
-                                .split("_")
-                                .join(" ")
-                                .toLowerCase()}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2  ">
-                            <Users size={16} />
-                            <span>
-                              {`${job?.minWorkExperience}-${job?.maxWorkExperience} Years`}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2  ">
-                            <DollarSign size={16} />
-                            <span>{job.maxSalary}</span>
-                          </div>
-                        </div>
-
-                        <p className="text-g-300 text-xs">
-                          Posted on {formatDate(job.createdAt)}
-                        </p>
-
-                        <div className="flex items-center justify-between mt-11 pt-5.5 border-t border-g-500">
-                          <div className="flex items-center gap-2 text-[#9C9C9D]">
-                            <Image
-                              src={job?.company?.profilePicture?.url}
-                              height={24}
-                              width={24}
-                              alt="company-logo"
-                              className=" rounded-full h-6 w-6"
-                            />
-                            <span>
-                              {truncateChars(job?.company?.companyName, 10)}
-                            </span>
-                          </div>
-                          <button
-                            title="Apply Job"
-                            disabled={appliedJob.some(
-                              (applied) => applied.job.id === job.id
-                            )}
-                            className=" text-g-200 px-4 cursor-pointer disabled:cursor-no-drop py-2 rounded-lg text-sm font-medium transition-colors duration-200 border border-g-500"
-                            onClick={() => {
-                              applyJob(job.id);
-                            }}
-                          >
-                            Apply Now
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
+            <div className="flex gap-5">
+              <div
+                className={`overflow-y-auto max-h-[calc(100vh-321px)]  md:max-h-[calc(100vh-175px)] overflow-hidden mt-5 mx-auto hide-scrollbar ${
+                  selectedJob ? "w-[25%]" : " w-full"
+                }`}
+              >
+                <div
+                  className={`grid-cols-1 ${
+                    selectedJob
+                      ? "grid-cols-1"
+                      : "sm:grid-cols-2 md:grid-cols-3"
+                  } grid gap-5`}
+                >
+                  {jobs?.length > 0 &&
+                    jobs?.map((job, i) => {
+                      return (
+                        <JobCard
+                          key={i}
+                          job={job}
+                          onClick={(job) => setSelectedJob(job)}
+                        />
+                      );
+                    })}
+                </div>
               </div>
               {selectedJob && (
-                <div className=" hidden sm:block bg-g-800 sticky top-0 py-10 px-5 flex-1 h-fit rounded-[10px] border border-g-500">
-                  <div className=" border-b border-dashed border-g-400">
-                    <div className=" flex items-center gap-3">
-                      <Image
-                        src={
-                          selectedJob?.company?.profilePicture?.url ||
-                          "/image.png"
-                        }
-                        height={60}
-                        width={60}
-                        alt="company-logo"
-                        className=" rounded-[10px] h-15 w-15 object-cover"
-                      />
-                      <h4 className=" font-medium text-xl leading-6 underline decoration-dotted underline-offset-[25%] text-g-100">
-                        {selectedJob?.company?.companyName}
-                      </h4>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-3 text-g-200 font-semibold py-4 text-xs leading-4">
-                        <div className="flex items-center gap-1.5  ">
-                          <Clock size={16} />
-                          <span className=" capitalize">
-                            {selectedJob?.contractType.toLowerCase()}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2  ">
-                          <Users size={16} />
-                          <span>
-                            {
-                              <span>
-                                {`${selectedJob?.minWorkExperience}-${selectedJob?.maxWorkExperience} Years`}
-                              </span>
-                            }
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2  ">
-                          <Receipt size={16} />
-                          <span>{selectedJob?.maxSalary}</span>
-                        </div>
-                        <div className="flex items-center gap-2  ">
-                          <Calendar size={16} />
-                          <span>
-                            Posted on {formatDate(selectedJob?.createdAt)}
-                          </span>
-                        </div>
-                      </div>
-                      <h2 className=" text-g-200 leading-6 font-medium text-2xl pb-2.5">
-                        {selectedJob?.title}
-                      </h2>
-                    </div>
-                  </div>
-                  <div className=" mt-7.5">
-                    <h5 className=" text-g-200 leading-6 font-medium">
-                      Job Description
-                    </h5>
-                    <p className=" text-g-300 font-normal leading-6 mt-3">
-                      {selectedJob?.jobDescription}
-                    </p>
-                  </div>
-                  <div className="mt-7.5">
-                    <h5 className="text-g-200 leading-6 font-medium ">
-                      Key Responsibilities
-                    </h5>
-                    <ul className=" text-g-300 font-normal leading-6 mt-3 list-disc pl-5">
-                      <li>
-                        Assist with security monitoring and incident triage.
-                      </li>
-                      <li>
-                        Participate in vulnerability scanning and patching.
-                      </li>
-                      <li>Help create security awareness materials.</li>
-                      <li>Document security procedure and policies.</li>
-                    </ul>
-                  </div>
-                  <div className=" mt-7.5">
-                    <h5 className=" text-g-200 leading-6 font-medium">
-                      Certifications
-                    </h5>
-                    <div className="flex gap-2 items-center mt-3  text-g-200 text-xs  leading-4 font-medium">
-                      {selectedJob?.certifications &&
-                        selectedJob.certifications.map((certification, i) => (
-                          <div
-                            key={i}
-                            className="py-1 px-2 bg-g-600 border border-g-500 rounded-full"
-                          >
-                            {certification}
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                  <div className="mt-7.5">
-                    <h5 className="text-g-200 leading-6 font-medium ">
-                      Required Skills
-                    </h5>
-                    <ul className=" text-g-300 font-normal leading-6 mt-3 list-disc pl-5">
-                      {selectedJob?.skills &&
-                        selectedJob.skills.map((skill, i) => (
-                          <li key={i}>{skill}</li>
-                        ))}
-                    </ul>
-                  </div>
+                <div className=" w-[75%]">
+                  <JobDetailsModal
+                    selectedJob={selectedJob}
+                    onClose={() => setSelectedJob(null)}
+                  />
                 </div>
               )}
             </div>
