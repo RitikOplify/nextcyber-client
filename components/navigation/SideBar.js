@@ -87,6 +87,16 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
             href: "/companies",
           },
           {
+            label: "Chats",
+            icon: MessageCircleMore,
+            href: "/messages",
+          },
+          {
+            label: "Notifications",
+            icon: Bell,
+            href: "/notifications",
+          },
+          {
             label: "Plans & Subscription",
             icon: Gem,
             href: "/plans",

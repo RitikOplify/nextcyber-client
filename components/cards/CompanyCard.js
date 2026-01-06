@@ -1,9 +1,10 @@
 import { MapPin, Users, ArrowUpRight, Globe } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const CompanyCard = ({ company }) => {
   return (
-    <div className="w-full max-w-md bg-g-700 rounded-[10px] overflow-hidden shadow-2xl p-4 border border-g-500">
+    <div className="w-full bg-g-700 rounded-[10px] overflow-hidden shadow-2xl p-4 border border-g-500">
       <div
         className="h-28 rounded-[10px]"
         style={{
@@ -55,10 +56,10 @@ const CompanyCard = ({ company }) => {
         </div>
 
         <div className="flex gap-3">
-          <button className="flex-1 bg-primary text-white font-medium py-3.5 px-6 rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer">
+          <Link href={`/companies/${company?.id}`} className="flex-1 bg-primary text-white font-medium py-3.5 px-6 rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer">
             <span className="truncate">124 Open Jobs</span>
             <ArrowUpRight className="w-5 h-5" />
-          </button>
+          </Link>
           <button className="bg-primary text-white p-3.5 rounded-lg transition-colors cursor-pointer">
             <Globe className="w-5 h-5" />
           </button>
