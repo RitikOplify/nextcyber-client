@@ -123,13 +123,13 @@ export default function Page() {
   };
 
   const columns = [
-    // {
-    //   label: "Job Title",
-    //   key: "title",
-    //   render: (row) => (
-    //     <span className="underline cursor-pointer">{row.title}</span>
-    //   ),
-    // },
+    {
+      label: "Job Title",
+      key: "title",
+      render: (row) => (
+        <span className="">{row?.job?.title}</span>
+      ),
+    },
     {
       label: "Job ID",
       key: "id",
@@ -175,8 +175,6 @@ export default function Page() {
       </div>
     );
   }
-
-  console.log("applications", applications);
 
   return (
     <div>
