@@ -124,6 +124,7 @@ function JobsPage() {
                   <JobDetailsModal
                     selectedJob={selectedJob}
                     onClose={() => setSelectedJob(null)}
+                    applyJob={applyJob}
                   />
                 </div>
               )}

@@ -48,8 +48,7 @@ export const asyncGetJobApplicants = (params, setIsLoading) => async (dispatch) 
   setIsLoading?.(true);
   try {
     const { data } = await jobApplicantsApi(params);
-    console.log("Applicants Data:", data.application);
-    dispatch(setApplications(data?.application));
+    dispatch(setApplications(data));
     return data?.application || [];
   } catch (error) {
     toast.error(getErrorMessage(error, "Failed to fetch Applicants"));
