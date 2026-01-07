@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   jobs: [],
+  applications: [],
+  totalApplicationsPages: null,
   totalJobsPages: null,
   appliedJob: [],
 };
@@ -19,9 +21,13 @@ export const jobReducer = createSlice({
     addAppliedJobs: (state, action) => {
       state.appliedJob.push(action.payload);
     },
+    setApplications: (state, action) => {
+      state.applications = action.payload.applications;
+      state.totalApplicationsPages = action.payload.totalPages;
+    },
   },
 });
 
-export const { setJobs, setAppliedJobs, addAppliedJobs } = jobReducer.actions;
-
+export const { setJobs, setAppliedJobs, addAppliedJobs, setApplications } =
+  jobReducer.actions;
 export default jobReducer.reducer;

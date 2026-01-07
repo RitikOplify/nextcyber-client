@@ -14,7 +14,7 @@ const JobCard = ({ job, onClick }) => {
   return (
     <div
       onClick={() => onClick(job)}
-      className=" flex flex-col justify-between bg-g-700 rounded-[10px] overflow-hidden shadow-2xl p-4 border border-g-500 hover:border-primary transition-colors cursor-pointer h-full"
+      className=" flex flex-col justify-between bg-g-700 rounded-[10px] overflow-hidden shadow-2xl p-5 border border-g-500 hover:border-primary transition-colors cursor-pointer h-full"
     >
       <div>
         <div className="flex items-start justify-between mb-6">
