@@ -289,10 +289,10 @@ function JobsPage() {
               </div>
             </div>
 
-            <div className="flex gap-5">
+            <div className="flex gap-5 mt-5">
               <div
-                className={`overflow-y-auto max-h-[calc(100vh-321px)]  md:max-h-[calc(100vh-175px)] overflow-hidden mt-5 mx-auto hide-scrollbar ${
-                  selectedJob ? "w-[25%]" : " w-full"
+                className={`overflow-y-auto max-h-[calc(100vh-321px)]  md:max-h-[calc(100vh-175px)] overflow-hidden mx-auto hide-scrollbar ${
+                  selectedJob ? "w-full md:w-[32.9%]" : " w-full"
                 }`}
               >
                 <div
@@ -315,7 +315,7 @@ function JobsPage() {
                 </div>
               </div>
               {selectedJob && (
-                <div className=" w-[75%]">
+                <div className="hidden md:block w-[67.1%]">
                   <JobDetailsModal
                     selectedJob={selectedJob}
                     onClose={() => setSelectedJob(null)}

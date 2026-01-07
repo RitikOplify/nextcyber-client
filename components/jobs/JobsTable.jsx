@@ -1,6 +1,6 @@
 "use client";
 
-import { BriefcaseBusiness } from "lucide-react";
+import { BriefcaseBusiness, EyeIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Filter from "../ui/Filter";
 import Search from "../ui/Search";
@@ -8,6 +8,7 @@ import Table from "../ui/Table";
 import Pagination from "../Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { asyncGetCreatedJobs } from "@/store/actions/jobActions";
+import Link from "next/link";
 
 const STATUS_STYLES = {
   ACTIVE: "bg-[#16A600]",
@@ -103,6 +104,11 @@ export default function JobsTable() {
         </span>
       ),
     },
+    {
+      label: "Applicants",
+      key: "applicantCount",
+      render: (row) => <Link href={`/jobs/${row.id}`}><EyeIcon /></Link>,
+    }
   ];
 
   const NotFound = () => (

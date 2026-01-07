@@ -14,7 +14,7 @@ const JobCard = ({ job, onClick }) => {
   return (
     <div
       onClick={() => onClick(job)}
-      className=" flex flex-col justify-between bg-g-700 rounded-[10px] overflow-hidden shadow-2xl p-4 border border-g-500"
+      className=" flex flex-col justify-between bg-g-700 rounded-[10px] overflow-hidden shadow-2xl p-5 border border-g-500 hover:border-primary transition-colors cursor-pointer h-full"
     >
       <div>
         <div className="flex items-start justify-between mb-6">
@@ -40,7 +40,7 @@ const JobCard = ({ job, onClick }) => {
           <h1 className="text-white text-md font-bold mb-2">
             {job?.title || "Job Title Here"}
           </h1>
-          <p className="text-gray-400 text-xs">Texas, USA</p>
+          <p className="text-gray-400 text-xs">{job?.location || "Location not specified"}</p>
         </div>
 
         <div className="flex flex-wrap gap-3 mb-3">
@@ -66,18 +66,17 @@ const JobCard = ({ job, onClick }) => {
 
         <div className="flex flex-wrap gap-3 mb-6 text-primary">
           <div
-            className="flex items-center gap-2 bg-gradient-to-r px-3 py-1 rounded"
+            className="flex items-center gap-[6px] bg-gradient-to-r px-3 py-1 rounded"
             style={{ background: "#CFFFC8" }}
           >
             <Star className="w-5 h-5" />
             <span className="text-xs font-semibold">Featured</span>
           </div>
           <div
-            className="flex items-center gap-2 bg-gradient-to-r px-3 py-1 rounded"
-            style={{ background: "#E8DFFF" }}
+            className="flex items-center gap-[6px] bg-gradient-to-r px-3 py-1 rounded bg-[#E8DFFF]"
           >
-            <Zap className="w-5 h-5 text-blue-400 fill-blue-400" />
-            <span className="text-blue-400 text-xs font-semibold">Urgent</span>
+            <Zap className="w-5 h-5 text-primary fill-primary" />
+            <span className="text-primary text-xs font-semibold">Urgent</span>
           </div>
         </div>
       </div>
