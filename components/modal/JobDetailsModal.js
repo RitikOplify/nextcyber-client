@@ -12,11 +12,11 @@ import Image from "next/image";
 
 export default function JobDetailsModal({ selectedJob, onClose }) {
   return (
-    <div className="hidden sm:block bg-g-800 sticky top-[75px] py-4 flex-1 h-fit rounded-[10px] border border-g-500">
-      <h1 className="text-g-100 text-2xl font-semibold mb-4 px-5">
+    <div className="sm:block bg-g-800 sticky top-[75px] py-4 flex-1 h-fit rounded-[10px] border border-g-500 overflow-x-hidden">
+      <h1 className="text-g-100 text-2xl font-semibold mb-4 px-5 break-words">
         {selectedJob?.title}
       </h1>
-      <div className=" absolute top-4 right-4">
+      <div className="absolute top-4 right-4">
         <button
           onClick={onClose}
           className="bg-red-600 rounded-full p-2 text-gray-100 transition-colors cursor-pointer"
@@ -26,7 +26,7 @@ export default function JobDetailsModal({ selectedJob, onClose }) {
       </div>
 
       <div className="px-5 mt-6 border-g-400">
-        <div className=" flex items-center justify-between">
+        <div className="sm:flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Image
               src={selectedJob?.company?.profilePicture?.url || "/image.png"}
@@ -47,7 +47,7 @@ export default function JobDetailsModal({ selectedJob, onClose }) {
             <button className="border border-g-400 p-2 rounded-lg cursor-pointer">
               <Share2 size={20} className=" text-g-300" />
             </button>
-            <button className="bg-primary text-g-100 px-4 py-2 rounded-lg float-right font-medium cursor-pointer">
+            <button className="bg-primary text-g-100 px-4 py-2 rounded-lg float-right font-medium cursor-pointer truncate">
               Apply Now
             </button>
           </div>
@@ -55,16 +55,16 @@ export default function JobDetailsModal({ selectedJob, onClose }) {
       </div>
 
       <div className="h-12 my-4 px-5 bg-[#DBF9FF] text-primary">
-        <div className="flex items-center gap-3  font-semibold py-4 text-xs leading-4">
+        <div className="flex items-center gap-3  font-semibold py-4 text-xs leading-4 overflow-auto hide-scrollbar">
           <div className="flex items-center gap-1.5  ">
             <Clock size={16} />
             <span className=" capitalize">
               {selectedJob?.contractType.toLowerCase()}
             </span>
           </div>
-          <div className="flex items-center gap-2  ">
+          <div className="flex items-center gap-2">
             <Users size={16} />
-            <span>
+            <span className="truncate">
               {
                 <span>
                   {`${selectedJob?.minWorkExperience}-${selectedJob?.maxWorkExperience} Years`}
@@ -74,11 +74,11 @@ export default function JobDetailsModal({ selectedJob, onClose }) {
           </div>
           <div className="flex items-center gap-2  ">
             <Receipt size={16} />
-            <span>{selectedJob?.maxSalary}</span>
+            <span className="truncate">{selectedJob?.maxSalary}</span>
           </div>
           <div className="flex items-center gap-2  ">
             <Calendar size={16} />
-            <span>Posted on {timeFormatter(selectedJob?.createdAt)}</span>
+            <span className="truncate">Posted on {timeFormatter(selectedJob?.createdAt)}</span>
           </div>
         </div>
       </div>

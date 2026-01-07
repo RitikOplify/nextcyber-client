@@ -63,8 +63,8 @@ function JobDetailsHeader({ status, setStatus }) {
             <span
               className={`flex items-center justify-center w-8 h-6 rounded-full text-xs font-semibold ${
                 tab.label === status
-                  ? "bg-primary text-white"
-                  : "bg-g-800 text-g-300"
+                  ? "bg-light-blue text-primary"
+                  : "bg-primary text-white"
               }`}
             >
               {tab.count}
