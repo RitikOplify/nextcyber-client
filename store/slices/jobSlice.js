@@ -22,7 +22,7 @@ export const jobReducer = createSlice({
       state.appliedJob.push(action.payload);
     },
     setApplications: (state, action) => {
-      state.applications = action.payload.applications;
+      state.applications = action.payload.application;
       state.totalApplicationsPages = action.payload.totalPages;
     },
   },

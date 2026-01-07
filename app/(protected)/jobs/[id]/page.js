@@ -1,6 +1,6 @@
 "use client";
 
-import { BriefcaseBusiness, EyeIcon, Undo2 } from "lucide-react";
+import { BriefcaseBusiness, EyeIcon, Loader2, Undo2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { asyncGetJobApplicants } from "@/store/actions/jobActions";
@@ -11,7 +11,7 @@ import Search from "@/components/ui/Search";
 import { useParams } from "next/navigation";
 
 const STATUS_STYLES = {
-  APPLIED: "bg-g-50",
+  APPLIED: "bg-g-50 text-g-400!",
   INVITED: "bg-[#16A600]",
   SHORTLISTED: "bg-[#FFAB00]",
   INTERVIEW: "bg-[#0066FF]",
@@ -96,7 +96,7 @@ export default function Page() {
     if (isFirstLoad.current) {
       isFirstLoad.current = false;
 
-      if (applications.length > 0) return;
+      if (applications?.length > 0) return;
     }
 
     dispatch(
@@ -123,34 +123,26 @@ export default function Page() {
   };
 
   const columns = [
-    {
-      label: "Job Title",
-      key: "title",
-      render: (row) => (
-        <span className="underline cursor-pointer">{row.title}</span>
-      ),
-    },
+    // {
+    //   label: "Job Title",
+    //   key: "title",
+    //   render: (row) => (
+    //     <span className="underline cursor-pointer">{row.title}</span>
+    //   ),
+    // },
     {
       label: "Job ID",
       key: "id",
       render: (row) => (
         <span className="underline cursor-pointer">
-          {row.id.slice(0, 4).toUpperCase()}
+          {row.jobId.slice(0, 4).toUpperCase()}
         </span>
       ),
     },
     {
-      label: "Posted On",
-      key: "createdAt",
-      render: (row) => formatDate(row.createdAt),
-    },
-    {
-      label: "Location",
-      key: "location",
-    },
-    {
-      label: "Remote Policy",
-      key: "remotePolicy",
+      label: "Applied On",
+      key: "appliedDate",
+      render: (row) => formatDate(row.appliedDate),
     },
     {
       label: "Status",
@@ -165,15 +157,6 @@ export default function Page() {
         </span>
       ),
     },
-    {
-      label: "Applicants",
-      key: "applicantCount",
-      render: (row) => (
-        <Link href={`/jobs/${row.id}`}>
-          <EyeIcon />
-        </Link>
-      ),
-    },
   ];
 
   const NotFound = () => (
@@ -184,6 +167,16 @@ export default function Page() {
       </p>
     </div>
   );
+
+  if (loading) {
+    return (
+      <div className="w-full py-15 flex items-center justify-center">
+        <Loader2 className="animate-spin text-primary" size={25} />
+      </div>
+    );
+  }
+
+  console.log("applications", applications);
 
   return (
     <div>

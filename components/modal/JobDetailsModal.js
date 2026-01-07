@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-export default function JobDetailsModal({ selectedJob, onClose }) {
+export default function JobDetailsModal({ selectedJob, onClose, applyJob }) {
   return (
     <div className="sm:block bg-g-800 sticky top-[75px] py-4 flex-1 h-fit rounded-[10px] border border-g-500 overflow-x-hidden">
       <h1 className="text-g-100 text-2xl font-semibold mb-4 px-5 break-words">
@@ -47,7 +47,7 @@ export default function JobDetailsModal({ selectedJob, onClose }) {
             <button className="border border-g-400 p-2 rounded-lg cursor-pointer">
               <Share2 size={20} className=" text-g-300" />
             </button>
-            <button className="bg-primary text-g-100 px-4 py-2 rounded-lg float-right font-medium cursor-pointer truncate">
+            <button onClick={() => applyJob(selectedJob?.id)} className="bg-primary text-g-100 px-4 py-2 rounded-lg float-right font-medium cursor-pointer truncate">
               Apply Now
             </button>
           </div>
