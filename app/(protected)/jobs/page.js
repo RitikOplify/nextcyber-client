@@ -8,7 +8,7 @@ import JobApplyModel from "@/components/modal/JobApply";
 import JobDetailsModal from "@/components/modal/JobDetailsModal";
 import AdvancePagination from "@/components/ui/AdvancePagination";
 import { asyncGetAppliedJob, asyncGetJobs } from "@/store/actions/jobActions";
-import { Plus, Search, SlidersHorizontal } from "lucide-react";
+import { Loader2, Plus, Search, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,7 +53,9 @@ function JobsPage() {
   }, [page, debounceSearchTerm, locationSearch]);
 
   useEffect(() => {
-    if (jobs?.length == 0) dispatch(asyncGetJobs());
+    if (jobs?.length == 0)
+      dispatch(asyncGetJobs()).then(() => setLoading(false));
+    else setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -117,54 +119,66 @@ function JobsPage() {
               </button>
             </div>
           </div>
-  
-         <div className="max-h-[calc(100vh-194.6px)] overflow-hidden">
-          <div className="flex gap-5 mt-5 overflow-hidden">
-            <div
-              className={`overflow-y-auto max-h-[calc(100vh-321px)]  md:max-h-[calc(100vh-195px)] overflow-hidden mx-auto hide-scrollbar ${
-                selectedJob ? "w-full md:w-[32.9%]" : " w-full"
-              }`}
-            >
-              <div
-                className={`grid-cols-1 ${
-                  selectedJob ? "grid-cols-1" : "sm:grid-cols-2 md:grid-cols-3"
-                } grid gap-5`}
-              >
-                {jobs?.length > 0 &&
-                  jobs?.map((job, i) => {
-                    return (
-                      <JobCard
-                        key={i}
-                        job={job}
-                        onClick={(job) => setSelectedJob(job)}
+
+          <div className="max-h-[calc(100vh-155.6px)] overflow-hidden">
+            {loading ? (
+              <div className="flex justify-center items-center h-[60vh]">
+                <Loader2 className="w-8 h-8 text-gray-500 animate-spin" />
+              </div>
+            ) : (
+              <>
+                <div className="flex gap-5 mt-5 overflow-hidden">
+                  <div
+                    className={`overflow-y-auto max-h-[calc(100vh-321px)]  md:max-h-[calc(100vh-195px)] overflow-hidden mx-auto hide-scrollbar ${
+                      selectedJob ? "w-full md:w-[32.9%]" : " w-full"
+                    }`}
+                  >
+                    <div
+                      className={`grid-cols-1 ${
+                        selectedJob
+                          ? "grid-cols-1"
+                          : "sm:grid-cols-2 md:grid-cols-3"
+                      } grid gap-5`}
+                    >
+                      {jobs?.length > 0 ? (
+                        jobs?.map((job, i) => {
+                          return (
+                            <JobCard
+                              key={i}
+                              job={job}
+                              onClick={(job) => setSelectedJob(job)}
+                            />
+                          );
+                        })
+                      ) : (
+                        <div className="flex justify-center items-center w-full h-[15vh] col-span-3">
+                          <p className="text-gray-500">No jobs found.</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {selectedJob && (
+                    <div className="mx-auto absolute z-50 w-[calc(100%-40px)] md:static md:block md:w-[67.1%]">
+                      <JobDetailsModal
+                        selectedJob={selectedJob}
+                        onClose={() => setSelectedJob(null)}
+                        applyJob={applyJob}
                       />
-                    );
-                  })}
-              </div>
-            </div>
-            {selectedJob && (
-              <div className="mx-auto absolute z-50 w-[calc(100%-40px)] md:static md:block md:w-[67.1%]">
-                <JobDetailsModal
-                  selectedJob={selectedJob}
-                  onClose={() => setSelectedJob(null)}
-                  applyJob={applyJob}
-                />
-              </div>
+                    </div>
+                  )}
+                </div>
+                {jobs?.length > 0 && (
+                  <div className="sticky z-60 bottom-0 flex justify-center mt-5">
+                    <AdvancePagination
+                      currentPage={page}
+                      totalPages={Math.ceil(jobs?.length / 10)}
+                      onPageChange={(newPage) => setPage(newPage)}
+                    />
+                  </div>
+                )}
+              </>
             )}
           </div>
-         {
-          jobs?.length > 0 && (
-            <div className="sticky z-60 bottom-0 flex justify-center mt-5">
-              <AdvancePagination
-                currentPage={page}
-                totalPages={Math.ceil(jobs?.length / 10)}
-                onPageChange={(newPage) => setPage(newPage)}
-              />
-            </div>
-          )
-         }
-        </div>
-
         </>
       </div>
 
@@ -182,6 +196,7 @@ function JobsPage() {
           filterData={filterData}
           setFilterData={setFilterData}
           onClose={() => setIsFilterOpen(false)}
+          setLoading={setLoading}
         />
       )}
     </>
