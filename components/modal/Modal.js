@@ -1,5 +1,5 @@
 "use client";
-import { X } from "lucide-react";
+import { X, XCircle } from "lucide-react";
 import React, { useEffect } from "react";
 
 export default function Modal({
@@ -24,20 +24,20 @@ export default function Modal({
       onClick={onClose}
     >
       <div
-        className={`bg-g-700 rounded-lg z-10 p-7.5 w-2xl bg-white border border-border shadow-lg`}
+        className={`bg-g-700 rounded-lg z-10 p-7.5 w-[636px] border border-g-400 shadow-lg`}
         onClick={(e) => {
           e.stopPropagation();
         }}
       >
         <div className="flex items-start justify-between">
-          <h3 className="text-xl leading-6 font-semibold text-g-100 text-primary">
+          <h3 className="text-xl leading-6 font-semibold text-g-100">
             {title}
           </h3>
           <button
             onClick={onClose}
             className="text-g-200 cursor-pointer hover:text-dark-red"
           >
-            <X size={20} />
+            <XCircle size={20} />
           </button>
         </div>
         <div className="mt-5">{children}</div>

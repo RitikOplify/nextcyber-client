@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import Modal from "../Model";
 import { useSelector } from "react-redux";
+import Modal from "../modal/Modal";
 const formatDateRange = (start, end) => {
   if (!start && !end) return "—";
   const s = start
