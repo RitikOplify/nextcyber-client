@@ -82,7 +82,7 @@ function JobDetailsHeader({ status, setStatus }) {
 export default function Page() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [status, setStatus] = useState("Applied");
+  const [status, setStatus] = useState("APPLIED");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
