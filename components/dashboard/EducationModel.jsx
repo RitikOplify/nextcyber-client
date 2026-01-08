@@ -36,7 +36,7 @@ function EducationModel({ isOpen, onClose }) {
                 className="flex items-start gap-1 py-3 relative"
               >
                 <div className="relative z-10 bg-g-400 p-0.5 rounded-full">
-                  <span className="w-2.5 h-2.5 bg-blue-500 rounded-full block" />
+                  <span className="w-2.5 h-2.5 bg-primary rounded-full block" />
                 </div>
 
                 <div className="pl-3 space-y-1">

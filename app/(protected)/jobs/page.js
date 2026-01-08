@@ -1,14 +1,16 @@
 "use client";
 
 import JobCard from "@/components/cards/JobCard";
+import JobFilter from "@/components/filters/JobFilter";
 import LocationSearchInput from "@/components/helper/LocationSearchInput";
 import JobTable from "@/components/jobs/MyJob";
 import JobApplyModel from "@/components/modal/JobApply";
 import JobDetailsModal from "@/components/modal/JobDetailsModal";
+import AdvancePagination from "@/components/ui/AdvancePagination";
 import { asyncGetAppliedJob, asyncGetJobs } from "@/store/actions/jobActions";
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 function JobsPage() {
@@ -21,9 +23,34 @@ function JobsPage() {
   const dispatch = useDispatch();
   const { appliedJob } = useSelector((state) => state.jobs);
   const [searchTerm, setSearchTerm] = useState("");
+  const [debounceSearchTerm, setDebounceSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
   const [locationSearch, setLocationSearch] = useState("");
   const [loading, setLoading] = useState(true);
-  const handleToggleFilter = () => {};
+  const [filterData, setFilterData] = useState({
+    contractType: "TEMPORARY",
+    remotePolicy: "onsite",
+    skills: [],
+    salaryRange: [],
+    experienceRange: { min: 0, max: 10 },
+  });
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const handleToggleFilter = () => {
+    setIsFilterOpen(!isFilterOpen);
+  };
+
+  const buildParams = useCallback(() => {
+    const params = {
+      page,
+      ...Object.fromEntries(
+        Object.entries({
+          search: debounceSearchTerm, // Use debounced search term
+          location: locationSearch,
+        }).filter(([_, value]) => value !== "")
+      ),
+    };
+    return params;
+  }, [page, debounceSearchTerm, locationSearch]);
 
   useEffect(() => {
     if (jobs?.length == 0) dispatch(asyncGetJobs());
@@ -34,15 +61,6 @@ function JobsPage() {
       dispatch(asyncGetAppliedJob());
   }, []);
 
-  const formatDate = (isoDate) => {
-    const date = new Date(isoDate);
-    return date.toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-  };
-
   const applyJob = async (id) => {
     setJobId(id);
     setJobOpen(true);
@@ -52,118 +70,102 @@ function JobsPage() {
     return text.length > limit ? text.slice(0, limit) + "..." : text;
   };
 
+  const handleSearch = () => {
+    // Implement search logic here
+  };
+
   return (
     <>
       <div className="mx-auto max-h-[calc(100vh-100.6px)] overflow-auto">
-        {activeTab === "Browse Jobs" && (
-          <>
-            <div className="sticky top-0 z-10 flex flex-col md:flex-row gap-4 items-center">
-              <div className="relative w-full md:w-2/5">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Search for jobs, skills..."
-                  className="w-full rounded-lg py-3.5 pl-12 pr-4 bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C]"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-
-              <div className="relative w-full md:w-2/5">
-                <LocationSearchInput
-                  selectedPlace={locationSearch}
-                  onPlaceSelected={(locationData) =>
-                    setLocationSearch(
-                      `${locationData.city}, ${locationData.state}, ${locationData.country}`
-                    )
-                  }
-                />
-              </div>
-
-              <div className="flex gap-3">
-                <button className="bg-primary rounded-lg px-8 py-3.5 text-gray-300">
-                  Search
-                </button>
-                <button
-                  onClick={handleToggleFilter}
-                  className="flex items-center gap-2 bg-g-600 rounded-lg px-12 py-3.5 text-gray-300"
-                >
-                  <SlidersHorizontal className="w-4 h-4" />
-                  Filter
-                </button>
-              </div>
+        <>
+          <div className="sticky top-0 z-60 flex flex-col md:flex-row gap-4 items-center">
+            <div className="relative w-full md:w-2/5">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search for jobs, skills..."
+                className="w-full rounded-lg py-3.5 pl-12 pr-4 bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C]"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
 
-            <div className="flex gap-5 mt-5">
+            <div className="relative w-full md:w-2/5">
+              <LocationSearchInput
+                selectedPlace={locationSearch}
+                onPlaceSelected={(locationData) =>
+                  setLocationSearch(
+                    `${locationData.city}, ${locationData.state}, ${locationData.country}`
+                  )
+                }
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={handleSearch}
+                className="bg-primary rounded-lg px-8 py-3.5 text-gray-300 cursor-pointer"
+              >
+                Search
+              </button>
+              <button
+                onClick={handleToggleFilter}
+                className="flex items-center gap-2 bg-g-600 rounded-lg px-12 py-3.5 text-gray-300 cursor-pointer"
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+                Filter
+              </button>
+            </div>
+          </div>
+  
+         <div className="max-h-[calc(100vh-194.6px)] overflow-hidden">
+          <div className="flex gap-5 mt-5 overflow-hidden">
+            <div
+              className={`overflow-y-auto max-h-[calc(100vh-321px)]  md:max-h-[calc(100vh-195px)] overflow-hidden mx-auto hide-scrollbar ${
+                selectedJob ? "w-full md:w-[32.9%]" : " w-full"
+              }`}
+            >
               <div
-                className={`overflow-y-auto max-h-[calc(100vh-321px)]  md:max-h-[calc(100vh-175px)] overflow-hidden mx-auto hide-scrollbar ${
-                  selectedJob ? "w-full md:w-[32.9%]" : " w-full"
-                }`}
+                className={`grid-cols-1 ${
+                  selectedJob ? "grid-cols-1" : "sm:grid-cols-2 md:grid-cols-3"
+                } grid gap-5`}
               >
-                <div
-                  className={`grid-cols-1 ${
-                    selectedJob
-                      ? "grid-cols-1"
-                      : "sm:grid-cols-2 md:grid-cols-3"
-                  } grid gap-5`}
-                >
-                  {jobs?.length > 0 &&
-                    jobs?.map((job, i) => {
-                      return (
-                        <JobCard
-                          key={i}
-                          job={job}
-                          onClick={(job) => setSelectedJob(job)}
-                        />
-                      );
-                    })}
-                </div>
+                {jobs?.length > 0 &&
+                  jobs?.map((job, i) => {
+                    return (
+                      <JobCard
+                        key={i}
+                        job={job}
+                        onClick={(job) => setSelectedJob(job)}
+                      />
+                    );
+                  })}
               </div>
-              {selectedJob && (
-                <div className="mx-auto absolute z-50 w-[calc(100%-40px)] md:static md:block md:w-[67.1%]">
-                  <JobDetailsModal
-                    selectedJob={selectedJob}
-                    onClose={() => setSelectedJob(null)}
-                    applyJob={applyJob}
-                  />
-                </div>
-              )}
             </div>
-          </>
-        )}
-        {activeTab === "My Jobs" && (
-          <div className="flex justify-end relative">
-            <div className="flex p-2 border border-g-500 bg-g-700  w-fit mb-7.5 gap-1 rounded-full">
-              <button
-                onClick={() => setActiveTab("Browse Jobs")}
-                className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap cursor-pointer
-                 ${
-                   activeTab === "Browse Jobs" ? " bg-g-500 rounded-full" : ""
-                 }`}
-              >
-                Browse Jobs
-              </button>
-              <button
-                onClick={() => setActiveTab("My Jobs")}
-                className={`text-base py-2 px-4 leading-4 font-semibold text-g-200 whitespace-nowrap cursor-pointer ${
-                  activeTab === "My Jobs" ? " bg-g-500 rounded-full" : ""
-                }`}
-              >
-                My Jobs
-              </button>
-            </div>
-            {user.role == "COMPANY" && (
-              <Link
-                href={"/add-new-job"}
-                className=" px-4 py-2 gap-2 flex items-center rounded-lg bg-g-600 border cursor-pointer absolute right-0 top-0 border-g-500 text-g-200 w-fit"
-              >
-                <Plus size={20} />
-                <span>Post New Job</span>
-              </Link>
+            {selectedJob && (
+              <div className="mx-auto absolute z-50 w-[calc(100%-40px)] md:static md:block md:w-[67.1%]">
+                <JobDetailsModal
+                  selectedJob={selectedJob}
+                  onClose={() => setSelectedJob(null)}
+                  applyJob={applyJob}
+                />
+              </div>
             )}
           </div>
-        )}
-        {activeTab === "My Jobs" && <JobTable />}
+         {
+          jobs?.length > 0 && (
+            <div className="sticky z-60 bottom-0 flex justify-center mt-5">
+              <AdvancePagination
+                currentPage={page}
+                totalPages={Math.ceil(jobs?.length / 10)}
+                onPageChange={(newPage) => setPage(newPage)}
+              />
+            </div>
+          )
+         }
+        </div>
+
+        </>
       </div>
 
       <JobApplyModel
@@ -174,6 +176,14 @@ function JobsPage() {
           setJobId(null);
         }}
       />
+      {isFilterOpen && (
+        <JobFilter
+          isOpen={isFilterOpen}
+          filterData={filterData}
+          setFilterData={setFilterData}
+          onClose={() => setIsFilterOpen(false)}
+        />
+      )}
     </>
   );
 }

@@ -126,7 +126,7 @@ export default function CandidateFilter({
                   type="checkbox"
                   checked={selectedContractType === value}
                   onChange={() => handleContractTypeChange(value)}
-                  className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-blue-600 checked:border-blue-600 focus:ring-2 focus:ring-primaborder-primary cursor-pointer"
+                  className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary cursor-pointer"
                 />
                 <span className="ml-3 text-sm text-gray-300 group-hover:text-white transition-colors">
                   {label}
@@ -153,7 +153,7 @@ export default function CandidateFilter({
                   type="checkbox"
                   checked={selectedRemotePolicy === value}
                   onChange={() => handleRemotePolicyChange(value)}
-                  className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-blue-600 checked:border-blue-600 focus:ring-2 focus:ring-primaborder-primary cursor-pointer"
+                  className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary cursor-pointer"
                 />
                 <span className="ml-3 text-sm text-gray-300 group-hover:text-white transition-colors">
                   {label}
