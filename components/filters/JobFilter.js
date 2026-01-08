@@ -3,13 +3,16 @@ import { X, RotateCcw } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { asyncGetCandidates } from "@/store/actions/candidateAction";
 import RangeFilter from "../ui/RangeFilter";
+import { asyncGetJobs } from "@/store/actions/jobActions";
 
 export default function JobFilter({
   isOpen,
   onClose,
   filterData,
   setFilterData,
+  setLoading,
 }) {
+  if (!isOpen) return null;
   // Local state
   const [selectedContractType, setSelectedContractType] = useState("TEMPORARY");
   const [selectedRemotePolicy, setSelectedRemotePolicy] = useState("onsite");
@@ -54,6 +57,7 @@ export default function JobFilter({
   };
 
   const handleReset = () => {
+  setLoading(true);
     setSelectedContractType("TEMPORARY");
     setSelectedRemotePolicy("onsite");
     setMinSalary("");
@@ -69,11 +73,12 @@ export default function JobFilter({
       contractType: "TEMPORARY",
       remotePolicy: "onsite",
     });
-    dispatch(asyncGetCandidates());
+    dispatch(asyncGetJobs()).then(() => setLoading(false));
     console.log("Filters have been reset", experienceRange);
   };
 
   const handleApply = () => {
+    setLoading(true);
     setFilterData({
       ...filterData,
       contractType: selectedContractType,
@@ -89,13 +94,12 @@ export default function JobFilter({
       skills: filterData.skills.join(",") || [],
     };
     console.log("Applying filters with params:", params);
-    dispatch(asyncGetCandidates(params));
+    dispatch(asyncGetJobs(params)).then(() => setLoading(false));
     onClose();
   };
 
-
   return (
-    <div className="absolute top-0 right-0 z-50 w-full max-w-[360px] backdrop-blur-[40px] bg-g-900/40 text-g-100 max-h-screen p-6 flex flex-col">
+    <div className="absolute top-0 right-0 z-90 w-full max-w-[360px] backdrop-blur-[40px] bg-g-900/40 text-g-100 max-h-screen p-6 flex flex-col">
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-xl font-semibold">Filters</h2>
         <button
