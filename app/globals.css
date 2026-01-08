@@ -250,3 +250,17 @@ body {
 .ql-container.ql-snow {
   border-radius: 0 0 8px 8px;
 }
+
+.exp-scroll::-webkit-scrollbar {
+  height: 6px !important;
+  width: 12px;
+  background: #1b1c1e;
+}
+
+.exp-scroll::-webkit-scrollbar-track {
+  background: #1b1c1e;
+}
+
+.exp-scroll::-webkit-scrollbar-thumb {
+  background: #2f3031;
+}

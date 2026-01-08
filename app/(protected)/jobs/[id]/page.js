@@ -20,11 +20,11 @@ const STATUS_STYLES = {
 };
 
 const tabs = [
-  { label: "Applied", count: 0, active: true },
-  { label: "Shortlisted", count: 12, active: false },
-  { label: "Invited to Interview", count: 7, active: false },
-  { label: "Interviewed", count: 4, active: false },
-  { label: "Hired", count: 1, active: false },
+  { label: "Applied", value:"APPLIED", count: 0, active: true },
+  { label: "Shortlisted", value:"SHORTLISTED", count: 12, active: false },
+  { label: "Invited to Interview", value:"INVITED", count: 7, active: false },
+  { label: "Interviewed", value:"INTERVIEWED", count: 4, active: false },
+  { label: "Hired", value:"HIRED", count: 1, active: false },
 ];
 
 function JobDetailsHeader({ status, setStatus }) {
@@ -53,23 +53,23 @@ function JobDetailsHeader({ status, setStatus }) {
           <button
             key={index}
             className={`flex items-center gap-2 px-5 py-2 whitespace-nowrap transition-colors relative ${
-              tab.label === status
+              tab.value === status
                 ? "text-white"
                 : "text-g-200 hover:text-g-300"
             }`}
-            onClick={() => setStatus(tab.label)}
+            onClick={() => setStatus(tab.value)}
           >
             <span className="text-sm font-medium">{tab.label}</span>
             <span
               className={`flex items-center justify-center w-8 h-6 rounded-full text-xs font-semibold ${
-                tab.label === status
+                tab.value === status
                   ? "bg-light-blue text-primary"
                   : "bg-primary text-white"
               }`}
             >
               {tab.count}
-            </span>
-            {tab.label === status && (
+            </span> 
+            {tab.value === status && (
               <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"></div>
             )}
           </button>
@@ -124,18 +124,25 @@ export default function Page() {
 
   const columns = [
     {
-      label: "Job Title",
-      key: "title",
-      render: (row) => (
-        <span className="">{row?.job?.title}</span>
-      ),
-    },
-    {
       label: "Job ID",
       key: "id",
       render: (row) => (
         <span className="underline cursor-pointer">
           {row.jobId.slice(0, 4).toUpperCase()}
+        </span>
+      ),
+    },
+    {
+      label: "Job Title",
+      key: "title",
+      render: (row) => <span className="">{row?.job?.title}</span>,
+    },
+    {
+      label: "Applicant Name",
+      key: "applicantName",
+      render: (row) => (
+        <span className="">
+          {row?.student?.user?.firstName} {row?.student?.user?.lastName}
         </span>
       ),
     },

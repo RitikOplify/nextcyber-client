@@ -22,7 +22,7 @@ const formatDateRange = (start, end) => {
   return `${s} - ${e}`;
 };
 
-export default function ProfileTabs() {
+export default function ProfileTabs({openExperienceModal}) {
   const { user } = useSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState("Skills & Experience");
   const [educationOpen, setEducationOpen] = useState(false);
@@ -118,7 +118,7 @@ export default function ProfileTabs() {
                             className="flex items-start gap-1 py-3 relative"
                           >
                             <div className="relative z-10 bg-g-400 p-0.5 rounded-full">
-                              <span className="w-2.5 h-2.5 bg-blue-500 rounded-full block" />
+                              <span className="w-2.5 h-2.5 bg-primary rounded-full block" />
                             </div>
 
                             <div className="pl-3 space-y-1">
@@ -139,7 +139,7 @@ export default function ProfileTabs() {
                         ))}
                       </div>
                     </div>
-                    <button className="mt-4 px-2 py-1 text-xs leading-4 cursor-pointer font-medium rounded-full bg-g-500 text-g-200">
+                    <button onClick={openExperienceModal} className="mt-4 px-2 py-1 text-xs leading-4 cursor-pointer font-medium rounded-full bg-g-500 text-g-200">
                       explore experience
                     </button>
                   </>
