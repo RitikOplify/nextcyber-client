@@ -12,7 +12,7 @@ import Image from "next/image";
 
 export default function JobDetailsModal({ selectedJob, onClose, applyJob }) {
   return (
-    <div className="sm:block bg-g-800 sticky top-[75px] py-4 flex-1 h-fit rounded-[10px] border border-g-500 overflow-x-hidden">
+    <div className="sm:block bg-g-800 sticky py-4 flex-1 h-fit rounded-[10px] border border-g-500 overflow-x-hidden">
       <h1 className="text-g-100 text-2xl font-semibold mb-4 px-5 break-words">
         {selectedJob?.title}
       </h1>
