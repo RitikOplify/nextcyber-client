@@ -1,6 +1,6 @@
 "use client";
 import { use, useCallback, useEffect, useState } from "react";
-import { Search, ChevronDown, SlidersHorizontal, Loader2 } from "lucide-react";
+import { ChevronDown, SlidersHorizontal, Loader2 } from "lucide-react";
 import LocationSearchInput from "@/components/helper/LocationSearchInput";
 import StudentCard from "@/components/cards/StudentCard";
 import {
@@ -11,6 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import CandidateFilter from "@/components/filters/CandidateFilter";
 import AdvancePagination from "@/components/ui/AdvancePagination";
+import Search from "@/components/ui/Search";
 
 export default function ShortlistingsPage() {
   const { user } = useSelector((state) => state.auth);
@@ -33,9 +34,15 @@ export default function ShortlistingsPage() {
     skills: [],
     salaryRange: [0, 0],
     contractType: "",
-    remotePolicy: "", 
+    remotePolicy: "",
     experienceRange: [0, 1],
   });
+
+  const handleClearSearch = () => {
+    setLoading(true);
+    setSearchTerm("");
+    dispatch(asyncShortlistedCandidates()).then(() => setLoading(false));
+  };
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -59,14 +66,22 @@ export default function ShortlistingsPage() {
       ),
     };
     return params;
-  }, [page, pageLimit, debounceSearchTerm]);
+  }, [page, debounceSearchTerm, locationSearch]);
 
   const handleFetchCandidates = () => {
     setLoading(true);
     const params = buildParams();
-    dispatch(asyncShortlistedCandidates(params)).then(() => {
-      setLoading(false);
-    });
+    if (debounceSearchTerm) {
+      dispatch(asyncShortlistedCandidates(params)).then(() =>
+        setLoading(false)
+      );
+    }
+
+    if (shortlistedCandidates.length === 0)
+      dispatch(asyncShortlistedCandidates(params)).then(() =>
+        setLoading(false)
+      );
+    else setLoading(false);
   };
 
   const handleFavoriteToggle = async (candidate) => {
@@ -87,7 +102,7 @@ export default function ShortlistingsPage() {
 
   useEffect(() => {
     handleFetchCandidates();
-  }, [page, pageLimit, debounceSearchTerm]);
+  }, [page, debounceSearchTerm, locationSearch]);
 
   return (
     <>
@@ -95,13 +110,12 @@ export default function ShortlistingsPage() {
         {/* 🔹 Header / Filters (Fixed) */}
         <div className="sticky top-0 z-10 flex flex-col items-center md:flex-row gap-4">
           <div className="relative w-full md:w-2/5">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-g w-5 h-5 text-g-300" />
-            <input
-              type="text"
-              placeholder="Search for candidates, skills..."
-              className="w-full rounded-lg py-3.5 pl-12 pr-4 bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C]"
+            <Search
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              setValue={setSearchTerm}
+              placeholder="Search candidates..."
+              className="w-full!"
+              onClick={handleClearSearch}
             />
           </div>
 
@@ -150,10 +164,11 @@ export default function ShortlistingsPage() {
                   isFavorite={candidate?.favoritedBy
                     ?.map(({ company }) => company.id)
                     .includes(user?.companyProfile.id)}
-                    style={{
-                      background: "radial-gradient(150.01% 100% at 50% 0%, rgba(2, 91, 207, 0.22) 0%, #1B1C1E 42%)"
-                    }}
-                    className="hover:border-[#025BCF]!"
+                  style={{
+                    background:
+                      "radial-gradient(150.01% 100% at 50% 0%, rgba(2, 91, 207, 0.22) 0%, #1B1C1E 42%)",
+                  }}
+                  className="hover:border-[#025BCF]!"
                 />
               ))
             ) : (
@@ -179,6 +194,7 @@ export default function ShortlistingsPage() {
         isOpen={showFilter}
         onClose={handleToggleFilter}
         setFilterData={setFilterData}
+        setLoading={setLoading}
       />
     </>
   );

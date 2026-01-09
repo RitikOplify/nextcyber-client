@@ -35,7 +35,7 @@ export default function Modal({
           </h3>
           <button
             onClick={onClose}
-            className="text-g-200 cursor-pointer hover:text-dark-red"
+            className="text-g-200 cursor-pointer hover:text-g-100 transition-colorsI"
           >
             <XCircle size={20} />
           </button>

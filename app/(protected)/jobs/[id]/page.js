@@ -175,13 +175,7 @@ export default function Page() {
     </div>
   );
 
-  if (loading) {
-    return (
-      <div className="w-full py-15 flex items-center justify-center">
-        <Loader2 className="animate-spin text-primary" size={25} />
-      </div>
-    );
-  }
+
 
   return (
     <div>
@@ -198,13 +192,21 @@ export default function Page() {
           />
         </div>
 
-        <Table
-          columns={columns}
-          data={applications}
-          NotFound={NotFound}
-          maxHeight="calc(100vh - 297.33px)"
-          loading={loading}
-        />
+        {
+
+          loading ? (
+            <div className="flex justify-center items-center h-[60vh]">
+              <Loader2 className="w-8 h-8 text-gray-500 animate-spin" />
+            </div>
+          ) : applications?.length > 0 ? (
+            <Table columns={columns} data={applications} />
+          ) : (
+            <NotFound />
+          )
+
+        }
+
+       
 
         <Pagination
           page={page}

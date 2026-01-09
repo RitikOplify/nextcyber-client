@@ -1,6 +1,6 @@
 "use client";
 import { use, useCallback, useEffect, useMemo, useState } from "react";
-import { Search, ChevronDown, SlidersHorizontal, Loader2 } from "lucide-react";
+import { ChevronDown, SlidersHorizontal, Loader2 } from "lucide-react";
 import LocationSearchInput from "@/components/helper/LocationSearchInput";
 import StudentCard from "@/components/cards/StudentCard";
 import {
@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CandidateFilter from "@/components/filters/CandidateFilter";
 import toast from "react-hot-toast";
 import AdvancePagination from "@/components/ui/AdvancePagination";
+import Search from "@/components/ui/Search";
 
 export default function CandidatesPage() {
   const { user } = useSelector((state) => state.auth);
@@ -34,6 +35,12 @@ export default function CandidatesPage() {
     remotePolicy: "",
     experienceRange: { min: 0, max: 10 },
   });
+
+  const handleClearSearch = () => {
+    setLoading(true);
+    setSearchTerm("");
+    dispatch(asyncGetCandidates()).then(() => setLoading(false));
+  };
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -68,7 +75,7 @@ export default function CandidatesPage() {
 
   const handleFetchCandidates = (params) => {
     setLoading(true);
-    handleSearchCandidates(params);
+    dispatch(asyncGetCandidates(params)).then(() => setLoading(false));
   };
 
   const handleFavoriteToggle = async (candidate) => {
@@ -91,12 +98,11 @@ export default function CandidatesPage() {
     const params = buildParams();
     if (debounceSearchTerm) {
       setLoading(true);
-      dispatch(asyncGetCandidates(params)).then(() => {
-        setLoading(false);
-      });
-    } else {
-      handleFetchCandidates(params);
+      dispatch(asyncGetCandidates(params)).then(() => setLoading(false));
     }
+
+    if (candidates.length === 0) handleFetchCandidates(params);
+    else setLoading(false);
   }, [debounceSearchTerm, page, locationSearch]);
 
   return (
@@ -104,13 +110,12 @@ export default function CandidatesPage() {
       <div className="h-[calc(100vh-100.6px)] grid grid-rows-[auto_1fr_auto] relative overflow-y-hidden!">
         <div className="sticky top-0 z-10 flex flex-col items-center md:flex-row gap-4">
           <div className="relative w-full md:w-2/5">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-g w-5 h-5 text-g-300 " />
-            <input
-              type="text"
-              placeholder="Search for candidates, skills..."
-              className="w-full rounded-lg py-3.5 pl-12 pr-4 bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C]"
+            <Search
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              setValue={setSearchTerm}
+              placeholder="Search candidates..."
+              className="w-full!"
+              onClick={handleClearSearch}
             />
           </div>
 
@@ -127,7 +132,7 @@ export default function CandidatesPage() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => handleFetchCandidates(buildParams())}
+              onClick={() => handleSearchCandidates(buildParams())}
               className="bg-primary rounded-lg px-8 py-3.5 text-gray-300 cursor-pointer"
             >
               Search
@@ -184,6 +189,7 @@ export default function CandidatesPage() {
         isOpen={showFilter}
         onClose={handleToggleFilter}
         setFilterData={setFilterData}
+        setLoading={setLoading}
       />
     </>
   );
