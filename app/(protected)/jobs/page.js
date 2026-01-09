@@ -8,6 +8,7 @@ import JobDetailsModal from "@/components/modal/JobDetailsModal";
 import AdvancePagination from "@/components/ui/AdvancePagination";
 import Search from "@/components/ui/Search";
 import { asyncGetAppliedJob, asyncGetJobs } from "@/store/actions/jobActions";
+import { removeJobs } from "@/store/slices/jobSlice";
 import { Loader2, SlidersHorizontal } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +19,7 @@ function JobsPage() {
   const [jobId, setJobId] = useState(null);
   const { user } = useSelector((state) => state.auth);
   const { jobs } = useSelector((state) => state.jobs);
-  const [selectedJob, setSelectedJob] = useState(jobs?.[0]);
+  const [selectedJob, setSelectedJob] = useState(null);
   const dispatch = useDispatch();
   const { appliedJob } = useSelector((state) => state.jobs);
   const [searchTerm, setSearchTerm] = useState("");
@@ -63,19 +64,22 @@ function JobsPage() {
 
   const fetchJobs = useCallback(() => {
     const params = buildParams();
-    setLoading(true);
-    dispatch(asyncGetJobs(params)).then(() => setLoading(false));
+    if (debounceSearchTerm || locationSearch) {
+      setLoading(true);
+      dispatch(asyncGetJobs(params)).then(() => setLoading(false));
+    }
+
+    if (!debounceSearchTerm && !locationSearch) {
+      setLoading(true);
+      if (jobs?.length === 0)
+        dispatch(asyncGetJobs("")).then(() => setLoading(false));
+      else setLoading(false);
+    }
   }, [buildParams, dispatch]);
 
   useEffect(() => {
     fetchJobs();
   }, [fetchJobs]);
-
-  useEffect(() => {
-    if (jobs?.length == 0)
-      dispatch(asyncGetJobs()).then(() => setLoading(false));
-    else setLoading(false);
-  }, []);
 
   useEffect(() => {
     if (user.role == "STUDENT" && appliedJob == 0)
@@ -95,17 +99,22 @@ function JobsPage() {
     // Implement search logic here
   };
 
+  const clearOnUnmount = () => {
+    dispatch(removeJobs());
+  };
+
   return (
     <>
       <div className="mx-auto max-h-[calc(100vh-100.6px)] overflow-auto">
         <>
           <div className="sticky top-0 z-60 flex flex-col md:flex-row gap-4 items-center">
             <div className="relative w-full md:w-2/5">
-             <Search
+              <Search
                 value={searchTerm}
                 setValue={setSearchTerm}
                 placeholder="Search jobs..."
                 className="w-full!"
+                clearOnUnmount={clearOnUnmount}
               />
             </div>
 

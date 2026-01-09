@@ -13,9 +13,17 @@ export const candidateReducer = createSlice({
       state.candidates = action.payload.students;
       state.totalPages = action.payload.pagination.totalPages;
     },
+    removeCandidates: (state) => {
+      state.candidates = [];
+      state.totalPages = 0;
+    },
     setShortlistedCandidates: (state, action) => {
       state.shortlistedCandidates = action.payload.students;
       state.totalPages = action.payload?.pagination?.totalPages || 1;
+    },
+    removeShortlistedCandidates: (state) => {
+      state.shortlistedCandidates = [];
+      state.totalPages = 0;
     },
     addToFavorite: (state, action) => {
       const { companyId, candidateId } = action.payload;
@@ -52,5 +60,7 @@ export const {
   setShortlistedCandidates,
   addToFavorite,
   removeFromFavorite,
+  removeCandidates,
+  removeShortlistedCandidates,
 } = candidateReducer.actions;
 export default candidateReducer.reducer;

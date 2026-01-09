@@ -15,6 +15,10 @@ export const jobReducer = createSlice({
       state.jobs = action.payload.jobs;
       state.totalJobsPages = action.payload.totalPages;
     },
+    removeJobs: (state) => {
+      state.jobs = [];
+      state.totalJobsPages = null;
+    },
     setAppliedJobs: (state, action) => {
       state.appliedJob = action.payload;
     },
@@ -28,6 +32,6 @@ export const jobReducer = createSlice({
   },
 });
 
-export const { setJobs, setAppliedJobs, addAppliedJobs, setApplications } =
+export const { setJobs, setAppliedJobs, addAppliedJobs, setApplications, removeJobs } =
   jobReducer.actions;
 export default jobReducer.reducer;
