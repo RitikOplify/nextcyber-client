@@ -318,7 +318,7 @@ export default function ResumeBuilderPrev({
   }, []);
 
   return (
-    <div className="h-[calc(100vh-60.8px)] text-black flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 overflow-hidden">
+    <div className="h-[calc(100vh-60.8px)] text-g-900 flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 overflow-hidden">
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar - 30% */}
         <div
@@ -327,7 +327,7 @@ export default function ResumeBuilderPrev({
         >
           <div className="flex-shrink-0 p-3 border-b border-slate-200">
             {/* AI Prompt Card */}
-            <div className="bg-white text-black rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+            <div className="bg-white text-g-900 rounded-lg shadow-sm border border-slate-200 overflow-hidden">
               <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-2">
                 <h3 className="text-white text-xs font-semibold flex items-center gap-1.5">
                   <Wand2 className="w-3.5 h-3.5" />

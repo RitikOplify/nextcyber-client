@@ -22,8 +22,8 @@ export default function Stepper({ step = 0 }) {
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 border-2 transition-all ${
                 i <= step
-                  ? "bg-blue-600 border-blue-600 text-white"
-                  : "bg-gray-900 border-gray-600 text-gray-400"
+                  ? "bg-primary border-primary text-white"
+                  : "bg-g-900 border-g-400 text-g-200"
               }`}
             >
               {i <= step ? "✔" : i + 1}
@@ -31,7 +31,7 @@ export default function Stepper({ step = 0 }) {
 
             <div
               className={`text-xs ${
-                i <= step ? "text-white" : "text-gray-500"
+                i <= step ? "text-white" : "text-g-200"
               }`}
             >
               {s}

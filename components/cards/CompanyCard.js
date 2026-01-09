@@ -24,7 +24,7 @@ const CompanyCard = ({ company }) => {
             />
           </div>
         ) : (
-          <div className="w-16 h-16 bg-black rounded-[10px] border-2 border-dark-yellow flex items-center justify-center">
+          <div className="w-16 h-16 bg-g-900 rounded-[10px] border-2 border-dark-yellow flex items-center justify-center">
             <span className="text-white font-bold text-lg">dyson</span>
           </div>
         )}
@@ -47,7 +47,7 @@ const CompanyCard = ({ company }) => {
         <div className="flex items-center gap-4 mb-5">
           <div className="flex items-center gap-1.5 text-g-100 bg-g-500 px-3 py-1 rounded text-sm">
             <MapPin className="w-4 h-4" />
-            <span>Texas, USA</span>
+            <span>{company?.headquarter}</span>
           </div>
           <div className="flex items-center gap-1.5 text-g-100 bg-g-500 px-3 py-1 rounded text-sm">
             <Users className="w-4 h-4" />
