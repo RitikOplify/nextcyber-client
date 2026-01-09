@@ -159,7 +159,7 @@ function CompanyDetailPage({ params }) {
           Latest Job Posted
         </h3>
         <div className="mt-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {jobs &&
               jobs.map((job) => (
                 <JobCard job={job} key={job.id} applyJob={applyJob} />

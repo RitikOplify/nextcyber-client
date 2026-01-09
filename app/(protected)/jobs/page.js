@@ -172,7 +172,7 @@ function JobsPage() {
                             <JobCard
                               key={i}
                               job={job}
-                              onClick={(job) => setSelectedJob(job)}
+                              handleClick={(job) => setSelectedJob(job)}
                             />
                           );
                         })
