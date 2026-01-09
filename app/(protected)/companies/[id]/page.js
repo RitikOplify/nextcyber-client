@@ -3,20 +3,9 @@ import { getCompanyProfileApi } from "@/api/companyApi";
 import JobCard from "@/components/cards/JobCard";
 import JobApplyModel from "@/components/modal/JobApply";
 import { asyncGetAppliedJob } from "@/store/actions/jobActions";
-import {
-  Bookmark,
-  Building2,
-  Clock,
-  DollarSign,
-  Globe,
-  Star,
-  User,
-  Users,
-  Zap,
-} from "lucide-react";
+import { Building2, Globe } from "lucide-react";
 import Image from "next/image";
 import React, { use, useEffect, useState } from "react";
-import { FcGoogle } from "react-icons/fc";
 import { useDispatch, useSelector } from "react-redux";
 
 function CompanyDetailPage({ params }) {
@@ -96,6 +85,10 @@ function CompanyDetailPage({ params }) {
                   style={{
                     background:
                       "linear-gradient(180deg, #2F3031 0%, #1B1C1E 100%)",
+                    boxShadow: "0px -1px 1.2px 0.35px #111214 inset",
+                    boxShadow: "0px 0.5px 1px 0px #FFFFFF26 inset",
+                    boxShadow: "0px 2px 4px -1px #0C0D0F",
+                    boxShadow: "0px 0px 0px 1px #2F3031",
                   }}
                 >
                   <Building2 size={20} />
@@ -110,11 +103,12 @@ function CompanyDetailPage({ params }) {
                 <div
                   className=" flex gap-2 items-center text-g-200 p-5 rounded-lg"
                   style={{
-                    background: "linear-gradient(180deg, #2F3031 0%, #1B1C1E 100%)",
-                    boxShadow: "0px -1px 1.2px 0.35px #111214 inset;",
-                    boxShadow: "0px 0.5px 1px 0px #FFFFFF26 inset;",
-                    boxShadow: "0px 2px 4px -1px #0C0D0F;",
-                    boxShadow: "0px 0px 0px 1px #2F3031;",
+                    background:
+                      "linear-gradient(180deg, #2F3031 0%, #1B1C1E 100%)",
+                    boxShadow: "0px -1px 1.2px 0.35px #111214 inset",
+                    boxShadow: "0px 0.5px 1px 0px #FFFFFF26 inset",
+                    boxShadow: "0px 2px 4px -1px #0C0D0F",
+                    boxShadow: "0px 0px 0px 1px #2F3031",
                   }}
                 >
                   <Building2 size={20} />
@@ -128,8 +122,25 @@ function CompanyDetailPage({ params }) {
 
               {company?.companyWebsiteLink && (
                 <div className=" flex gap-2 items-center text-g-200">
-                  <Globe size={20} />
-                  <span>{company?.companyWebsiteLink}</span>
+                  <div
+                    className=" flex gap-2 items-center text-g-200 p-5 rounded-lg"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, #2F3031 0%, #1B1C1E 100%)",
+                      boxShadow: "0px -1px 1.2px 0.35px #111214 inset",
+                      boxShadow: "0px 0.5px 1px 0px #FFFFFF26 inset",
+                      boxShadow: "0px 2px 4px -1px #0C0D0F",
+                      boxShadow: "0px 0px 0px 1px #2F3031",
+                    }}
+                  >
+                    <Globe size={20} />
+                  </div>
+                  <div>
+                    <h2 className="text-g-200 text-sm">Website</h2>
+                    <span className="text-lg text-g-100">
+                      {company?.companyWebsiteLink}
+                    </span>
+                  </div>
                 </div>
               )}
             </div>
