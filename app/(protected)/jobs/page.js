@@ -3,13 +3,12 @@
 import JobCard from "@/components/cards/JobCard";
 import JobFilter from "@/components/filters/JobFilter";
 import LocationSearchInput from "@/components/helper/LocationSearchInput";
-import JobTable from "@/components/jobs/MyJob";
 import JobApplyModel from "@/components/modal/JobApply";
 import JobDetailsModal from "@/components/modal/JobDetailsModal";
 import AdvancePagination from "@/components/ui/AdvancePagination";
+import Search from "@/components/ui/Search";
 import { asyncGetAppliedJob, asyncGetJobs } from "@/store/actions/jobActions";
-import { Loader2, Plus, Search, SlidersHorizontal } from "lucide-react";
-import Link from "next/link";
+import { Loader2, SlidersHorizontal } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -39,6 +38,16 @@ function JobsPage() {
     setIsFilterOpen(!isFilterOpen);
   };
 
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebounceSearchTerm(searchTerm);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
+
   const buildParams = useCallback(() => {
     const params = {
       page,
@@ -51,6 +60,16 @@ function JobsPage() {
     };
     return params;
   }, [page, debounceSearchTerm, locationSearch]);
+
+  const fetchJobs = useCallback(() => {
+    const params = buildParams();
+    setLoading(true);
+    dispatch(asyncGetJobs(params)).then(() => setLoading(false));
+  }, [buildParams, dispatch]);
+
+  useEffect(() => {
+    fetchJobs();
+  }, [fetchJobs]);
 
   useEffect(() => {
     if (jobs?.length == 0)
@@ -82,13 +101,11 @@ function JobsPage() {
         <>
           <div className="sticky top-0 z-60 flex flex-col md:flex-row gap-4 items-center">
             <div className="relative w-full md:w-2/5">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search for jobs, skills..."
-                className="w-full rounded-lg py-3.5 pl-12 pr-4 bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C]"
+             <Search
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                setValue={setSearchTerm}
+                placeholder="Search jobs..."
+                className="w-full!"
               />
             </div>
 
@@ -122,8 +139,8 @@ function JobsPage() {
 
           <div className="max-h-[calc(100vh-155.6px)] overflow-hidden">
             {loading ? (
-              <div className="flex justify-center items-center h-[60vh]">
-                <Loader2 className="w-8 h-8 text-gray-500 animate-spin" />
+              <div className="flex mt-5 justify-center items-center col-span-full py-10">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
               </div>
             ) : (
               <>

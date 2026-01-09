@@ -10,6 +10,7 @@ export default function CompanyFilter({
   onClose,
   filterData,
   setFilterData,
+  setLoading,
 }) {
   const [companySize, setCompanySize] = useState("");
   const [sectorInput, setSectorInput] = useState("");
@@ -38,17 +39,24 @@ export default function CompanyFilter({
   };
 
   const handleReset = () => {
+    setLoading(true);
     setFilterData({
       location: "",
       sectors: [],
       companySize: null,
     });
+    setTimeout(() => {
+      setLoading(false);
+    }, 300);
   };
 
   const handleApply = () => {
-    onClose();
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      onClose();
+    }, 300);
   };
-
 
   if (!isOpen) return null;
 

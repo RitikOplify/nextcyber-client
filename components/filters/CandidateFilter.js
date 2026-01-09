@@ -9,6 +9,7 @@ export default function CandidateFilter({
   onClose,
   filterData,
   setFilterData,
+  setLoading,
 }) {
   // Local state
   const [selectedContractType, setSelectedContractType] = useState("TEMPORARY");
@@ -54,6 +55,7 @@ export default function CandidateFilter({
   };
 
   const handleReset = () => {
+    setLoading(true);
     setSelectedContractType("TEMPORARY");
     setSelectedRemotePolicy("onsite");
     setMinSalary("");
@@ -69,11 +71,12 @@ export default function CandidateFilter({
       contractType: "TEMPORARY",
       remotePolicy: "onsite",
     });
-    dispatch(asyncGetCandidates());
+    dispatch(asyncGetCandidates()).then(() => setLoading(false));
     console.log("Filters have been reset", experienceRange);
   };
 
   const handleApply = () => {
+    setLoading(true);
     setFilterData({
       ...filterData,
       contractType: selectedContractType,
@@ -89,7 +92,9 @@ export default function CandidateFilter({
       skills: filterData.skills.join(",") || [],
     };
     console.log("Applying filters with params:", params);
-    dispatch(asyncGetCandidates(params));
+    dispatch(asyncGetCandidates(params)).then(() => {
+      setLoading(false);
+    });
     onClose();
   };
 

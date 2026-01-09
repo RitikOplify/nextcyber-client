@@ -1,12 +1,13 @@
 "use client";
 import { asyncGetCompanies } from "@/store/actions/companiesAction";
-import { Loader2, Search, SlidersHorizontal } from "lucide-react";
+import { Loader2, SlidersHorizontal } from "lucide-react";
 import CompanyCard from "@/components/cards/CompanyCard";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import LocationSearchInput from "@/components/helper/LocationSearchInput";
 import AdvancePagination from "@/components/ui/AdvancePagination";
 import CompanyFilter from "@/components/filters/CompanyFilter";
+import Search from "@/components/ui/Search";
 
 function CompaniesPage() {
   const dispatch = useDispatch();
@@ -55,10 +56,12 @@ function CompaniesPage() {
     dispatch(asyncGetCompanies(params, setLoading)).then((data) => {
       setTotalPages(data?.totalPages || 1);
     });
-  }, [dispatch, buildParams]);
+  }, [buildParams]);
 
   useEffect(() => {
-    if (companies.length == 0) dispatch(asyncGetCompanies("", setLoading));
+    if (companies.length === 0)
+      dispatch(asyncGetCompanies("", setLoading)).then(() => setLoading(false));
+    else setLoading(false);
   }, []);
 
   return (
@@ -66,13 +69,11 @@ function CompaniesPage() {
       <div className="h-[calc(100vh-100.6px)] grid grid-rows-[auto_1fr_auto] relative overflow-y-hidden!">
         <div className="sticky top-0 z-10 flex flex-col items-center md:flex-row gap-4">
           <div className="relative w-full md:w-2/5">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-g w-5 h-5 text-g-300 " />
-            <input
-              type="text"
-              placeholder="Search for candidates, skills..."
-              className="w-full rounded-lg py-3.5 pl-12 pr-4 bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C]"
+            <Search
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              setValue={setSearchTerm}
+              placeholder="Search companies..."
+              className="w-full!"
             />
           </div>
 
@@ -138,6 +139,7 @@ function CompaniesPage() {
         onClose={handleToggleFilter}
         filterData={filterData}
         setFilterData={setFilterData}
+        setLoading={setLoading}
       />
     </>
   );
