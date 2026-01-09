@@ -105,7 +105,7 @@ function ProtectedLayout({ children }) {
             <div className="flex lg:hidden items-center space-x-4">
               <button className="relative bg-g-400/50 transition-colors p-2 rounded-full cursor-pointer bg-g-4000 hover:bg-g-500">
                 <Bell size={20} />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-dark-red text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   3
                 </span>
               </button>
@@ -160,7 +160,7 @@ function ProtectedLayout({ children }) {
             <div className="flex items-center gap-4 relative">
               <button className="relative bg-g-400/50 transition-colors p-2 rounded-full cursor-pointer bg-g-4000 hover:bg-g-500">
                 <Bell size={20} />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-dark-red text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   3
                 </span>
               </button>

@@ -20,7 +20,7 @@ export default function JobDetailsModal({ selectedJob, onClose, applyJob }) {
         <div className="absolute top-4 right-4">
           <button
             onClick={onClose}
-            className="bg-red-600 rounded-full p-2 text-gray-100 transition-colors cursor-pointer"
+            className="bg-dark-red rounded-full p-2 text-gray-100 transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
