@@ -1,5 +1,5 @@
 "use client";
-import { use, useCallback, useEffect, useMemo, useState } from "react";
+import { use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, SlidersHorizontal, Loader2 } from "lucide-react";
 import LocationSearchInput from "@/components/helper/LocationSearchInput";
 import StudentCard from "@/components/cards/StudentCard";
@@ -13,6 +13,7 @@ import CandidateFilter from "@/components/filters/CandidateFilter";
 import toast from "react-hot-toast";
 import AdvancePagination from "@/components/ui/AdvancePagination";
 import Search from "@/components/ui/Search";
+import { removeCandidates } from "@/store/slices/candidateSlice";
 
 export default function CandidatesPage() {
   const { user } = useSelector((state) => state.auth);
@@ -105,6 +106,10 @@ export default function CandidatesPage() {
     else setLoading(false);
   }, [debounceSearchTerm, page, locationSearch]);
 
+  const clearOnUnmount = () => {
+    dispatch(removeCandidates());
+  };
+
   return (
     <>
       <div className="h-[calc(100vh-100.6px)] grid grid-rows-[auto_1fr_auto] relative overflow-y-hidden!">
@@ -116,6 +121,7 @@ export default function CandidatesPage() {
               placeholder="Search candidates..."
               className="w-full!"
               onClick={handleClearSearch}
+              clearOnUnmount={clearOnUnmount}
             />
           </div>
 

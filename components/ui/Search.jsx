@@ -1,7 +1,24 @@
 import { Search as SearchIcon, X } from "lucide-react";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
-function Search({ value, setValue, placeholder, className, onClick }) {
+function Search({
+  value,
+  setValue,
+  placeholder,
+  className,
+  onClick,
+  clearOnUnmount,
+}) {
+  const searchTermRef = useRef(value);
+
+  useEffect(() => {
+    searchTermRef.current = value;
+  }, [value]);
+
+  useEffect(() => {
+    return () => clearOnUnmount && setValue("");
+  }, []);
+
   return (
     <div className={`w-[320px] ${className}`}>
       <div className="flex items-center gap-2 bg-[#111214] border border-[#2F3031] rounded-lg px-5 py-4">

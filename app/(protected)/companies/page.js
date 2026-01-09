@@ -50,19 +50,29 @@ function CompaniesPage() {
     return params;
   }, [page, debouncedSearchTerm, locationSearch]);
 
-  useMemo(() => {
-    const params = buildParams();
+  const fetchCompanies = useCallback(() => {
     setLoading(true);
-    dispatch(asyncGetCompanies(params, setLoading)).then((data) => {
-      setTotalPages(data?.totalPages || 1);
-    });
-  }, [buildParams]);
+    const params = buildParams();
+    if (debouncedSearchTerm) {
+      dispatch(asyncGetCompanies(params, setLoading)).then((data) => {
+        setTotalPages(data?.totalPages || 1);
+        setLoading(false);
+      });
+    }
+
+    if (companies?.length === 0 && !debouncedSearchTerm) {
+      dispatch(asyncGetCompanies("", setLoading)).then((data) => {
+        setTotalPages(data?.totalPages || 1);
+        setLoading(false);
+      });
+    } else {
+      setLoading(false);
+    }
+  }, [dispatch, buildParams]);
 
   useEffect(() => {
-    if (companies.length === 0)
-      dispatch(asyncGetCompanies("", setLoading)).then(() => setLoading(false));
-    else setLoading(false);
-  }, []);
+    fetchCompanies();
+  }, [fetchCompanies]);
 
   return (
     <>
