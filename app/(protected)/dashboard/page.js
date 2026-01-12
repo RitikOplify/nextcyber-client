@@ -331,7 +331,7 @@ function DashboardPage() {
               <h6 className="  font-semibold leading-[150%]">
                 Profile Completion
               </h6>
-              <button className=" bg-g-400 px-2 py-1 text-[9px] font-semibold leading-[100%] rounded-full">
+              <button onClick={() => setIsModalOpen(true)} className=" bg-g-400 px-2 py-1 text-[9px] font-semibold leading-[100%] rounded-full cursor-pointer">
                 Suggestions
               </button>
             </div>

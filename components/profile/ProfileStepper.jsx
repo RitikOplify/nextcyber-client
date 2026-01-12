@@ -1,44 +1,32 @@
 "use client";
 import React from "react";
 
-export default function Stepper({ step = 0 }) {
+export default function Stepper({ step = 0, onChange }) {
   const steps = ["Account Details", "Profile", "Technical"];
+  const stepLabels = {
+    account: "Account Details",
+    profile: "Profile",
+    technical: "Technical Skills",
+  };
+
+
   return (
-    <div className="w-full mx-auto relative">
-      <div
-        className="absolute top-4 left-0 w-full h-[2px] z-0"
-        style={{
-          backgroundImage:
-            "linear-gradient(90deg, rgba(156,156,157,0) 0%, #9C9C9D 50%, rgba(156,156,157,0) 100%)",
-        }}
-      />
-
-      <div className="flex items-center justify-between w-full relative z-10 max-w-2xl mx-auto">
-        {steps.map((s, i) => (
-          <div
-            key={i}
-            className="flex-1 flex flex-col items-center relative z-20"
-          >
-            <div
-              className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 border-2 transition-all ${
-                i <= step
-                  ? "bg-primary border-primary text-white"
-                  : "bg-g-900 border-g-400 text-g-200"
+    <div className="flex items-center gap-1 p-2 bg-g-700 border border-g-500 rounded-full mx-auto w-fit whitespace-nowrap">
+      {steps.map((s, i) => (
+        <button
+          type="button"
+          key={s.key}
+          onClick={() => onChange(i)}
+          className={`px-4 py-2 text-sm font-medium rounded-full transition cursor-pointer
+              ${
+                step === i
+                  ? "bg-primary text-g-50"
+                  : "text-g-200 hover:text-[#CDCECE]"
               }`}
-            >
-              {i <= step ? "✔" : i + 1}
-            </div>
-
-            <div
-              className={`text-xs ${
-                i <= step ? "text-white" : "text-g-200"
-              }`}
-            >
-              {s}
-            </div>
-          </div>
-        ))}
-      </div>
+        >
+          {s}
+        </button>
+      ))}
     </div>
   );
 }

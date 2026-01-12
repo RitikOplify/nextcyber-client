@@ -32,12 +32,14 @@ import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { asyncSignOutUser } from "@/store/actions/authActions";
 import { toggleSidebar } from "@/store/slices/appSettingsSlice";
+import { useRouter } from "next/navigation";
 
 export default function Sidebar({ isMobileOpen, toggleMobile }) {
   const { user } = useSelector((state) => state.auth);
   const { collapseSidebar } = useSelector((state) => state.appSettings);
   const pathname = usePathname();
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const [openGroups, setOpenGroups] = useState({});
 
@@ -166,7 +168,7 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
   ];
 
   const handleLogout = async () => {
-    dispatch(asyncSignOutUser());
+    dispatch(asyncSignOutUser()).then(()=> router.replace("/auth/signin"));
   };
 
   const SidebarNavLinks = ({ items, collapsed }) => (

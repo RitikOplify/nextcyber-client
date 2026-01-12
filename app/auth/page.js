@@ -1,5 +1,4 @@
 "use client";
-import NextCyberAuth from "@/components/Auth";
 import { asyncCurrentUser } from "@/store/actions/authActions";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -13,13 +12,15 @@ function AuthPage() {
 
   useEffect(() => {
     if (user === null) {
-      dispatch(asyncCurrentUser());
+      // dispatch(asyncCurrentUser());
     }
   }, [dispatch, user]);
 
   useEffect(() => {
     if (!isLoading && user) {
       router.replace("/dashboard");
+    }else{
+      router.replace("/auth/signin");
     }
   }, [user, isLoading, router]);
 
@@ -31,7 +32,7 @@ function AuthPage() {
     );
   }
 
-  return <NextCyberAuth />;
+  return null;
 }
 
 export default AuthPage;

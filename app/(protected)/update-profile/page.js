@@ -176,7 +176,7 @@ export default function SettingsPage() {
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mx-auto">
-          <Stepper step={step} />
+          <Stepper step={step} onChange={setStep} />
 
           <div className="rounded-[10px] p-0.5 bg-gradient-to-r from-[#2F3031] to-[#1B1C1E] mt-10">
             <div className="p-10 bg-g-800 rounded-lg">
@@ -226,15 +226,7 @@ export default function SettingsPage() {
                   </button>
                 )}
 
-                {step < steps.length - 1 ? (
-                  <button
-                    type="button"
-                    onClick={onNext}
-                    className="px-4 py-3 text-sm font-semibold leading-5  bg-primary text-white rounded cursor-pointer"
-                  >
-                    Next
-                  </button>
-                ) : (
+                
                   <button
                     type="submit"
                     onClick={async () => {
@@ -253,7 +245,6 @@ export default function SettingsPage() {
                   >
                     Save Changes
                   </button>
-                )}
               </div>
             </div>
           </div>

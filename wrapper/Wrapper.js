@@ -55,13 +55,13 @@ function Wrapper({ children }) {
 
   useEffect(() => {
     if (user === null && !isAuthPage) {
-      dispatch(asyncCurrentUser());
+      // dispatch(asyncCurrentUser());
     }
   }, [dispatch, user, isAuthPage]);
 
   useEffect(() => {
     if (!isLoading && user === null && !isAuthPage) {
-      router.replace("/auth");
+      router.replace("/auth/signin");
     }
   }, [user, isLoading, router, isAuthPage]);
 

@@ -200,7 +200,7 @@ function RecruiterOnBoarding() {
                     steps[activeStep].name !== "STEP6" ? "button" : "submit"
                   }
                   disabled={loading}
-                  className="px-16 py-3 flex items-center gap-2 rounded bg-primary text-white text-sm leading-5 font-medium disabled:opacity-50"
+                  className="px-16 py-3 flex items-center gap-2 rounded bg-primary text-white text-sm leading-5 font-medium disabled:opacity-50 cursor-pointer"
                 >
                   {loading && <Loader2 size={20} className=" animate-spin" />}
                   {steps[activeStep].name !== "STEP6" ? "Next" : "Continue"}
