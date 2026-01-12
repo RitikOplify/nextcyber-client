@@ -57,7 +57,7 @@ function ResetPassword({ params }) {
       reset();
       toast.success(data.message);
       setLoading(false);
-      router.push("/auth");
+      router.push("/auth/signin");
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
       setLoading(false);
@@ -142,7 +142,7 @@ function ResetPassword({ params }) {
 
             <div className=" flex justify-center mt-7.5">
               <Link
-                href={"/auth"}
+                href={"/auth/signin"}
                 className=" flex items-center text-g-300 text-sm leading-5 font-medium gap-1.5"
               >
                 <ChevronLeft size={20} />

@@ -82,7 +82,7 @@ function ForgotPassword() {
 
             <div className=" flex justify-center mt-10">
               <Link
-                href={"/auth"}
+                href={"/auth/signin"}
                 className=" flex items-center text-g-200 text-sm leading-5 font-medium gap-1.5"
               >
                 <ChevronLeft size={20} />

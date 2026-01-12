@@ -32,7 +32,7 @@ function AuthPage() {
     );
   }
 
-  return null;
+  return <></>;
 }
 
 export default AuthPage;
