@@ -7,6 +7,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { currencyFormatter } from "@/helper";
+import Image from "next/image";
 
 const StudentCard = ({
   candidate,
@@ -25,13 +26,19 @@ const StudentCard = ({
       >
         <div className="mb-4">
           <div className="flex justify-between items-start mb-4">
-            <img
+            <Image
               src={
                 candidate?.profilePicture?.url ||
                 "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop"
               }
               alt={candidate.name}
               className="w-14 h-14 rounded-full object-cover"
+              width={56}
+              height={56}
+              onLoad={(event) => {
+                event.target.style.opacity = 1;
+              }}
+              style={{ opacity: 0, transition: "opacity 0.3s ease-in-out" }}
             />
             <button
               onClick={handleFavoriteToggle}

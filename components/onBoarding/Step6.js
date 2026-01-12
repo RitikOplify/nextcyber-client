@@ -78,14 +78,28 @@ const Step6 = ({ files, setFiles, showErrors = true }) => {
       {/* Gender */}
       <div>
         <label className="block mb-2 text-sm font-medium text-g-200 leading-5">
-          Gender preference
+          Gender preference <span className="text-dark-red">*</span>
         </label>
+
+        {/* register hidden field */}
+        <input
+          type="hidden"
+          {...register("gender", {
+            required: "Gender is required",
+          })}
+        />
+
         <div className="flex gap-2 flex-wrap">
           {["MALE", "FEMALE", "PREFER_NOT_TO_SAY"].map((option) => (
             <button
               type="button"
               key={option}
-              onClick={() => setValue("gender", option)}
+              onClick={() =>
+                setValue("gender", option, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                })
+              }
               className={`px-4 py-2 rounded-full border capitalize transition text-sm leading-5 bg-g-600 text-g-200 border-g-500 font-medium ${
                 gender === option ? "border-primary" : "hover:bg-g-700"
               }`}
@@ -94,6 +108,10 @@ const Step6 = ({ files, setFiles, showErrors = true }) => {
             </button>
           ))}
         </div>
+
+        {showErrors && errors.gender && (
+          <p className="mt-1 text-xs text-dark-red">{errors.gender.message}</p>
+        )}
       </div>
 
       {/* Candidate Section */}
@@ -219,7 +237,7 @@ const Step6 = ({ files, setFiles, showErrors = true }) => {
                 className="w-full bg-[#111214] border border-[#1B1C1E] rounded-lg px-5 py-4 text-white outline-none text-sm"
               />
               {errors.companyName && (
-                <p className="mt-1 text-xs text-red-400">
+                <p className="mt-1 text-xs text-dark-red">
                   {errors.companyName.message}
                 </p>
               )}
@@ -242,7 +260,7 @@ const Step6 = ({ files, setFiles, showErrors = true }) => {
                 className="w-full bg-[#111214] border border-[#1B1C1E] rounded-lg px-5 py-4 text-white outline-none text-sm"
               />
               {errors.companyEmail && (
-                <p className="mt-1 text-xs text-red-400">
+                <p className="mt-1 text-xs text-dark-red">
                   {errors.companyEmail.message}
                 </p>
               )}

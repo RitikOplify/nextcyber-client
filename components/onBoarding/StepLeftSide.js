@@ -77,6 +77,12 @@ function Step1LeftSide({ STEP }) {
                         width={64}
                         height={64}
                         className="object-cover w-full h-full"
+                        onLoad={(event) => {
+                          const img = event.target;
+                          img.style.opacity = 1;
+                        }}
+                        loader={({ src }) => src}
+                        loading="eager"
                       />
                     </div>
 

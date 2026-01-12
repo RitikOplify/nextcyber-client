@@ -1,10 +1,11 @@
 import { MapPin, Users, ArrowUpRight, Globe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import QuillContentViewer from "../QuillContentViewer";
 
 const CompanyCard = ({ company }) => {
   return (
-    <div className="w-full bg-g-700 rounded-[10px] overflow-hidden shadow-2xl p-4 border border-g-500">
+    <div className="w-full bg-g-700 rounded-[10px] overflow-hidden shadow-2xl p-4 border border-g-500 min-h-full">
       <div
         className="h-28 rounded-[10px]"
         style={{
@@ -21,6 +22,10 @@ const CompanyCard = ({ company }) => {
               width={64}
               height={64}
               className="rounded-[10px] border-2 border-dark-yellow"
+              onLoad={(event) => {
+                event.target.style.opacity = 1;
+              }}
+              style={{ opacity: 0, transition: "opacity 0.3s ease-in-out" }}
             />
           </div>
         ) : (
@@ -34,14 +39,19 @@ const CompanyCard = ({ company }) => {
         </h2>
       </div>
 
+      <div className="flex flex-col justify-between h-[250px] ">
+
       <div className="pt-3 ">
         <p className="text-g-100 text-md mb-3">
-          Tagline will come here (max 2 lines)
+          {company?.companyTagline ||
+            "Innovating the future, one step at a time."}
         </p>
-
-        <p className="text-g-100  leading-relaxed mb-4">
-          Google LLC is an American multinational technology corporation focused
-          on information technology, online advertising...
+        <p className="text-g-100  leading-relaxed mb-4 line-clamp-3">
+          {company?.about ? (
+            <QuillContentViewer html={company.about} />
+          ) : (
+            "Google LLC is an American multinational technology corporation focused on information technology, online advertising..."
+          )}
         </p>
 
         <div className="flex items-center gap-4 mb-5">
@@ -54,16 +64,20 @@ const CompanyCard = ({ company }) => {
             <span>{company?.companySize || 1}+</span>
           </div>
         </div>
+      </div>
 
-        <div className="flex gap-3">
-          <Link href={`/companies/${company?.id}`} className="flex-1 bg-primary text-white font-medium py-3.5 px-6 rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer">
-            <span className="truncate">124 Open Jobs</span>
-            <ArrowUpRight className="w-5 h-5" />
-          </Link>
-          <button className="bg-primary text-white p-3.5 rounded-lg transition-colors cursor-pointer">
-            <Globe className="w-5 h-5" />
-          </button>
-        </div>
+      <div className="flex gap-3">
+        <Link
+          href={`/companies/${company?.id}`}
+          className="flex-1 bg-primary text-white font-medium py-3.5 px-6 rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer"
+        >
+          <span className="truncate">124 Open Jobs</span>
+          <ArrowUpRight className="w-5 h-5" />
+        </Link>
+        <button className="bg-primary text-white p-3.5 rounded-lg transition-colors cursor-pointer">
+          <Globe className="w-5 h-5" />
+        </button>
+      </div>
       </div>
     </div>
   );

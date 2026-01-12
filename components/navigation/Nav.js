@@ -30,13 +30,13 @@ function Nav() {
 
       <div className="flex items-center space-x-4 text-white text-xs sm:text-base font-medium">
         <Link
-          href={"/auth"}
+          href={"/auth/signin"}
           className=" px-4 py-2 sm:px-6 sm:py-3 bg-g-600 border border-g-500 rounded-full"
         >
           Login
         </Link>
         <Link
-          href={"/auth"}
+          href={"/auth/signup"}
           className="px-4 py-2 sm:px-6 sm:py-3 bg-primary rounded-full "
         >
           Sign up
