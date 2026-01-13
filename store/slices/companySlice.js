@@ -10,9 +10,11 @@ export const companyReducer = createSlice({
     setCompany: (state, action) => {
       state.companies = action.payload;
     },
+   removeCompanies: (state) => {
+      state.companies = [];
+    },
   },
 });
 
-export const { setCompany } = companyReducer.actions;
-
+export const { setCompany, removeCompanies } = companyReducer.actions;
 export default companyReducer.reducer;

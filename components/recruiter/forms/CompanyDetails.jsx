@@ -16,6 +16,7 @@ export default function CompanyDetails() {
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors, dirtyFields },
   } = useForm();
 
@@ -149,6 +150,7 @@ export default function CompanyDetails() {
               Headquarter
             </label>
            <LocationSearchInput 
+           value={watch("headquarter")}
             onPlaceSelected={
               (place) => {
                 const address = `${place.city || ""}, ${place.state || ""}, ${place.country || ""}`.replace(/,\s*,/g, ',').replace(/^\s*,|,\s*$/g, '');

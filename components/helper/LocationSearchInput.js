@@ -1,10 +1,14 @@
 "use client";
 
-import { ChevronDown, Loader2 } from "lucide-react";
+import { ChevronDown, Loader2, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 
-export default function LocationSearchInput({ value, onPlaceSelected }) {
+export default function LocationSearchInput({
+  value,
+  onPlaceSelected,
+  clearOnUnmount,
+}) {
   const {
     placesService,
     placePredictions,
@@ -18,6 +22,7 @@ export default function LocationSearchInput({ value, onPlaceSelected }) {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const dropdownRef = useRef(null);
   const debounceRef = useRef(null);
+  const searchTermRef = useRef(searchValue);
 
   const extractLocation = useCallback(
     (placeDetails) => {
@@ -104,6 +109,14 @@ export default function LocationSearchInput({ value, onPlaceSelected }) {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
 
+  useEffect(() => {
+    searchTermRef.current = value;
+  }, [value]);
+
+  useEffect(() => {
+    return () => clearOnUnmount?.();
+  }, []);
+
   const showDropdown =
     dropdownVisible &&
     (isPlacePredictionsLoading || placePredictions.length > 0);
@@ -119,7 +132,18 @@ export default function LocationSearchInput({ value, onPlaceSelected }) {
         className="w-full rounded-lg px-4 py-3.5 bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C]"
       />
 
-      <ChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+      {searchValue ? (
+        <X
+          className="pointer-events-auto absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 cursor-pointer"
+          onClick={() => {
+            setSearchValue("");
+            onPlaceSelected?.({});
+            setDropdownVisible(false);
+          }}
+        />
+      ) : (
+        <ChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+      )}
 
       {showDropdown && (
         <div className="absolute z-20 mt-1 w-full rounded-lg bg-g-700 shadow-lg">

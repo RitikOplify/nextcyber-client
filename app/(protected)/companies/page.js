@@ -8,6 +8,7 @@ import LocationSearchInput from "@/components/helper/LocationSearchInput";
 import AdvancePagination from "@/components/ui/AdvancePagination";
 import CompanyFilter from "@/components/filters/CompanyFilter";
 import Search from "@/components/ui/Search";
+import { removeCompanies } from "@/store/slices/companySlice";
 
 function CompaniesPage() {
   const dispatch = useDispatch();
@@ -41,7 +42,7 @@ function CompaniesPage() {
       ...Object.fromEntries(
         Object.entries({
           search: debouncedSearchTerm,
-          location: locationSearch,
+          location: locationSearch || "" ,
           industry: filterData.industry,
           companySize: filterData.companySize,
         }).filter(([_, value]) => value !== "")
@@ -70,9 +71,22 @@ function CompaniesPage() {
     }
   }, [dispatch, buildParams]);
 
+  const handleSearch = () => {
+    setLoading(true);
+    const params = buildParams();
+    dispatch(asyncGetCompanies(buildParams(), setLoading)).then((data) => {
+      setTotalPages(data?.totalPages || 1);
+      setLoading(false);
+    });
+  };
+
   useEffect(() => {
     fetchCompanies();
   }, [fetchCompanies]);
+
+  const clearOnUnmount = () => {
+    dispatch(removeCompanies());
+  }
 
   return (
     <>
@@ -84,6 +98,7 @@ function CompaniesPage() {
               setValue={setSearchTerm}
               placeholder="Search companies..."
               className="w-full!"
+              clearOnUnmount={clearOnUnmount}
             />
           </div>
 
@@ -92,15 +107,16 @@ function CompaniesPage() {
               selectedPlace={locationSearch}
               onPlaceSelected={(locationData) =>
                 setLocationSearch(
-                  `${locationData.city}, ${locationData.state}, ${locationData.country}`
+                 (locationData.city && locationData.state) ? `${locationData?.city}, ${locationData?.state}, ${locationData?.country}` : ""
                 )
               }
+              clearOnUnmount={clearOnUnmount}
             />
           </div>
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => {}}
+              onClick={handleSearch}
               className="bg-primary rounded-lg px-8 py-3.5 text-gray-300 cursor-pointer"
             >
               Search
