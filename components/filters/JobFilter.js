@@ -21,6 +21,10 @@ export default function JobFilter({
   const [maxSalary, setMaxSalary] = useState(filterData.salaryRange?.[1] || "");
   const [experienceRange, setExperienceRange] = useState({ min: 0, max: 10 }); // [min, max] in years
   const dispatch = useDispatch();
+  const [loadingLocal, setLoadingLocal] = useState({
+    resetLoading: false,
+    applyLoading: false,
+  });
 
   // Sync with external filterData
   useEffect(() => {
@@ -57,7 +61,8 @@ export default function JobFilter({
   };
 
   const handleReset = () => {
-  setLoading(true);
+    setLoadingLocal((prev) => ({ ...prev, resetLoading: true }));
+    setLoading(true);
     setSelectedContractType("TEMPORARY");
     setSelectedRemotePolicy("onsite");
     setMinSalary("");
@@ -73,11 +78,20 @@ export default function JobFilter({
       contractType: "TEMPORARY",
       remotePolicy: "onsite",
     });
-    dispatch(asyncGetJobs()).then(() => setLoading(false));
+    dispatch(asyncGetJobs())
+      .then(() => {
+        setLoading(false);
+        setLoadingLocal((prev) => ({ ...prev, resetLoading: false }));
+      })
+      .catch(() => {
+        setLoading(false);
+        setLoadingLocal((prev) => ({ ...prev, resetLoading: false }));
+      });
     console.log("Filters have been reset", experienceRange);
   };
 
   const handleApply = () => {
+    setLoadingLocal((prev) => ({ ...prev, applyLoading: true }));
     setLoading(true);
     setFilterData({
       ...filterData,
@@ -94,8 +108,12 @@ export default function JobFilter({
       skills: filterData.skills.join(",") || [],
     };
     console.log("Applying filters with params:", params);
-    dispatch(asyncGetJobs(params)).then(() => setLoading(false));
-    onClose();
+    dispatch(asyncGetJobs(params))
+      .then(() => setLoading(false))
+      .finally(() => {
+        setLoadingLocal((prev) => ({ ...prev, applyLoading: false }));
+        onClose();
+      });
   };
 
   return (
@@ -242,17 +260,19 @@ export default function JobFilter({
       <div className="fixed bottom-0 left-0 right-0 p-6 bg-g-900/80 backdrop-blur-md border-t border-neutral-800">
         <div className="max-w-[360px] mx-auto flex gap-3">
           <button
+            disabled={loadingLocal.resetLoading}
             onClick={handleReset}
             className="flex-1 flex items-center justify-center gap-2 bg-g-700 hover:bg-neutral-750 text-gray-300 py-3 rounded-lg transition-colors font-medium cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" />
-            <span>Reset</span>
+            <span>{loadingLocal.resetLoading ? "Resetting..." : "Reset"}</span>
           </button>
           <button
+            disabled={loadingLocal.applyLoading}
             onClick={handleApply}
             className="flex-1 bg-primary hover:bg-primary-dark text-white py-3 rounded-lg transition-colors font-medium cursor-pointer"
           >
-            Apply Filters
+            {loadingLocal.applyLoading ? "Applying..." : "Apply Filters"}
           </button>
         </div>
       </div>

@@ -168,7 +168,8 @@ export default function Sidebar({ isMobileOpen, toggleMobile }) {
   ];
 
   const handleLogout = async () => {
-    dispatch(asyncSignOutUser()).then(()=> router.replace("/auth/signin"));
+    router.replace("/auth/signin");
+    dispatch(asyncSignOutUser());
   };
 
   const SidebarNavLinks = ({ items, collapsed }) => (

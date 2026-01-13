@@ -94,7 +94,7 @@ export default function JobDetailsModal({ selectedJob, onClose, applyJob }) {
         <div className="px-5 mt-5">
           <h5 className=" text-g-100 leading-6 font-medium">Job Description</h5>
           <p className=" text-g-200 font-normal leading-6 mt-3">
-            {selectedJob?.jobDescription}
+           <div dangerouslySetInnerHTML={{ __html: selectedJob?.jobDescription }}></div>
           </p>
         </div>
         <div className="px-5 mt-7.5">

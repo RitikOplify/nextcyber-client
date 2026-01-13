@@ -13,7 +13,7 @@ function ProfileSetting({ setProfileSettingOpen }) {
         <p className="font-medium mt-1 mb-2.5">{user.email}</p>
       </div>
       <Link
-        href={"/update-profile"}
+        href={"/profile"}
         className="hover:underline"
         onClick={() => setProfileSettingOpen(false)}
       >

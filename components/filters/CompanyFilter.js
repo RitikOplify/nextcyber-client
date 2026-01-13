@@ -14,6 +14,7 @@ export default function CompanyFilter({
 }) {
   const [companySize, setCompanySize] = useState("");
   const [sectorInput, setSectorInput] = useState("");
+  const [loadingLocal, setLoadingLocal] = useState({ resetLoading: false, applyLoading: false });
 
   const dispatch = useDispatch();
 
@@ -39,6 +40,7 @@ export default function CompanyFilter({
   };
 
   const handleReset = () => {
+    setLoadingLocal((prev) => ({ ...prev, resetLoading: true }));
     setLoading(true);
     setFilterData({
       location: "",
@@ -47,13 +49,16 @@ export default function CompanyFilter({
     });
     setTimeout(() => {
       setLoading(false);
+      setLoadingLocal((prev) => ({ ...prev, resetLoading: false }));
     }, 300);
   };
 
   const handleApply = () => {
+    setLoadingLocal((prev) => ({ ...prev, applyLoading: true }));
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
+      setLoadingLocal((prev) => ({ ...prev, applyLoading: false }));
       onClose();
     }, 300);
   };
@@ -126,17 +131,19 @@ export default function CompanyFilter({
       <div className="fixed bottom-0 left-0 right-0 p-6 bg-g-900/80 backdrop-blur-md border-t border-neutral-800">
         <div className="max-w-[360px] mx-auto flex gap-3">
           <button
+            disabled={loadingLocal.resetLoading}
             onClick={handleReset}
             className="flex-1 flex items-center justify-center gap-2 bg-g-700 hover:bg-neutral-750 text-gray-300 py-3 rounded-lg transition-colors font-medium cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" />
-            <span>Reset</span>
+            <span>{loadingLocal.resetLoading ? "Resetting..." : "Reset"}</span>
           </button>
           <button
+            disabled={loadingLocal.applyLoading}
             onClick={handleApply}
             className="flex-1 bg-primary hover:bg-primary-dark text-white py-3 rounded-lg transition-colors font-medium cursor-pointer"
           >
-            Apply Filters
+            {loadingLocal.applyLoading ? "Applying..." : "Apply Filters"}
           </button>
         </div>
       </div>

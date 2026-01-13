@@ -9,13 +9,12 @@ export default function Stepper({ step = 0, onChange }) {
     technical: "Technical Skills",
   };
 
-
   return (
     <div className="flex items-center gap-1 p-2 bg-g-700 border border-g-500 rounded-full mx-auto w-fit whitespace-nowrap">
       {steps.map((s, i) => (
         <button
           type="button"
-          key={s.key}
+          key={i}
           onClick={() => onChange(i)}
           className={`px-4 py-2 text-sm font-medium rounded-full transition cursor-pointer
               ${

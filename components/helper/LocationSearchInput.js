@@ -4,7 +4,7 @@ import { ChevronDown, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 
-export default function LocationSearchInput({ onPlaceSelected }) {
+export default function LocationSearchInput({ value, onPlaceSelected }) {
   const {
     placesService,
     placePredictions,
@@ -24,9 +24,8 @@ export default function LocationSearchInput({ onPlaceSelected }) {
       if (!placeDetails?.address_components) return;
 
       const getComponent = (type) =>
-        placeDetails.address_components.find((c) =>
-          c.types.includes(type)
-        )?.long_name || "";
+        placeDetails.address_components.find((c) => c.types.includes(type))
+          ?.long_name || "";
 
       const locationData = {
         city:
@@ -61,6 +60,9 @@ export default function LocationSearchInput({ onPlaceSelected }) {
     setDropdownVisible(false);
   };
 
+  useEffect(() => {
+    setSearchValue(value || "");
+  }, [value]);
 
   // Debounced prediction fetch
   useEffect(() => {
@@ -90,8 +92,7 @@ export default function LocationSearchInput({ onPlaceSelected }) {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   useEffect(() => {
@@ -102,7 +103,6 @@ export default function LocationSearchInput({ onPlaceSelected }) {
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
-
 
   const showDropdown =
     dropdownVisible &&
@@ -131,7 +131,9 @@ export default function LocationSearchInput({ onPlaceSelected }) {
             placePredictions.map((item) => (
               <div
                 key={item.place_id}
-                onClick={() => (handleSelect(item.place_id), setDropdownVisible(false))}
+                onClick={() => (
+                  handleSelect(item.place_id), setDropdownVisible(false)
+                )}
                 className="cursor-pointer px-4 py-2 text-gray-300 hover:bg-zinc-700"
               >
                 {item.description}

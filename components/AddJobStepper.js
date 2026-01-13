@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import instance from "@/utils/axios";
 import NoJobsPosted from "./jobs/NoJobsPosted";
 import JobPreview from "./jobs/JobPreview";
+import { SaveButton } from "./ui/SaveButton";
 
 export default function AddJobStepper() {
   const form = useForm({
@@ -264,13 +265,12 @@ export default function AddJobStepper() {
                           Discard
                         </button>
 
-                        <button
-                          disabled={loading}
+                        <SaveButton
+                          isLoading={loading}
                           type="submit"
-                          className="px-4 py-2 bg-primary text-white rounded-lg text-sm cursor-pointer"
-                        >
-                          {loading ? "Posting..." : "Post Job"}
-                        </button>
+                          text="Post Job"
+                          loadingText="Posting..."
+                        />
                       </>
                     ) : (
                       <button
