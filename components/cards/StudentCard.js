@@ -31,7 +31,7 @@ const StudentCard = ({
                 candidate?.profilePicture?.url ||
                 "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop"
               }
-              alt={candidate.name}
+              alt={candidate.user.firstName + " " + candidate.user.lastName}
               className="w-14 h-14 rounded-full object-cover"
               width={56}
               height={56}

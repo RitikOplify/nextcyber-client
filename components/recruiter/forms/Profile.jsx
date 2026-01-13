@@ -116,6 +116,7 @@ export default function Profile() {
   const company = user?.companyProfile;
 
   const [roleWithCompany, setRoleWithCompany] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const profileImage = watch("profileImage");
   const bannerImage = watch("bannerImage");
@@ -139,6 +140,7 @@ export default function Profile() {
   }, [user, company, reset]);
 
   const onSubmit = async (data) => {
+    setIsSubmitting(true);
     const formData = new FormData();
 
     if (dirtyFields.profileImage && data.profileImage?.file) {
@@ -175,6 +177,8 @@ export default function Profile() {
       toast.success("Company details updated successfully");
     } catch (error) {
       toast.error(getErrorMessage(error));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -330,7 +334,7 @@ export default function Profile() {
       </div>
 
       <div className="flex justify-end">
-        <SaveButton type="submit" />
+        <SaveButton isLoading={isSubmitting} type="submit" />
       </div>
     </form>
   );

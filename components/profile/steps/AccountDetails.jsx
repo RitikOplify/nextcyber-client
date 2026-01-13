@@ -5,6 +5,7 @@ import SelectField from "@/components/SelectField";
 import Image from "next/image";
 import { Image as LucideImage, X } from "lucide-react";
 import toast from "react-hot-toast";
+import LocationSearchInput from "@/components/helper/LocationSearchInput";
 
 export default function AccountDetails({ showErrors = true }) {
   const {
@@ -163,14 +164,21 @@ export default function AccountDetails({ showErrors = true }) {
         />
         {showErrors && <p className="error">{errors.lastName?.message}</p>}
       </div>
-      <SelectField
-        label="Location"
-        name="location"
-        options={["India", "USA", "UK", "UAE"]}
-        placeholder="Select location"
-        rules={{ required: "Location required" }}
-        showErrors={showErrors}
-      />
+      <div>
+        <label className="text-g-200 font-medium leading-6 block mb-1">
+          Location
+        </label>
+        <LocationSearchInput 
+          value={watch("location")}
+          onPlaceSelected={
+            (place) => {
+              const address = `${place.city || ""}, ${place.state || ""}, ${place.country || ""}`.replace(/,\s*,/g, ',').replace(/^\s*,|,\s*$/g, '');
+              setValue("location", address, { shouldDirty: true });
+            }
+          }
+        />
+        {showErrors && <p className="error">{errors.location?.message}</p>} 
+      </div>
       <SelectField
         label="Currency"
         name="currency"

@@ -7,7 +7,7 @@ import { SaveButton } from "@/components/ui/SaveButton";
 import { updateCompanyApi } from "@/api/companyApi";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/utils/errMessage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function NextCybrProfile() {
@@ -25,6 +25,7 @@ export default function NextCybrProfile() {
   });
 
   const { companyProfile } = useSelector((state) => state.auth.user);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!companyProfile) return;
@@ -36,6 +37,7 @@ export default function NextCybrProfile() {
   }, [companyProfile, reset]);
 
   const onSubmit = async (data) => {
+    setIsSubmitting(true);
     try {
       const payload = {};
 
@@ -57,6 +59,8 @@ export default function NextCybrProfile() {
       console.log(res);
     } catch (error) {
       toast.error(getErrorMessage(error || "Failed to update company details"));
+    } finally {
+      setIsSubmitting(false); 
     }
   };
 
@@ -108,7 +112,7 @@ export default function NextCybrProfile() {
       </div>
 
       <div className="flex justify-end">
-        <SaveButton type="submit" />
+        <SaveButton isLoading={isSubmitting} type="submit" />
       </div>
     </form>
   );

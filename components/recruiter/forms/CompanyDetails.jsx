@@ -4,20 +4,23 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/Input";
 import { SaveButton } from "@/components/ui/SaveButton";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { updateCompanyApi } from "@/api/companyApi";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/utils/errMessage";
+import LocationSearchInput from "@/components/helper/LocationSearchInput";
 
 export default function CompanyDetails() {
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, dirtyFields },
   } = useForm();
 
   const { companyProfile } = useSelector((state) => state.auth.user);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!companyProfile) return;
@@ -45,6 +48,7 @@ export default function CompanyDetails() {
   }, [companyProfile, reset]);
 
   const onSubmit = async (data) => {
+    setIsSubmitting(true);
     try {
       const payload = {};
 
@@ -99,6 +103,8 @@ export default function CompanyDetails() {
       console.log(res);
     } catch (error) {
       toast.error(getErrorMessage(error || "Failed to update company details"));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -138,13 +144,19 @@ export default function CompanyDetails() {
             error={errors.website?.message}
           />
 
-          <Input
-            label="Headquarters"
-            placeholder="Enter location"
-            {...register("headquarter")}
-            error={errors.headquarters?.message}
+          <div>
+            <label className="block mb-2 text-sm font-medium text-g-200">
+              Headquarter
+            </label>
+           <LocationSearchInput 
+            onPlaceSelected={
+              (place) => {
+                const address = `${place.city || ""}, ${place.state || ""}, ${place.country || ""}`.replace(/,\s*,/g, ',').replace(/^\s*,|,\s*$/g, '');
+                setValue("headquarter", address, { shouldDirty: true });
+              }
+            }
           />
-
+          </div>
           <Input
             label="Founded"
             placeholder="Year"
@@ -212,7 +224,7 @@ export default function CompanyDetails() {
       </div>
 
       <div className="flex justify-end">
-        <SaveButton type="submit" />
+        <SaveButton isLoading={isSubmitting} type="submit" />
       </div>
     </form>
   );

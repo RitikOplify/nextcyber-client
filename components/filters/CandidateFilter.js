@@ -19,6 +19,10 @@ export default function CandidateFilter({
   const [maxSalary, setMaxSalary] = useState(filterData.salaryRange?.[1] || "");
   const [experienceRange, setExperienceRange] = useState({ min: 0, max: 10 }); // [min, max] in years
   const dispatch = useDispatch();
+  const [loadingLocal, setLoadingLocal] = useState({
+    resetLoaing: false,
+    applyLoading: false,
+  });
 
   // Sync with external filterData
   useEffect(() => {
@@ -55,6 +59,7 @@ export default function CandidateFilter({
   };
 
   const handleReset = () => {
+    setLoadingLocal((prev) => ({ ...prev, resetLoading: true }));
     setLoading(true);
     setSelectedContractType("TEMPORARY");
     setSelectedRemotePolicy("onsite");
@@ -71,11 +76,20 @@ export default function CandidateFilter({
       contractType: "TEMPORARY",
       remotePolicy: "onsite",
     });
-    dispatch(asyncGetCandidates()).then(() => setLoading(false));
+    dispatch(asyncGetCandidates())
+      .then(() => {
+        setLoading(false);
+        setLoadingLocal((prev) => ({ ...prev, resetLoading: false }));
+      })
+      .finally(() => {
+        setLoading(false);
+        setLoadingLocal((prev) => ({ ...prev, resetLoading: false }));
+      });
     console.log("Filters have been reset", experienceRange);
   };
 
   const handleApply = () => {
+    setLoadingLocal((prev) => ({ ...prev, applyLoading: true }));
     setLoading(true);
     setFilterData({
       ...filterData,
@@ -92,10 +106,15 @@ export default function CandidateFilter({
       skills: filterData.skills.join(",") || [],
     };
     console.log("Applying filters with params:", params);
-    dispatch(asyncGetCandidates(params)).then(() => {
-      setLoading(false);
-    });
-    onClose();
+    dispatch(asyncGetCandidates(params))
+      .then(() => {
+        setLoading(false);
+        setLoadingLocal((prev) => ({ ...prev, applyLoading: false }));
+      })
+      .finally(() => {
+        setLoadingLocal((prev) => ({ ...prev, applyLoading: false }));
+        onClose();
+      });
   };
 
   if (!isOpen) return null;
@@ -244,17 +263,21 @@ export default function CandidateFilter({
       <div className="fixed bottom-0 left-0 right-0 p-6 bg-g-900/80 backdrop-blur-md border-t border-neutral-800">
         <div className="max-w-[360px] mx-auto flex gap-3">
           <button
+            disabled={loadingLocal.resetLoaing}
             onClick={handleReset}
             className="flex-1 flex items-center justify-center gap-2 bg-g-700 hover:bg-neutral-750 text-gray-300 py-3 rounded-lg transition-colors font-medium cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" />
-            <span>Reset</span>
+            <span>{loadingLocal.resetLoading ? "Resetting..." : "Reset"}</span>
           </button>
           <button
+            disabled={loadingLocal.applyLoading}
             onClick={handleApply}
             className="flex-1 bg-primary hover:bg-primary-dark text-white py-3 rounded-lg transition-colors font-medium cursor-pointer"
           >
-            Apply Filters
+            <span>
+              {loadingLocal.applyLoading ? "Applying..." : "Apply Filters"}
+            </span>
           </button>
         </div>
       </div>
