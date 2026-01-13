@@ -51,7 +51,7 @@ const SECTION_CONFIG = [
   },
   {
     key: "skills",
-    title: "Skills",
+    title: "Skills and Languages",
     icon: <Code className="w-4 h-4" />,
   },
   {
@@ -119,17 +119,14 @@ export default function ResumeBuilder({
     },
     socialLinks: [
       {
-        platform: "linkedin",
         url: "https://linkedin.com/in/example",
         label: "LinkedIn",
       },
       {
-        platform: "github",
         url: "https://github.com/example",
         label: "GitHub",
       },
       {
-        platform: "website",
         url: "https://example.com",
         label: "Personal",
       },
@@ -870,29 +867,34 @@ function SectionEditor({
               setExpandedSubItems={setExpandedSubItems} // ADD THIS
             />
           </div>
-          <div className="flex items-center gap-4 mt-4">
-            <input
-              type="text"
-              value={enhancePrompt}
-              onChange={(e) => setEnhancePrompt(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleEnhance()}
-              placeholder="Give prompt"
-              className="flex-1 px-4 py-3 text-sm leading-5 outline-none bg-g-700 text-g-300 rounded-lg "
-            />
-            <button
-              onClick={handleEnhance}
-              disabled={!enhancePrompt.trim() || isEnhancing}
-              className="px-4 py-3 text-sm leading-5 outline-none bg-primary rounded-lg hover:bg-primary/75 transition-colors disabled:opacity-75  text-white disabled:cursor-not-allowed flex items-center gap-2 font-medium"
-            >
-              {isEnhancing ? (
-                <Loader2 size={20} className="animate-spin" />
-              ) : (
-                <>
-                  <Sparkles size={20} />
-                </>
-              )}
-            </button>
-          </div>
+
+          {(section.key === "professionalSummary" ||
+            // section.key === "workExperience" ||
+            section.key === "projects") && (
+            <div className="flex items-center gap-4 mt-4">
+              <input
+                type="text"
+                value={enhancePrompt}
+                onChange={(e) => setEnhancePrompt(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleEnhance()}
+                placeholder="Give prompt"
+                className="flex-1 px-4 py-3 text-sm leading-5 outline-none bg-g-700 text-g-300 rounded-lg "
+              />
+              <button
+                onClick={handleEnhance}
+                disabled={!enhancePrompt.trim() || isEnhancing}
+                className="px-4 py-3 text-sm leading-5 outline-none bg-primary rounded-lg hover:bg-primary/75 transition-colors disabled:opacity-75  text-white disabled:cursor-not-allowed flex items-center gap-2 font-medium"
+              >
+                {isEnhancing ? (
+                  <Loader2 size={20} className="animate-spin" />
+                ) : (
+                  <>
+                    <Sparkles size={20} />
+                  </>
+                )}
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -920,6 +922,9 @@ function SectionForm({
 
     return (
       <div className="space-y-3">
+        <h3 className="text-sm leading-5 font-medium text-dark-blue">
+          Basic Information
+        </h3>
         <div className="grid grid-cols-2 gap-2">
           <div>
             <label className={labelClass}>First Name</label>
@@ -969,10 +974,13 @@ function SectionForm({
             value={data?.phone || ""}
             onChange={(e) => handleChange("phone", e.target.value)}
             className={inputClass}
-            placeholder="+1 234 567 8900"
+            placeholder="+91 0123456789"
           />
         </div>
-        <div className="grid grid-cols-2 gap-2">
+        <h3 className="text-sm leading-5 font-medium text-dark-blue">
+          Address
+        </h3>
+        <div className="grid grid-cols-1 gap-2">
           <div>
             <label className={labelClass}>City</label>
             <input
@@ -980,7 +988,7 @@ function SectionForm({
               value={data?.city || ""}
               onChange={(e) => handleChange("city", e.target.value)}
               className={inputClass}
-              placeholder="New York"
+              placeholder="Pune"
             />
           </div>
           <div>
@@ -990,7 +998,7 @@ function SectionForm({
               value={data?.state || ""}
               onChange={(e) => handleChange("state", e.target.value)}
               className={inputClass}
-              placeholder="NY"
+              placeholder="Maharashtra"
             />
           </div>
         </div>
@@ -1002,7 +1010,7 @@ function SectionForm({
               value={data?.country || ""}
               onChange={(e) => handleChange("country", e.target.value)}
               className={inputClass}
-              placeholder="USA"
+              placeholder="India"
             />
           </div>
           <div>
@@ -1012,7 +1020,7 @@ function SectionForm({
               value={data?.zipCode || ""}
               onChange={(e) => handleChange("zipCode", e.target.value)}
               className={inputClass}
-              placeholder="10001"
+              placeholder="411045"
             />
           </div>
         </div>
@@ -1023,10 +1031,11 @@ function SectionForm({
   // Social Links Form
   if (sectionKey === "socialLinks") {
     const links = Array.isArray(data) ? data : [];
-
-    const addLink = () => {
-      onUpdate([...links, { platform: "", url: "", label: "" }]);
-    };
+    const [addNewLink, setAddNewLink] = useState(false);
+    const [addNewLinkData, setAddNewLinkData] = useState({
+      url: "",
+      label: "",
+    });
 
     const removeLink = (index) => {
       onUpdate(links.filter((_, i) => i !== index));
@@ -1041,27 +1050,38 @@ function SectionForm({
     return (
       <div className="space-y-3">
         {links.map((link, index) => (
-          <div
-            key={index}
-            className="p-3 border border-slate-200 rounded-lg space-y-2"
-          >
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-xs font-medium text-slate-700">
-                Link {index + 1}
-              </span>
+          <div className="w-full" key={index}>
+            <label className={labelClass}>{link.label}</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="url"
+                value={link.url || ""}
+                onChange={(e) => updateLink(index, "url", e.target.value)}
+                className={inputClass}
+                placeholder="https://linkedin.com/in/iamgauravkha"
+              />
               <button
                 onClick={() => removeLink(index)}
-                className="p-1 hover:bg-red-50 rounded text-red-600"
+                className="p-1 cursor-pointer rounded text-g-200 hover:text-g-100"
               >
-                <Trash2 className="w-3 h-3" />
+                <Trash2 size={16} />
               </button>
             </div>
+          </div>
+        ))}
+        {addNewLink && (
+          <div className="w-full flex flex-col gap-3 p-4 border border-g-400 rounded-lg">
             <div>
-              <label className={labelClass}>Platform</label>
+              <label className={labelClass}>Label Name</label>
               <input
                 type="text"
-                value={link.platform || ""}
-                onChange={(e) => updateLink(index, "platform", e.target.value)}
+                value={addNewLinkData.label || ""}
+                onChange={(e) =>
+                  setAddNewLinkData({
+                    ...addNewLinkData,
+                    label: e.target.value,
+                  })
+                }
                 className={inputClass}
                 placeholder="LinkedIn"
               />
@@ -1070,29 +1090,45 @@ function SectionForm({
               <label className={labelClass}>URL</label>
               <input
                 type="url"
-                value={link.url || ""}
-                onChange={(e) => updateLink(index, "url", e.target.value)}
+                value={addNewLinkData.url || ""}
+                onChange={(e) =>
+                  setAddNewLinkData({
+                    ...addNewLinkData,
+                    url: e.target.value,
+                  })
+                }
                 className={inputClass}
                 placeholder="https://linkedin.com/in/johndoe"
               />
             </div>
-            <div>
-              <label className={labelClass}>Label (Optional)</label>
-              <input
-                type="text"
-                value={link.label || ""}
-                onChange={(e) => updateLink(index, "label", e.target.value)}
-                className={inputClass}
-                placeholder="LinkedIn"
-              />
+            <div className="flex items-center justify-end gap-3 w-full">
+              <button
+                className="px-2 py-1 bg-dark-red text-white rounded-lg text-xs leading-4 cursor-pointer"
+                onClick={() => {
+                  setAddNewLinkData({ url: "", label: "" });
+                  setAddNewLink(false);
+                }}
+              >
+                Discard
+              </button>
+              <button
+                className="px-2 py-1 bg-primary text-white rounded-lg text-xs leading-4 cursor-pointer"
+                onClick={() => {
+                  onUpdate([...links, addNewLinkData]);
+                  setAddNewLinkData({ url: "", label: "" });
+                  setAddNewLink(false);
+                }}
+              >
+                Save
+              </button>
             </div>
           </div>
-        ))}
+        )}
         <button
-          onClick={addLink}
-          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-blue-500 hover:text-primary transition-colors flex items-center justify-center gap-2"
+          onClick={() => setAddNewLink((prev) => !prev)}
+          className="w-full p-2 border border-g-300 border-dashed flex  items-center cursor-pointer justify-center gap-1.5 text-xs leading-4 text-g-200 hover:text-g-100 hover:border-g-100"
         >
-          <Plus className="w-4 h-4" />
+          <Plus size={16} />
           Add Link
         </button>
       </div>
@@ -1115,19 +1151,37 @@ function SectionForm({
 
   // Work Experience Form
   if (sectionKey === "workExperience") {
+    const [enhancePrompt, setEnhancePrompt] = useState("");
+    const [isEnhancing, setIsEnhancing] = useState(false);
+
+    const handleEnhance = async () => {
+      if (!enhancePrompt.trim()) return;
+
+      setIsEnhancing(true);
+      try {
+        await onEnhance(section.key, enhancePrompt);
+        setEnhancePrompt("");
+      } finally {
+        setIsEnhancing(false);
+      }
+    };
     const experiences = Array.isArray(data) ? data : [];
 
     const addExperience = () => {
       onUpdate([
         ...experiences,
         {
-          company: "",
-          position: "",
-          startDate: "",
+          company: "Your company name",
+          position: "Your Job Title",
+          startDate: "01/2025",
           endDate: "",
-          highlights: [""],
+          highlights: ["Achievement or responsibility..."],
         },
       ]);
+      setExpandedSubItems({
+        ...expandedSubItems,
+        [`workExperience-${experiences.length}`]: true,
+      });
     };
 
     const removeExperience = (index) => {
@@ -1168,42 +1222,43 @@ function SectionForm({
           return (
             <div
               key={expIndex}
-              className="p-3 border border-slate-200 rounded-lg space-y-2"
+              className="border rounded-lg border-g-400 overflow-hidden"
               ref={(el) =>
                 (leftSubItemRefs.current[`workExperience-${expIndex}`] = el)
               }
             >
-              <div className="flex justify-between items-center mb-2">
-                <div className="flex items-center gap-2 flex-1">
-                  <button
-                    onClick={() =>
-                      setExpandedSubItems({
-                        ...expandedSubItems,
-                        [`workExperience-${expIndex}`]: !isExpanded,
-                      })
-                    }
-                    className="p-1 hover:bg-gray-100 rounded"
-                  >
-                    {isExpanded ? (
-                      <ChevronUp size={16} />
-                    ) : (
-                      <ChevronDown size={16} />
-                    )}
-                  </button>
-                  <span className="text-xs font-medium text-slate-700">
-                    Experience {expIndex + 1}
-                    {exp.position && ` - ${exp.position}`}
-                  </span>
-                </div>
+              <div className="flex justify-between items-center ">
                 <button
-                  onClick={() => removeExperience(expIndex)}
-                  className="p-1 hover:bg-red-50 rounded text-red-600"
+                  onClick={() =>
+                    setExpandedSubItems({
+                      ...expandedSubItems,
+                      [`workExperience-${expIndex}`]: !isExpanded,
+                    })
+                  }
+                  className="w-full px-4 py-3 flex items-center justify-between hover:bg-g-400 transition-colors text-g-200 font-semibold"
                 >
-                  <Trash2 className="w-3 h-3" />
+                  <div className="leading-6 flex items-center gap-2.5">
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeExperience(expIndex);
+                      }}
+                      className="p-1 cursor-pointer rounded text-g-200 hover:text-g-100"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </div>
+                    {exp.position && `${exp.position}`}
+                  </div>
+
+                  {isExpanded ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
                 </button>
               </div>
               {isExpanded && (
-                <>
+                <div className="w-full px-4 py-3 space-y-3">
                   <div>
                     <label className={labelClass}>Company</label>
                     <input
@@ -1217,7 +1272,7 @@ function SectionForm({
                     />
                   </div>
                   <div>
-                    <label className={labelClass}>Position</label>
+                    <label className={labelClass}>Job Title</label>
                     <input
                       type="text"
                       value={exp.position || ""}
@@ -1259,13 +1314,12 @@ function SectionForm({
                     </div>
                   </div>
                   <div>
-                    <label className={labelClass}>Highlights</label>
+                    <label className={labelClass}>Details</label>
                     <div className="space-y-2">
                       {exp.highlights &&
                         exp.highlights.map((highlight, hlIndex) => (
                           <div key={hlIndex} className="flex gap-2">
-                            <input
-                              type="text"
+                            <textarea
                               value={highlight}
                               onChange={(e) =>
                                 updateHighlight(
@@ -1274,12 +1328,12 @@ function SectionForm({
                                   e.target.value
                                 )
                               }
-                              className={inputClass}
+                              className={`${inputClass} min-h-[80px] resize-none`}
                               placeholder="Achievement or responsibility..."
                             />
                             <button
                               onClick={() => removeHighlight(expIndex, hlIndex)}
-                              className="p-2 hover:bg-red-50 rounded text-red-600"
+                              className="p-1 cursor-pointer rounded text-g-200 hover:text-g-100"
                             >
                               <Trash2 className="w-3 h-3" />
                             </button>
@@ -1287,20 +1341,43 @@ function SectionForm({
                         ))}
                       <button
                         onClick={() => addHighlight(expIndex)}
-                        className="w-full px-3 py-1.5 border border-dashed border-slate-300 rounded text-xs text-slate-600 hover:border-blue-500 hover:text-primary"
+                        className="w-full p-2 border border-g-300 border-dashed flex  items-center cursor-pointer justify-center gap-1.5 text-xs leading-4 text-g-200 hover:text-g-100 hover:border-g-100"
                       >
-                        + Add Highlight
+                        + Add Detail
                       </button>
                     </div>
                   </div>
-                </>
+                  <div className="flex items-center gap-4 mt-4">
+                    <input
+                      type="text"
+                      value={enhancePrompt}
+                      onChange={(e) => setEnhancePrompt(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleEnhance()}
+                      placeholder="Give prompt"
+                      className="flex-1 px-4 py-3 text-sm leading-5 outline-none bg-g-700 text-g-300 rounded-lg "
+                    />
+                    <button
+                      onClick={handleEnhance}
+                      disabled={!enhancePrompt.trim() || isEnhancing}
+                      className="px-4 py-3 text-sm leading-5 outline-none bg-primary rounded-lg hover:bg-primary/75 transition-colors disabled:opacity-75  text-white disabled:cursor-not-allowed flex items-center gap-2 font-medium"
+                    >
+                      {isEnhancing ? (
+                        <Loader2 size={20} className="animate-spin" />
+                      ) : (
+                        <>
+                          <Sparkles size={20} />
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
           );
         })}
         <button
           onClick={addExperience}
-          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-blue-500 hover:text-primary transition-colors flex items-center justify-center gap-2"
+          className="w-full p-2 border border-g-300 border-dashed flex  items-center cursor-pointer justify-center gap-1.5 text-xs leading-4 text-g-200 hover:text-g-100 hover:border-g-100"
         >
           <Plus className="w-4 h-4" />
           Add Experience
@@ -1328,7 +1405,7 @@ function SectionForm({
     };
 
     return (
-      <div className="space-y-2">
+      <div className="space-y-3 grid grid-cols-2 gap-x-2">
         {skills.map((skill, index) => (
           <div key={index} className="flex gap-2">
             <input
@@ -1340,7 +1417,7 @@ function SectionForm({
             />
             <button
               onClick={() => removeSkill(index)}
-              className="p-2 hover:bg-red-50 rounded text-red-600"
+              className="p-1 cursor-pointer rounded text-g-200 hover:text-g-100"
             >
               <Trash2 className="w-3 h-3" />
             </button>
@@ -1348,7 +1425,7 @@ function SectionForm({
         ))}
         <button
           onClick={addSkill}
-          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-blue-500 hover:text-primary transition-colors flex items-center justify-center gap-2"
+          className="w-full p-2 border border-g-300 border-dashed flex  items-center cursor-pointer justify-center gap-1.5 text-xs leading-4 text-g-200 hover:text-g-100 hover:border-g-100 col-span-2"
         >
           <Plus className="w-4 h-4" />
           Add Skill
@@ -1359,6 +1436,20 @@ function SectionForm({
 
   // Projects Form
   if (sectionKey === "projects") {
+    const [enhancePrompt, setEnhancePrompt] = useState("");
+    const [isEnhancing, setIsEnhancing] = useState(false);
+
+    const handleEnhance = async () => {
+      if (!enhancePrompt.trim()) return;
+
+      setIsEnhancing(true);
+      try {
+        await onEnhance(section.key, enhancePrompt);
+        setEnhancePrompt("");
+      } finally {
+        setIsEnhancing(false);
+      }
+    };
     const projects = Array.isArray(data) ? data : [];
 
     const addProject = () => {
@@ -1372,6 +1463,10 @@ function SectionForm({
           endDate: "",
         },
       ]);
+      setExpandedSubItems({
+        ...expandedSubItems,
+        [`projects-${projects.length}`]: true,
+      });
     };
 
     const removeProject = (index) => {
@@ -1406,104 +1501,170 @@ function SectionForm({
 
     return (
       <div className="space-y-3">
-        {projects.map((project, index) => (
-          <div
-            key={index}
-            className="p-3 border border-slate-200 rounded-lg space-y-2"
-          >
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-xs font-medium text-slate-700">
-                Project {index + 1}
-              </span>
-              <button
-                onClick={() => removeProject(index)}
-                className="p-1 hover:bg-red-50 rounded text-red-600"
-              >
-                <Trash2 className="w-3 h-3" />
-              </button>
-            </div>
-            <div>
-              <label className={labelClass}>Project Name</label>
-              <input
-                type="text"
-                value={project.name || ""}
-                onChange={(e) => updateProject(index, "name", e.target.value)}
-                className={inputClass}
-                placeholder="Project Name"
-              />
-            </div>
-            <div>
-              <label className={labelClass}>Highlights</label>
-              <div className="space-y-2">
-                {project.highlights &&
-                  project.highlights.map((highlight, hlIndex) => (
-                    <div key={hlIndex} className="flex gap-2">
-                      <input
-                        type="text"
-                        value={highlight}
-                        onChange={(e) =>
-                          updateHighlight(index, hlIndex, e.target.value)
-                        }
-                        className={inputClass}
-                        placeholder="Achievement or responsibility..."
-                      />
-                      <button
-                        onClick={() => removeHighlight(index, hlIndex)}
-                        className="p-2 hover:bg-red-50 rounded text-red-600"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </button>
-                    </div>
-                  ))}
+        {projects.map((project, expIndex) => {
+          const isExpanded = expandedSubItems[`projects-${expIndex}`];
+
+          return (
+            <div
+              key={expIndex}
+              className={`border rounded-lg overflow-hidden ${
+                isExpanded ? "border-g-400" : "border-g-400"
+              }`}
+              ref={(el) =>
+                (leftSubItemRefs.current[`projects-${expIndex}`] = el)
+              }
+            >
+              <div className="flex justify-between items-center ">
                 <button
-                  onClick={() => addHighlight(index)}
-                  className="w-full px-3 py-1.5 border border-dashed border-slate-300 rounded text-xs text-slate-600 hover:border-blue-500 hover:text-primary"
+                  onClick={() =>
+                    setExpandedSubItems({
+                      ...expandedSubItems,
+                      [`projects-${expIndex}`]: !isExpanded,
+                    })
+                  }
+                  className="w-full px-4 py-3 flex items-center justify-between hover:bg-g-400 transition-colors text-g-200 font-semibold"
                 >
-                  + Add Highlight
+                  <div className="leading-6 flex items-center gap-2.5">
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeProject(expIndex);
+                      }}
+                      className="p-1 cursor-pointer rounded text-g-200 hover:text-g-100"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </div>
+                    {project.name
+                      ? project.name.split(" ").slice(0, 3).join(" ") + "..."
+                      : "Project " + `${expIndex + 1}`}
+                  </div>
+
+                  {isExpanded ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
                 </button>
               </div>
+              {isExpanded && (
+                <div className="w-full px-4 py-3 space-y-3">
+                  <div>
+                    <label className={labelClass}>Project Title</label>
+                    <input
+                      type="text"
+                      value={project.name || ""}
+                      onChange={(e) =>
+                        updateProject(expIndex, "name", e.target.value)
+                      }
+                      className={inputClass}
+                      placeholder="Project Name"
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Project URL</label>
+                    <input
+                      type="url"
+                      value={project.link || ""}
+                      onChange={(e) =>
+                        updateProject(expIndex, "link", e.target.value)
+                      }
+                      className={inputClass}
+                      placeholder="https://github.com/..."
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className={labelClass}>Start Date</label>
+                      <input
+                        type="text"
+                        value={project.startDate || ""}
+                        onChange={(e) =>
+                          updateProject(expIndex, "startDate", e.target.value)
+                        }
+                        className={inputClass}
+                        placeholder="2023-01"
+                      />
+                    </div>
+                    <div>
+                      <label className={labelClass}>End Date</label>
+                      <input
+                        type="text"
+                        value={project.endDate || ""}
+                        onChange={(e) =>
+                          updateProject(expIndex, "endDate", e.target.value)
+                        }
+                        className={inputClass}
+                        placeholder="2023-06"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className={labelClass}>Details</label>
+                    <div className="space-y-2">
+                      {project.highlights &&
+                        project.highlights.map((highlight, hlIndex) => (
+                          <div key={hlIndex} className="flex gap-2">
+                            <textarea
+                              value={highlight}
+                              onChange={(e) =>
+                                updateHighlight(
+                                  expIndex,
+                                  hlIndex,
+                                  e.target.value
+                                )
+                              }
+                              className={`${inputClass} min-h-[80px] resize-none`}
+                              placeholder="Achievement or responsibility..."
+                            />
+                            <button
+                              onClick={() => removeHighlight(expIndex, hlIndex)}
+                              className="p-1 cursor-pointer rounded text-g-200 hover:text-g-100"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      <button
+                        onClick={() => addHighlight(expIndex)}
+                        className="w-full p-2 border border-g-300 border-dashed flex  items-center cursor-pointer justify-center gap-1.5 text-xs leading-4 text-g-200 hover:text-g-100 hover:border-g-100"
+                      >
+                        + Add Detail
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 mt-4">
+                    <input
+                      type="text"
+                      value={enhancePrompt}
+                      onChange={(e) => setEnhancePrompt(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleEnhance()}
+                      placeholder="Give prompt"
+                      className="flex-1 px-4 py-3 text-sm leading-5 outline-none bg-g-700 text-g-300 rounded-lg "
+                    />
+                    <button
+                      onClick={handleEnhance}
+                      disabled={!enhancePrompt.trim() || isEnhancing}
+                      className="px-4 py-3 text-sm leading-5 outline-none bg-primary rounded-lg hover:bg-primary/75 transition-colors disabled:opacity-75  text-white disabled:cursor-not-allowed flex items-center gap-2 font-medium"
+                    >
+                      {isEnhancing ? (
+                        <Loader2 size={20} className="animate-spin" />
+                      ) : (
+                        <>
+                          <Sparkles size={20} />
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
-            <div>
-              <label className={labelClass}>Link (Optional)</label>
-              <input
-                type="url"
-                value={project.link || ""}
-                onChange={(e) => updateProject(index, "link", e.target.value)}
-                className={inputClass}
-                placeholder="https://github.com/..."
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className={labelClass}>Start Date</label>
-                <input
-                  type="text"
-                  value={project.startDate || ""}
-                  onChange={(e) =>
-                    updateProject(index, "startDate", e.target.value)
-                  }
-                  className={inputClass}
-                  placeholder="2023-01"
-                />
-              </div>
-              <div>
-                <label className={labelClass}>End Date</label>
-                <input
-                  type="text"
-                  value={project.endDate || ""}
-                  onChange={(e) =>
-                    updateProject(index, "endDate", e.target.value)
-                  }
-                  className={inputClass}
-                  placeholder="2023-06"
-                />
-              </div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
+
         <button
           onClick={addProject}
-          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-blue-500 hover:text-primary transition-colors flex items-center justify-center gap-2"
+          className="w-full p-2 border border-g-300 border-dashed flex  items-center cursor-pointer justify-center gap-1.5 text-xs leading-4 text-g-200 hover:text-g-100 hover:border-g-100"
         >
           <Plus className="w-4 h-4" />
           Add Project
@@ -1514,6 +1675,20 @@ function SectionForm({
 
   // Education Form
   if (sectionKey === "education") {
+    const [enhancePrompt, setEnhancePrompt] = useState("");
+    const [isEnhancing, setIsEnhancing] = useState(false);
+
+    const handleEnhance = async () => {
+      if (!enhancePrompt.trim()) return;
+
+      setIsEnhancing(true);
+      try {
+        await onEnhance(section.key, enhancePrompt);
+        setEnhancePrompt("");
+      } finally {
+        setIsEnhancing(false);
+      }
+    };
     const education = Array.isArray(data) ? data : [];
 
     const addEducation = () => {
@@ -1528,6 +1703,10 @@ function SectionForm({
           highlights: [""],
         },
       ]);
+      setExpandedSubItems({
+        ...expandedSubItems,
+        [`education-${education.length}`]: true,
+      });
     };
 
     const removeEducation = (index) => {
@@ -1562,128 +1741,187 @@ function SectionForm({
 
     return (
       <div className="space-y-3">
-        {education.map((edu, index) => (
-          <div
-            key={index}
-            className="p-3 border border-slate-200 rounded-lg space-y-2"
-          >
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-xs font-medium text-slate-700">
-                Education {index + 1}
-              </span>
-              <button
-                onClick={() => removeEducation(index)}
-                className="p-1 hover:bg-red-50 rounded text-red-600"
-              >
-                <Trash2 className="w-3 h-3" />
-              </button>
-            </div>
-            <div>
-              <label className={labelClass}>Institution</label>
-              <input
-                type="text"
-                value={edu.institution || ""}
-                onChange={(e) =>
-                  updateEducation(index, "institution", e.target.value)
-                }
-                className={inputClass}
-                placeholder="University Name"
-              />
-            </div>
-            <div>
-              <label className={labelClass}>Degree</label>
-              <input
-                type="text"
-                value={edu.degree || ""}
-                onChange={(e) =>
-                  updateEducation(index, "degree", e.target.value)
-                }
-                className={inputClass}
-                placeholder="Bachelor's in Computer Science"
-              />
-            </div>
-            <div>
-              <label className={labelClass}>Field of Study</label>
-              <input
-                type="text"
-                value={edu.field || ""}
-                onChange={(e) =>
-                  updateEducation(index, "field", e.target.value)
-                }
-                className={inputClass}
-                placeholder="Computer Science"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className={labelClass}>Start Year</label>
-                <input
-                  type="number"
-                  value={edu.startYear || ""}
-                  onChange={(e) =>
-                    updateEducation(
-                      index,
-                      "startYear",
-                      e.target.value ? parseInt(e.target.value) : null
-                    )
+        {education.map((edu, expIndex) => {
+          const isExpanded = expandedSubItems[`education-${expIndex}`];
+
+          return (
+            <div
+              key={expIndex}
+              className={`border rounded-lg overflow-hidden ${
+                isExpanded ? "border-g-400" : "border-g-400"
+              }`}
+              ref={(el) =>
+                (leftSubItemRefs.current[`education-${expIndex}`] = el)
+              }
+            >
+              <div className="flex justify-between items-center ">
+                <button
+                  onClick={() =>
+                    setExpandedSubItems({
+                      ...expandedSubItems,
+                      [`education-${expIndex}`]: !isExpanded,
+                    })
                   }
-                  className={inputClass}
-                  placeholder="2015"
-                />
+                  className="w-full px-4 py-3 flex items-center justify-between hover:bg-g-400 transition-colors text-g-200 font-semibold"
+                >
+                  <div className="leading-6 flex items-center gap-2.5">
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeEducation(expIndex);
+                      }}
+                      className="p-1 cursor-pointer rounded text-g-200 hover:text-g-100"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </div>
+                    {edu.degree ? edu.degree : "Education " + `${expIndex + 1}`}
+                  </div>
+
+                  {isExpanded ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
+                </button>
               </div>
-              <div>
-                <label className={labelClass}>End Year</label>
-                <input
-                  type="number"
-                  value={edu.endYear || ""}
-                  onChange={(e) =>
-                    updateEducation(
-                      index,
-                      "endYear",
-                      e.target.value ? parseInt(e.target.value) : null
-                    )
-                  }
-                  className={inputClass}
-                  placeholder="2019"
-                />
-              </div>
-              <div className="col-span-2">
-                <label className={labelClass}>Highlights</label>
-                <div className="space-y-2">
-                  {edu.highlights &&
-                    edu.highlights.map((highlight, hlIndex) => (
-                      <div key={hlIndex} className="flex gap-2">
-                        <input
-                          type="text"
-                          value={highlight}
-                          onChange={(e) =>
-                            updateHighlight(index, hlIndex, e.target.value)
-                          }
-                          className={inputClass}
-                          placeholder="Achievement or responsibility..."
-                        />
-                        <button
-                          onClick={() => removeHighlight(index, hlIndex)}
-                          className="p-2 hover:bg-red-50 rounded text-red-600"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
-                    ))}
-                  <button
-                    onClick={() => addHighlight(index)}
-                    className="w-full px-3 py-1.5 border border-dashed border-slate-300 rounded text-xs text-slate-600 hover:border-blue-500 hover:text-primary"
-                  >
-                    + Add Highlight
-                  </button>
+              {isExpanded && (
+                <div className="w-full px-4 py-3 space-y-3">
+                  <div>
+                    <label className={labelClass}>Institution</label>
+                    <input
+                      type="text"
+                      value={edu.institution || ""}
+                      onChange={(e) =>
+                        updateEducation(expIndex, "institution", e.target.value)
+                      }
+                      className={inputClass}
+                      placeholder="University Name"
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Degree</label>
+                    <input
+                      type="text"
+                      value={edu.degree || ""}
+                      onChange={(e) =>
+                        updateEducation(index, "degree", e.target.value)
+                      }
+                      className={inputClass}
+                      placeholder="Bachelor's in Computer Science"
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Field of Study</label>
+                    <input
+                      type="text"
+                      value={edu.field || ""}
+                      onChange={(e) =>
+                        updateEducation(expIndex, "field", e.target.value)
+                      }
+                      className={inputClass}
+                      placeholder="Computer Science"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className={labelClass}>Start Year</label>
+                      <input
+                        type="number"
+                        value={edu.startYear || ""}
+                        onChange={(e) =>
+                          updateEducation(
+                            expIndex,
+                            "startYear",
+                            e.target.value ? parseInt(e.target.value) : null
+                          )
+                        }
+                        className={inputClass}
+                        placeholder="2015"
+                      />
+                    </div>
+                    <div>
+                      <label className={labelClass}>End Year</label>
+                      <input
+                        type="number"
+                        value={edu.endYear || ""}
+                        onChange={(e) =>
+                          updateEducation(
+                            expIndex,
+                            "endYear",
+                            e.target.value ? parseInt(e.target.value) : null
+                          )
+                        }
+                        className={inputClass}
+                        placeholder="2019"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className={labelClass}>Details</label>
+                    <div className="space-y-2">
+                      {edu.highlights &&
+                        edu.highlights.map((highlight, hlIndex) => (
+                          <div key={hlIndex} className="flex gap-2">
+                            <textarea
+                              value={highlight}
+                              onChange={(e) =>
+                                updateHighlight(
+                                  expIndex,
+                                  hlIndex,
+                                  e.target.value
+                                )
+                              }
+                              className={`${inputClass} min-h-[80px] resize-none`}
+                              placeholder="Achievement or responsibility..."
+                            />
+                            <button
+                              onClick={() => removeHighlight(expIndex, hlIndex)}
+                              className="p-1 cursor-pointer rounded text-g-200 hover:text-g-100"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      <button
+                        onClick={() => addHighlight(expIndex)}
+                        className="w-full p-2 border border-g-300 border-dashed flex  items-center cursor-pointer justify-center gap-1.5 text-xs leading-4 text-g-200 hover:text-g-100 hover:border-g-100"
+                      >
+                        + Add Detail
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 mt-4">
+                    <input
+                      type="text"
+                      value={enhancePrompt}
+                      onChange={(e) => setEnhancePrompt(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleEnhance()}
+                      placeholder="Give prompt"
+                      className="flex-1 px-4 py-3 text-sm leading-5 outline-none bg-g-700 text-g-300 rounded-lg "
+                    />
+                    <button
+                      onClick={handleEnhance}
+                      disabled={!enhancePrompt.trim() || isEnhancing}
+                      className="px-4 py-3 text-sm leading-5 outline-none bg-primary rounded-lg hover:bg-primary/75 transition-colors disabled:opacity-75  text-white disabled:cursor-not-allowed flex items-center gap-2 font-medium"
+                    >
+                      {isEnhancing ? (
+                        <Loader2 size={20} className="animate-spin" />
+                      ) : (
+                        <>
+                          <Sparkles size={20} />
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
+
         <button
           onClick={addEducation}
-          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-blue-500 hover:text-primary transition-colors flex items-center justify-center gap-2"
+          className="w-full p-2 border border-g-300 border-dashed flex  items-center cursor-pointer justify-center gap-1.5 text-xs leading-4 text-g-200 hover:text-g-100 hover:border-g-100"
         >
           <Plus className="w-4 h-4" />
           Add Education
@@ -1701,12 +1939,13 @@ function SectionForm({
         ...certifications,
         {
           name: "",
-          issuer: "",
-          year: null,
-          credentialId: "",
           url: "",
         },
       ]);
+      setExpandedSubItems({
+        ...expandedSubItems,
+        [`certifications-${certifications.length}`]: true,
+      });
     };
 
     const removeCertification = (index) => {
@@ -1721,91 +1960,84 @@ function SectionForm({
 
     return (
       <div className="space-y-3">
-        {certifications.map((cert, index) => (
-          <div
-            key={index}
-            className="p-3 border border-slate-200 rounded-lg space-y-2"
-          >
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-xs font-medium text-slate-700">
-                Certification {index + 1}
-              </span>
-              <button
-                onClick={() => removeCertification(index)}
-                className="p-1 hover:bg-red-50 rounded text-red-600"
-              >
-                <Trash2 className="w-3 h-3" />
-              </button>
+        {certifications.map((cert, index) => {
+          const isExpanded = expandedSubItems[`certifications-${index}`];
+
+          return (
+            <div
+              key={index}
+              className="border rounded-lg border-g-400 overflow-hidden"
+              ref={(el) =>
+                (leftSubItemRefs.current[`certifications-${index}`] = el)
+              }
+            >
+              <div className="flex justify-between items-center ">
+                <button
+                  onClick={() =>
+                    setExpandedSubItems({
+                      ...expandedSubItems,
+                      [`certifications-${index}`]: !isExpanded,
+                    })
+                  }
+                  className="w-full px-4 py-3 flex items-center justify-between hover:bg-g-400 transition-colors text-g-200 font-semibold"
+                >
+                  <div className="leading-6 flex items-center gap-2.5">
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeCertification(index);
+                      }}
+                      className="p-1 cursor-pointer rounded text-g-200 hover:text-g-100"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </div>
+                    {"Certificate " + `${index + 1}`}
+                  </div>
+
+                  {isExpanded ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
+                </button>
+              </div>
+              {isExpanded && (
+                <div className="w-full px-4 py-3 space-y-3">
+                  <div>
+                    <label className={labelClass}>Certification Name</label>
+                    <input
+                      type="text"
+                      value={cert.name || ""}
+                      onChange={(e) =>
+                        updateCertification(index, "name", e.target.value)
+                      }
+                      className={inputClass}
+                      placeholder="AWS Certified Solutions Architect"
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>
+                      Certification URL (Optional)
+                    </label>
+                    <input
+                      type="url"
+                      value={cert.url || ""}
+                      onChange={(e) =>
+                        updateCertification(index, "url", e.target.value)
+                      }
+                      className={inputClass}
+                      placeholder="https://..."
+                    />
+                  </div>
+                </div>
+              )}
             </div>
-            <div>
-              <label className={labelClass}>Certification Name</label>
-              <input
-                type="text"
-                value={cert.name || ""}
-                onChange={(e) =>
-                  updateCertification(index, "name", e.target.value)
-                }
-                className={inputClass}
-                placeholder="AWS Certified Solutions Architect"
-              />
-            </div>
-            <div>
-              <label className={labelClass}>Issuer</label>
-              <input
-                type="text"
-                value={cert.issuer || ""}
-                onChange={(e) =>
-                  updateCertification(index, "issuer", e.target.value)
-                }
-                className={inputClass}
-                placeholder="Amazon Web Services"
-              />
-            </div>
-            <div>
-              <label className={labelClass}>Year</label>
-              <input
-                type="number"
-                value={cert.year || ""}
-                onChange={(e) =>
-                  updateCertification(
-                    index,
-                    "year",
-                    e.target.value ? parseInt(e.target.value) : null
-                  )
-                }
-                className={inputClass}
-                placeholder="2023"
-              />
-            </div>
-            <div>
-              <label className={labelClass}>Credential ID (Optional)</label>
-              <input
-                type="text"
-                value={cert.credentialId || ""}
-                onChange={(e) =>
-                  updateCertification(index, "credentialId", e.target.value)
-                }
-                className={inputClass}
-                placeholder="ABC123XYZ"
-              />
-            </div>
-            <div>
-              <label className={labelClass}>URL (Optional)</label>
-              <input
-                type="url"
-                value={cert.url || ""}
-                onChange={(e) =>
-                  updateCertification(index, "url", e.target.value)
-                }
-                className={inputClass}
-                placeholder="https://..."
-              />
-            </div>
-          </div>
-        ))}
+          );
+        })}
+
         <button
           onClick={addCertification}
-          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-blue-500 hover:text-primary transition-colors flex items-center justify-center gap-2"
+          className="w-full p-2 border border-g-300 border-dashed flex  items-center cursor-pointer justify-center gap-1.5 text-xs leading-4 text-g-200 hover:text-g-100 hover:border-g-100"
         >
           <Plus className="w-4 h-4" />
           Add Certification
@@ -1845,7 +2077,7 @@ function SectionForm({
             />
             <button
               onClick={() => removeHobby(index)}
-              className="p-2 hover:bg-red-50 rounded text-red-600"
+              className="p-1 cursor-pointer rounded text-g-200 hover:text-g-100"
             >
               <Trash2 className="w-3 h-3" />
             </button>
@@ -1853,7 +2085,7 @@ function SectionForm({
         ))}
         <button
           onClick={addHobby}
-          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-blue-500 hover:text-primary transition-colors flex items-center justify-center gap-2"
+          className="w-full p-2 border border-g-300 border-dashed flex  items-center cursor-pointer justify-center gap-1.5 text-xs leading-4 text-g-200 hover:text-g-100 hover:border-g-100"
         >
           <Plus className="w-4 h-4" />
           Add Hobby
