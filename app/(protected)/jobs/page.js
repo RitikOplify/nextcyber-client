@@ -126,6 +126,7 @@ function JobsPage() {
                     `${locationData.city}, ${locationData.state}, ${locationData.country}`
                   )
                 }
+                clearOnUnmount={clearOnUnmount}
               />
             </div>
 

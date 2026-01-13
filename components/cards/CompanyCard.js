@@ -57,7 +57,7 @@ const CompanyCard = ({ company }) => {
         <div className="flex items-center gap-4 mb-5">
           <div className="flex items-center gap-1.5 text-g-100 bg-g-500 px-3 py-1 rounded text-sm">
             <MapPin className="w-4 h-4" />
-            <span>{company?.headquarter}</span>
+            <span className="truncate">{company?.headquarter}</span>
           </div>
           <div className="flex items-center gap-1.5 text-g-100 bg-g-500 px-3 py-1 rounded text-sm">
             <Users className="w-4 h-4" />

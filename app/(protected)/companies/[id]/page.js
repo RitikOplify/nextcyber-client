@@ -180,7 +180,7 @@ function CompanyDetailPage({ params }) {
       </div>
       <div className=" text-center">
         <button className=" text-g-200 leading-6 text-base font-medium bg-g-600 border border-g-500 px-6 py-3 mt-10 rounded-full">
-          View more jobs
+          {jobs.length > 0 ? "View more jobs" : "No more jobs"}
         </button>
       </div>
       <JobApplyModel
