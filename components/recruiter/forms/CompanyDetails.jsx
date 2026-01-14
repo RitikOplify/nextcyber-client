@@ -149,15 +149,18 @@ export default function CompanyDetails() {
             <label className="block mb-2 text-sm font-medium text-g-200">
               Headquarter
             </label>
-           <LocationSearchInput 
-           value={watch("headquarter")}
-            onPlaceSelected={
-              (place) => {
-                const address = `${place.city || ""}, ${place.state || ""}, ${place.country || ""}`.replace(/,\s*,/g, ',').replace(/^\s*,|,\s*$/g, '');
+            <LocationSearchInput
+              value={watch("headquarter")}
+              setValue={(val) => setValue("headquarter", val, { shouldDirty: true })}
+              onPlaceSelected={(place) => {
+                const address = `${place.city || ""}, ${place.state || ""}, ${
+                  place.country || ""
+                }`
+                  .replace(/,\s*,/g, ",")
+                  .replace(/^\s*,|,\s*$/g, "");
                 setValue("headquarter", address, { shouldDirty: true });
-              }
-            }
-          />
+              }}
+            />
           </div>
           <Input
             label="Founded"

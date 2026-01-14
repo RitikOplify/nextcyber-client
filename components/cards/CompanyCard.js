@@ -46,13 +46,13 @@ const CompanyCard = ({ company }) => {
           {company?.companyTagline ||
             "Innovating the future, one step at a time."}
         </p>
-        <p className="text-g-100  leading-relaxed mb-4 line-clamp-3">
+        <span className="text-g-100  leading-relaxed mb-4 line-clamp-3">
           {company?.about ? (
             <QuillContentViewer html={company.about} />
           ) : (
             "Google LLC is an American multinational technology corporation focused on information technology, online advertising..."
           )}
-        </p>
+        </span>
 
         <div className="flex items-center gap-4 mb-5">
           <div className="flex items-center gap-1.5 text-g-100 bg-g-500 px-3 py-1 rounded text-sm">

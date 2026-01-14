@@ -23,6 +23,7 @@ export default function LocationSearchInput({
   const dropdownRef = useRef(null);
   const debounceRef = useRef(null);
   const searchTermRef = useRef(searchValue);
+  const [selectedLocation, setSelectedLocation] = useState(null);
 
   const extractLocation = useCallback(
     (placeDetails) => {
@@ -42,6 +43,11 @@ export default function LocationSearchInput({
 
       onPlaceSelected?.(locationData);
 
+      setSelectedLocation(
+        [locationData.city, locationData.state, locationData.country]
+          .filter(Boolean)
+          .join(", ")
+      );
       setSearchValue(
         [locationData.city, locationData.state, locationData.country]
           .filter(Boolean)
@@ -67,6 +73,7 @@ export default function LocationSearchInput({
 
   useEffect(() => {
     setSearchValue(value || "");
+    setSelectedLocation(value || "");
   }, [value]);
 
   // Debounced prediction fetch
@@ -79,6 +86,7 @@ export default function LocationSearchInput({
     clearTimeout(debounceRef.current);
 
     debounceRef.current = setTimeout(() => {
+      if (selectedLocation === searchValue) return;
       getPlacePredictions({
         input: searchValue,
         types: ["(cities)"],
@@ -114,7 +122,9 @@ export default function LocationSearchInput({
   }, [value]);
 
   useEffect(() => {
-    return () => clearOnUnmount?.();
+    return () => {
+      if (searchTermRef.current || selectedLocation || searchValue.length > 0) clearOnUnmount?.();
+    };
   }, []);
 
   const showDropdown =
@@ -137,6 +147,7 @@ export default function LocationSearchInput({
           className="pointer-events-auto absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 cursor-pointer"
           onClick={() => {
             setSearchValue("");
+            setSelectedLocation(null);
             onPlaceSelected?.({});
             setDropdownVisible(false);
           }}

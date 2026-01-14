@@ -4,6 +4,8 @@ export function SaveButton({ isLoading=false, type, text="Save", loadingText="Sa
   return (
     <button
       type={type}
+      aria-busy={isLoading}
+      aria-live="polite"
       disabled={isLoading}
       className={`px-5 py-3 ${
         isLoading && "opacity-50 cursor-not-allowed flex bg-primary"

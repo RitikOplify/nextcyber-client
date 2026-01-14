@@ -7,8 +7,8 @@ import RangeFilter from "../ui/RangeFilter";
 export default function CandidateFilter({
   isOpen,
   onClose,
-  filterData,
-  setFilterData,
+  filterData={},
+  setFilterData=() => {},
   setLoading,
 }) {
   // Local state
