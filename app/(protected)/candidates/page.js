@@ -130,7 +130,9 @@ export default function CandidatesPage() {
               selectedPlace={locationSearch}
               onPlaceSelected={(locationData) =>
                 setLocationSearch(
-                  `${locationData.city}, ${locationData.state}, ${locationData.country}`
+                  locationData.city && locationData.state
+                    ? `${locationData?.city}, ${locationData?.state}, ${locationData?.country}`
+                    : ""
                 )
               }
             />

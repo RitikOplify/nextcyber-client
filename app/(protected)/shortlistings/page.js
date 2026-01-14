@@ -60,6 +60,7 @@ export default function ShortlistingsPage() {
     const params = {
       page,
       limit: pageLimit,
+      location: locationSearch || "",
       ...Object.fromEntries(
         Object.entries({
           search: debounceSearchTerm, // Use debounced search term
@@ -101,6 +102,12 @@ export default function ShortlistingsPage() {
         );
   };
 
+  const handleSearch = () => {
+    const params = buildParams();
+    setLoading(true);
+    dispatch(asyncShortlistedCandidates(params)).then(() => setLoading(false));
+  };
+
   useEffect(() => {
     handleFetchCandidates();
   }, [page, debounceSearchTerm, locationSearch]);
@@ -129,15 +136,18 @@ export default function ShortlistingsPage() {
               selectedPlace={locationSearch}
               onPlaceSelected={(locationData) =>
                 setLocationSearch(
-                  `${locationData.city}, ${locationData.state}, ${locationData.country}`
+                  locationData.city && locationData.state
+                    ? `${locationData?.city}, ${locationData?.state}, ${locationData?.country}`
+                    : ""
                 )
               }
+              clearOnUnmount={clearOnUnmount}
             />
           </div>
 
           <div className="flex items-center gap-3">
             <button
-              onClick={handleFetchCandidates}
+              onClick={handleSearch}
               className="bg-primary rounded-lg px-8 py-3.5 text-gray-300 cursor-pointer"
             >
               Search

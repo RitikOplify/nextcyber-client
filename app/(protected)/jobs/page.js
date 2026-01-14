@@ -55,7 +55,7 @@ function JobsPage() {
       ...Object.fromEntries(
         Object.entries({
           search: debounceSearchTerm, // Use debounced search term
-          location: locationSearch,
+          location: locationSearch || "",
         }).filter(([_, value]) => value !== "")
       ),
     };
@@ -96,7 +96,8 @@ function JobsPage() {
   };
 
   const handleSearch = () => {
-    // Implement search logic here
+    setPage(1);
+    fetchJobs();
   };
 
   const clearOnUnmount = () => {
@@ -107,7 +108,7 @@ function JobsPage() {
     <>
       <div className="mx-auto max-h-[calc(100vh-100.6px)] overflow-auto">
         <>
-          <div className="sticky top-0 z-60 flex flex-col md:flex-row gap-4 items-center">
+          <div className="sticky top-0 z-10 flex flex-col md:flex-row gap-4 items-center">
             <div className="relative w-full md:w-2/5">
               <Search
                 value={searchTerm}
@@ -123,7 +124,9 @@ function JobsPage() {
                 selectedPlace={locationSearch}
                 onPlaceSelected={(locationData) =>
                   setLocationSearch(
-                    `${locationData.city}, ${locationData.state}, ${locationData.country}`
+                    locationData.city && locationData.state
+                      ? `${locationData?.city}, ${locationData?.state}, ${locationData?.country}`
+                      : ""
                   )
                 }
                 clearOnUnmount={clearOnUnmount}

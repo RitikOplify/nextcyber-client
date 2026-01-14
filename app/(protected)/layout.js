@@ -185,7 +185,7 @@ function ProtectedLayout({ children }) {
                 />
               </div>
               {profileSettingOpen && (
-                <div className="absolute top-11 rounded right-0 bg-g-600 text-white">
+                <div className="absolute z-[9999] top-11 rounded right-0 bg-g-600 text-white">
                   <ProfileSetting
                     setProfileSettingOpen={setProfileSettingOpen}
                   />
