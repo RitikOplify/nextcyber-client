@@ -200,6 +200,8 @@ export default function CandidatesPage() {
           onClose={handleToggleFilter}
           setFilterData={setFilterData}
           setLoading={setLoading}
+          handleApplyFilters={(params) => dispatch(asyncGetCandidates(params))}
+          handleResetFilters={()=> dispatch(asyncGetCandidates())}
         />
       )}
     </>
