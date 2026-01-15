@@ -124,20 +124,30 @@ export default function CandidateFilter({
 
         <FilterGroup title="Salary">
           <div className="grid grid-cols-2 gap-4">
-            {["Min", "Max"].map((label, i) => (
-              <input
-                key={label}
-                type="number"
-                value={formState.salaryRange[i]}
-                onChange={(e) =>
-                  updateField("salaryRange", [
-                    i === 0 ? +e.target.value : formState.salaryRange[0],
-                    i === 1 ? +e.target.value : formState.salaryRange[1],
-                  ])
-                }
-                placeholder={label}
-                className="bg-g-700 border border-g-500 rounded-lg px-3 py-2.5 text-sm outline-none w-full text-g-300"
-              />
+            {[
+              {
+                label: "Min",
+                placeholder: "e.g. 30000",
+              },
+              { label: "Max", placeholder: "e.g. 150000" },
+            ].map((label, i) => (
+              <div>
+                <label className="text-sm text-gray-300 mb-2 block">
+                  {label.label}
+                </label>
+                <input
+                  key={label.label}
+                  value={formState.salaryRange[i] || ""}
+                  placeholder={label.placeholder}
+                  onChange={(e) =>
+                    updateField("salaryRange", [
+                      i === 0 ? +e.target.value : formState.salaryRange[0],
+                      i === 1 ? +e.target.value : formState.salaryRange[1],
+                    ])
+                  }
+                  className="bg-g-700 border border-g-500 rounded-lg px-3 py-3 text-sm outline-none w-full text-g-300"
+                />
+              </div>
             ))}
           </div>
         </FilterGroup>

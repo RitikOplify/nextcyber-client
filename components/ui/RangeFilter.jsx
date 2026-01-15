@@ -26,7 +26,7 @@ const RangeFilter = ({ min = 0, max = 10, step = 1, value, onChange }) => {
 
   return (
     <div className="w-full max-w-md mx-auto rounded-lg shadow-lg">
-      <div className="flex justify-between mb-2 text-sm text-gray-600">
+      <div className="flex justify-between mb-2 text-sm text-g-400">
         <span>{minValue} yrs</span>
         <span>{maxValue} yrs</span>
       </div>

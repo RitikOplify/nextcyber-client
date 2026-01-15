@@ -170,7 +170,7 @@ export default function JobFilter({
                   onChange={() => handleContractTypeChange(value)}
                   className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary cursor-pointer"
                 />
-                <span className="ml-3 text-sm text-gray-300 group-hover:text-white transition-colors">
+                <span className="ml-3 text-sm text-gray-300 group-hover:text-white transition-colors uppercase">
                   {label}
                 </span>
               </label>
@@ -236,7 +236,7 @@ export default function JobFilter({
                   }))
                 }
                 placeholder="e.g. 150,000"
-                className="w-full rounded-lg px-3 py-2.5 text-sm bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C] focus:outline-none mb-3"
+                className="w-full rounded-lg px-3 py-3 text-sm bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C] focus:outline-none mb-3"
               />
             </div>
           </div>
