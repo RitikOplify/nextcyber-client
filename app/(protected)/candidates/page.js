@@ -12,11 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import CandidateFilter from "@/components/filters/CandidateFilter";
 import toast from "react-hot-toast";
 import AdvancePagination from "@/components/ui/AdvancePagination";
-<<<<<<< Updated upstream
 import Search from "@/components/ui/Search";
 import { removeCandidates } from "@/store/slices/candidateSlice";
-=======
->>>>>>> Stashed changes
 
 export default function CandidatesPage() {
   const { user } = useSelector((state) => state.auth);
@@ -159,7 +156,6 @@ export default function CandidatesPage() {
           </div>
         </div>
 
-<<<<<<< Updated upstream
         <div className="overflow-y-auto max-h-full mt-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {loading ? (
@@ -168,16 +164,6 @@ export default function CandidatesPage() {
               </div>
             ) : candidates?.length > 0 ? (
               candidates.map((candidate, index) => (
-=======
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {loading ? (
-            <div className="flex justify-center items-center col-span-full py-10">
-              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-            </div>
-          ) : candidates.length > 0 ? (
-            <>
-              {candidates?.map((candidate, index) => (
->>>>>>> Stashed changes
                 <StudentCard
                   key={candidate.id}
                   candidate={candidate}
@@ -196,7 +182,6 @@ export default function CandidatesPage() {
             )}
           </div>
         </div>
-<<<<<<< Updated upstream
 
         {candidates?.length > 0 && !loading && (
           <div className="sticky bottom-0 flex justify-center mt-5">
@@ -209,18 +194,6 @@ export default function CandidatesPage() {
         )}
       </div>
       {showFilter && (
-=======
-      </div>
-      {candidates?.length > 0 && !loading && (
-        <AdvancePagination
-          currentPage={page}
-          totalPages={totalPages}
-          onPageChange={(page) => setPage(page)}
-        />
-      )}
-
-      {
->>>>>>> Stashed changes
         <CandidateFilter
           filterData={filterData}
           isOpen={showFilter}
