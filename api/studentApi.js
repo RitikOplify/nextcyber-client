@@ -6,4 +6,5 @@ export const studentOnboardingApi = (data) =>
 export const updateStudentApi = (data) =>
   axios.patch("/student/update-profile", data);
 
-export const getCompaniesApi = (params) => axios.get("/student/find-companies", { params });
+export const getCompaniesApi = (params) =>
+  axios.get("/student/find-companies", { params });
