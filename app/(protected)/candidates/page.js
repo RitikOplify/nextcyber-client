@@ -192,13 +192,15 @@ export default function CandidatesPage() {
           </div>
         )}
       </div>
-      <CandidateFilter
-        filterData={filterData}
-        isOpen={showFilter}
-        onClose={handleToggleFilter}
-        setFilterData={setFilterData}
-        setLoading={setLoading}
-      />
+      {showFilter && (
+        <CandidateFilter
+          filterData={filterData}
+          isOpen={showFilter}
+          onClose={handleToggleFilter}
+          setFilterData={setFilterData}
+          setLoading={setLoading}
+        />
+      )}
     </>
   );
 }

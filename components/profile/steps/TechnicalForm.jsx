@@ -1,7 +1,9 @@
 "use client";
 import SelectField from "@/components/SelectField";
-import React from "react";
+import { asyncGetDropdown } from "@/store/actions/dropdownAction";
+import React, { useCallback, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function TechnicalForm({ showErrors = false }) {
   const {
@@ -15,6 +17,17 @@ export default function TechnicalForm({ showErrors = false }) {
   const remotePolicy = watch("remotePolicy");
   const skills = watch("skills");
   const certificates = watch("certificates");
+  const dispatch = useDispatch();
+  const { skillsDropdown } = useSelector((state) => state.dropdown);
+
+  const fetchDropdowns = useCallback(() => {
+    if (skillsDropdown?.length === 0)
+      dispatch(asyncGetDropdown({ name: "skills" }));
+  }, [skillsDropdown, dispatch]);
+
+  useEffect(() => {
+    fetchDropdowns();
+  }, [fetchDropdowns]);
 
   const pillClass = (isActive) =>
     `px-2 py-1 rounded-full border transition text-xs leading-4 font-medium ${
@@ -107,12 +120,7 @@ export default function TechnicalForm({ showErrors = false }) {
             name="skills"
             placeholder="Skills"
             multiple
-            options={[
-              "Analytical Thinking",
-              "Advanced Red Team Operations",
-              "JavaScript",
-              "Node.js",
-            ]}
+            options={skillsDropdown}
             rules={{ required: "Skills are required" }}
             showErrors={showErrors}
           />

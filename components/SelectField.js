@@ -39,7 +39,7 @@ const SelectField = ({
 
   const filteredOptions = isSearch
     ? normalizedOptions.filter((opt) =>
-        opt.label?.toLowerCase().includes(search.toLowerCase())
+        opt?.label?.toLowerCase()?.includes(search.toLowerCase())
       )
     : normalizedOptions;
 

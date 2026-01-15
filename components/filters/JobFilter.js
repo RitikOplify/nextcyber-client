@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { X, RotateCcw } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { asyncGetCandidates } from "@/store/actions/candidateAction";
 import RangeFilter from "../ui/RangeFilter";
 import { asyncGetJobs } from "@/store/actions/jobActions";
+import SelectField from "../SelectField";
+import { asyncGetDropdown } from "@/store/actions/dropdownAction";
 
 export default function JobFilter({
   isOpen,
@@ -14,34 +16,44 @@ export default function JobFilter({
 }) {
   if (!isOpen) return null;
   // Local state
-  const [selectedContractType, setSelectedContractType] = useState("TEMPORARY");
-  const [selectedRemotePolicy, setSelectedRemotePolicy] = useState("onsite");
-  const [skillInput, setSkillInput] = useState("");
-  const [minSalary, setMinSalary] = useState(filterData.salaryRange?.[0] || "");
-  const [maxSalary, setMaxSalary] = useState(filterData.salaryRange?.[1] || "");
-  const [experienceRange, setExperienceRange] = useState({ min: 0, max: 10 }); // [min, max] in years
+  const [FormData, setFormData] = useState({
+    contractType: filterData.contractType || "TEMPORARY",
+    remotePolicy: filterData.remotePolicy || "onsite",
+    minSalary: "",
+    maxSalary: "",
+    experienceRange: filterData.experienceRange || { min: 0, max: 10 },
+    skills: filterData.skills || [],
+  });
   const dispatch = useDispatch();
   const [loadingLocal, setLoadingLocal] = useState({
     resetLoading: false,
     applyLoading: false,
   });
-
+  const { skillsDropdown } = useSelector((state) => state.dropdown);
   // Sync with external filterData
   useEffect(() => {
     if (filterData) {
-      setSelectedContractType(filterData.contractType || "TEMPORARY");
-      setSelectedRemotePolicy(filterData.remotePolicy || "onsite");
-      setExperienceRange(filterData.experienceRange);
+      setFormData({
+        contractType: filterData.contractType || "TEMPORARY",
+        remotePolicy: filterData.remotePolicy || "onsite",
+        experienceRange: filterData.experienceRange,
+        skills: filterData.skills,
+      });
     }
   }, [filterData]);
 
+  const fetchDropdowns = useCallback(() => {
+    if (skillsDropdown?.length === 0)
+      dispatch(asyncGetDropdown({ name: "skills" }));
+  }, [skillsDropdown, dispatch]);
+
   const handleContractTypeChange = (type) => {
-    setSelectedContractType(type);
+    setFormData((prev) => ({ ...prev, contractType: type }));
     setFilterData((prev) => ({ ...prev, contractType: type }));
   };
 
   const handleRemotePolicyChange = (policy) => {
-    setSelectedRemotePolicy(policy);
+    setFormData((prev) => ({ ...prev, remotePolicy: policy }));
     setFilterData((prev) => ({ ...prev, remotePolicy: policy }));
   };
 
@@ -49,7 +61,6 @@ export default function JobFilter({
     if (skillInput.trim()) {
       const newSkills = [...(filterData.skills || []), skillInput.trim()];
       setFilterData({ ...filterData, skills: newSkills });
-      setSkillInput("");
     }
   };
 
@@ -63,12 +74,14 @@ export default function JobFilter({
   const handleReset = () => {
     setLoadingLocal((prev) => ({ ...prev, resetLoading: true }));
     setLoading(true);
-    setSelectedContractType("TEMPORARY");
-    setSelectedRemotePolicy("onsite");
-    setMinSalary("");
-    setMaxSalary("");
-    setExperienceRange({ min: 0, max: 10 });
-    setSkillInput("");
+    setFormData({
+      contractType: "TEMPORARY",
+      remotePolicy: "onsite",
+      minSalary: "",
+      maxSalary: "",
+      experienceRange: { min: 0, max: 10 },
+      skills: [],
+    });
 
     setFilterData({
       location: "",
@@ -87,7 +100,6 @@ export default function JobFilter({
         setLoading(false);
         setLoadingLocal((prev) => ({ ...prev, resetLoading: false }));
       });
-    console.log("Filters have been reset", experienceRange);
   };
 
   const handleApply = () => {
@@ -95,19 +107,22 @@ export default function JobFilter({
     setLoading(true);
     setFilterData({
       ...filterData,
-      contractType: selectedContractType,
-      remotePolicy: selectedRemotePolicy,
-      salaryRange: [minSalary, maxSalary],
-      experienceRange,
+      contractType: FormData.contractType,
+      remotePolicy: FormData.remotePolicy,
+      salaryRange: [FormData.minSalary, FormData.maxSalary],
+      experienceRange: FormData.experienceRange,
+      skills: FormData.skills,
     });
     const params = {
-      contractType: selectedContractType?.toUpperCase(),
-      remotePolicy: selectedRemotePolicy?.toUpperCase(),
-      salary: minSalary && maxSalary ? `${minSalary}-${maxSalary}` : null,
-      experience: `${experienceRange.min}-${experienceRange.max}`,
+      contractType: FormData.contractType?.toUpperCase(),
+      remotePolicy: FormData.remotePolicy?.toUpperCase(),
+      salary:
+        FormData.minSalary && FormData.maxSalary
+          ? `${FormData.minSalary}-${FormData.maxSalary}`
+          : null,
+      experience: `${FormData.experienceRange.min}-${FormData.experienceRange.max}`,
       skills: filterData.skills.join(",") || [],
     };
-    console.log("Applying filters with params:", params);
     dispatch(asyncGetJobs(params))
       .then(() => setLoading(false))
       .finally(() => {
@@ -115,6 +130,12 @@ export default function JobFilter({
         onClose();
       });
   };
+
+  useEffect(() => {
+    fetchDropdowns();
+  }, [fetchDropdowns]);
+
+  if (!isOpen) return null;
 
   return (
     <div className="absolute top-0 right-0 z-90 w-full max-w-[360px] backdrop-blur-[40px] bg-g-900/40 text-g-100 max-h-screen p-6 flex flex-col">
@@ -145,7 +166,7 @@ export default function JobFilter({
               >
                 <input
                   type="checkbox"
-                  checked={selectedContractType === value}
+                  checked={FormData.contractType === value}
                   onChange={() => handleContractTypeChange(value)}
                   className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary cursor-pointer"
                 />
@@ -172,7 +193,7 @@ export default function JobFilter({
               >
                 <input
                   type="checkbox"
-                  checked={selectedRemotePolicy === value}
+                  checked={FormData.remotePolicy === value}
                   onChange={() => handleRemotePolicyChange(value)}
                   className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-primary checked:border-blue-600 focus:ring-2 focus:ring-primaborder-primary cursor-pointer"
                 />
@@ -192,18 +213,28 @@ export default function JobFilter({
               <label className="block text-xs text-gray-400 mb-2">Min.</label>
               <input
                 type="text"
-                value={minSalary}
-                onChange={(e) => setMinSalary(e.target.value)}
+                value={FormData.minSalary}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    minSalary: e.target.value,
+                  }))
+                }
                 placeholder="e.g. 50,000"
-                className="w-full rounded-lg px-3 py-2.5 text-sm bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C] focus:outline-none mb-3"
+                className="w-full rounded-lg px-3 py-3 text-sm bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C] focus:outline-none mb-3"
               />
             </div>
             <div>
               <label className="block text-xs text-gray-400 mb-2">Max.</label>
               <input
                 type="text"
-                value={maxSalary}
-                onChange={(e) => setMaxSalary(e.target.value)}
+                value={FormData.maxSalary}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    maxSalary: e.target.value,
+                  }))
+                }
                 placeholder="e.g. 150,000"
                 className="w-full rounded-lg px-3 py-2.5 text-sm bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C] focus:outline-none mb-3"
               />
@@ -218,41 +249,30 @@ export default function JobFilter({
             min={0}
             max={10}
             step={1}
-            value={experienceRange}
+            value={FormData.experienceRange}
             onChange={(newRange) => {
-              setExperienceRange(newRange);
-              setFilterData({ ...filterData, experienceRange: newRange });
+              setFormData((prev) => ({ ...prev, experienceRange: newRange }));
             }}
           />
         </div>
 
         {/* Skills */}
         <div className="mb-8">
-          <h3 className="text-sm font-medium mb-4">Skills</h3>
-          <input
-            type="text"
-            placeholder="Type skill and press Enter"
-            value={skillInput}
-            onChange={(e) => setSkillInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleAddSkill()}
-            className="w-full rounded-lg px-3 py-2.5 text-sm bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C] focus:outline-none mb-3"
+          <SelectField
+            label="Skills"
+            options={skillsDropdown}
+            value={FormData?.skills}
+            onChange={(value) =>
+              console.log(value) ||
+              setFormData((prev) => ({ ...prev, skills: value }))
+            }
+            multiple
+            onAdd={handleAddSkill}
+            placeholder="Type a skill and press Add"
+            selectedOptions={FormData?.skills || []}
+            onRemove={handleRemoveSkill}
+            isCreatable={true}
           />
-          <div className="flex flex-wrap gap-2">
-            {filterData?.skills?.map((skill, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-2 bg-g-700 rounded-full px-3 py-1.5 text-sm text-gray-300"
-              >
-                <span>{skill}</span>
-                <button
-                  onClick={() => handleRemoveSkill(skill)}
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 

@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { X, RotateCcw } from "lucide-react";
-import { useDispatch } from "react-redux";
-import { asyncGetCandidates } from "@/store/actions/candidateAction";
-import RangeFilter from "../ui/RangeFilter";
+import { useDispatch, useSelector } from "react-redux";
 import SelectField from "../SelectField";
+import { asyncGetDropdown } from "@/store/actions/dropdownAction";
+import { asyncGetCompanies } from "@/store/actions/companiesAction";
 
 export default function CompanyFilter({
   isOpen,
@@ -12,9 +12,17 @@ export default function CompanyFilter({
   setFilterData,
   setLoading,
 }) {
-  const [companySize, setCompanySize] = useState("");
-  const [sectorInput, setSectorInput] = useState("");
-  const [loadingLocal, setLoadingLocal] = useState({ resetLoading: false, applyLoading: false });
+  const [FormData, setFormData] = useState({
+    location: filterData.location || "",
+    sectors: filterData.sectors || [],
+    companySize: filterData.companySize || null,
+  });
+
+  const [loadingLocal, setLoadingLocal] = useState({
+    resetLoading: false,
+    applyLoading: false,
+  });
+  const { sectorDropdown } = useSelector((state) => state.dropdown);
 
   const dispatch = useDispatch();
 
@@ -23,6 +31,11 @@ export default function CompanyFilter({
     if (filterData) {
     }
   }, [filterData]);
+
+  const fetchDropdowns = useCallback(() => {
+    if (sectorDropdown?.length === 0)
+      dispatch(asyncGetDropdown({ name: "industries" }));
+  }, [dispatch]);
 
   const handleAddSector = () => {
     if (sectorInput.trim()) {
@@ -43,7 +56,6 @@ export default function CompanyFilter({
     setLoadingLocal((prev) => ({ ...prev, resetLoading: true }));
     setLoading(true);
     setFilterData({
-      location: "",
       sectors: [],
       companySize: null,
     });
@@ -56,12 +68,20 @@ export default function CompanyFilter({
   const handleApply = () => {
     setLoadingLocal((prev) => ({ ...prev, applyLoading: true }));
     setLoading(true);
-    setTimeout(() => {
+    const params = {
+      sectors: (FormData.sectors || []).join(","),
+      companySize: FormData.companySize || "",
+    };
+    console.log("Applying filters with params:", params);
+    dispatch(asyncGetCompanies(params)).then((data) => {
       setLoading(false);
       setLoadingLocal((prev) => ({ ...prev, applyLoading: false }));
-      onClose();
-    }, 300);
+    });
   };
+
+  useEffect(() => {
+    fetchDropdowns();
+  }, [fetchDropdowns]);
 
   if (!isOpen) return null;
 
@@ -90,40 +110,29 @@ export default function CompanyFilter({
               { label: "1001+", value: "1001+" },
             ]}
             placeholder="Select company size"
-            value={companySize}
+            value={filterData.companySize}
             onChange={(value) => {
-              setCompanySize(value);
               setFilterData({ ...filterData, companySize: value });
+              setFormData({ ...FormData, companySize: value });
             }}
           />
         </div>
 
         <div className="">
-          <h3 className="text-sm font-medium mb-2 text-g-100">Sectors</h3>
-          <input
-            type="text"
-            placeholder="Type sector and press Enter"
-            value={sectorInput}
-            onChange={(e) => setSectorInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleAddSector()}
-            className="w-full h-[52px] rounded-lg px-3 py-2.5 text-sm bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C] focus:outline-none mb-3"
+          <SelectField
+            label="Industries"
+            options={sectorDropdown}
+            value={filterData.sectors || []}
+            onChange={(value) => {
+              setFilterData({ ...filterData, sectors: value });
+            }}
+            multiple
+            onAdd={handleAddSector}
+            placeholder="Type a sector and press Add"
+            selectedOptions={filterData.sectors || []}
+            onRemove={handleRemoveSector}
+            isCreatable={true}
           />
-          <div className="flex flex-wrap gap-2">
-            {filterData?.sectors?.map((sector, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-2 bg-g-700 rounded-full px-3 py-1.5 text-sm text-gray-300"
-              >
-                <span>{sector}</span>
-                <button
-                  onClick={() => handleRemoveSector(sector)}
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 

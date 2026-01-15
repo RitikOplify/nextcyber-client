@@ -1,7 +1,9 @@
 "use client";
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import SelectField from "@/components/SelectField";
+import { asyncGetDropdown } from "@/store/actions/dropdownAction";
+import { useDispatch, useSelector } from "react-redux";
 
 const Step7 = ({ showErrors = true }) => {
   const {
@@ -13,6 +15,17 @@ const Step7 = ({ showErrors = true }) => {
   const contractType = watch("contractType");
   const skills = watch("skills");
   const remotePolicy = watch("remotePolicy");
+  const dispatch = useDispatch();
+  const { skillsDropdown } = useSelector((state) => state.dropdown);
+
+  const fetchDropdowns = useCallback(() => {
+    if (skillsDropdown?.length === 0)
+      dispatch(asyncGetDropdown({ name: "skills" }));
+  }, [skillsDropdown, dispatch]);
+
+  useEffect(() => {
+    fetchDropdowns();
+  }, [fetchDropdowns]);
 
   const pillClass = (isActive) =>
     `px-2 py-1 rounded-full border transition text-xs bg-g-600 leading-4 font-medium ${
@@ -79,7 +92,7 @@ const Step7 = ({ showErrors = true }) => {
             placeholder="Skills"
             showErrors={showErrors}
             multiple
-            options={["Analytical Thinking", "Advanced Red Team Operations"]}
+            options={skillsDropdown || []}
             rules={{
               validate: (value) =>
                 value.length > 0 || "Please select at least one skill",
@@ -87,7 +100,7 @@ const Step7 = ({ showErrors = true }) => {
           />
           <div className="flex gap-2 mt-4 flex-wrap">
             {skills?.map((skill) => (
-              <button key={skill} className={`${pillClass()}`}>
+              <button key={skill} className={`${pillClass(true)}`}>
                 {skill}
               </button>
             ))}

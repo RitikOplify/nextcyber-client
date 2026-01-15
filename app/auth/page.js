@@ -20,7 +20,7 @@ function AuthPage() {
     if (!isLoading && user) {
       router.replace("/dashboard");
     }else{
-      router.replace("/auth/signin");
+      router.replace("/auth/signin?role=STUDENT");
     }
   }, [user, isLoading, router]);
 
