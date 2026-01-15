@@ -10,17 +10,16 @@ import {
 import { ArrowLeft, Search, X } from "lucide-react";
 import Image from "next/image";
 
-export default function Home() {
+export default function ChatPage() {
   const { user: loggedInUser } = useSelector((s) => s.auth);
 
   const [cursor, setCursor] = useState(null);
   const [hasMore, setHasMore] = useState(true);
   const isFetchingRef = useRef(false);
-  const [convoCursor, setConvoCursor] = useState(null);
-  const [convoHasMore, setConvoHasMore] = useState(true);
   const [convoSearch, setConvoSearch] = useState("");
 
   const [conversations, setConversations] = useState([]);
+  const [allConversations, setAllConversations] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
   const [conversationId, setConversationId] = useState(null);
@@ -70,131 +69,47 @@ export default function Home() {
     window.history.replaceState({}, "", url);
   };
 
-  // Connect socket when user is logged in
   useEffect(() => {
     if (!loggedInUser) return;
-
-    console.log("Connecting socket for user:", loggedInUser.id);
 
     if (!socket.connected) {
       socket.connect();
     }
 
     return () => {
-      console.log("Disconnecting socket");
       socket.disconnect();
     };
   }, [loggedInUser]);
 
-  // Subscribe to online users updates
   useEffect(() => {
     if (!loggedInUser) return;
 
-    console.log("Subscribing to online users updates");
-
-    // Get cached online users immediately
     const cached = getOnlineUsersCache();
     if (cached.length > 0) {
-      console.log("Using cached online users:", cached);
       setOnlineUsers(cached);
     }
 
-    // Subscribe to future updates
     const unsubscribe = subscribeToOnlineUsers((userIds) => {
-      console.log("Online users updated:", userIds);
       setOnlineUsers(userIds);
     });
 
     return () => {
-      console.log("Unsubscribing from online users");
       unsubscribe();
     };
   }, [loggedInUser]);
 
-  console.log(conversations);
-  // Set up socket event listeners
   useEffect(() => {
-    console.log(conversations);
     if (!loggedInUser) return;
 
-    console.log("Setting up socket event listeners...");
-
-    // const onReceive = async (msg) => {
-    //   console.log(conversations);
-    //   console.log("Received message:", msg);
-    //   const isActive = msg.conversationId === conversationIdRef.current;
-    //   const isMine = msg.senderId === loggedInUser.id;
-
-    //   let convo = null;
-    //   try {
-    //     const { data } = await axios.get(`/conversation/${msg.conversationId}`);
-    //     convo = data.conversation;
-    //   } catch (e) {
-    //     console.error("Failed loading convobyid", e);
-    //     return;
-    //   }
-
-    //   setConversations((prev) => {
-    //     const exists = prev.some((c) => c.id === convo.id);
-    //     if (!exists) {
-    //       return [
-    //         ...prev,
-    //         {
-    //           id: convo.id,
-    //           user: convo.user,
-    //           lastMessage: msg.text,
-    //           lastMessageAt: msg.createdAt,
-    //           unreadCount: isActive || isMine ? 0 : 1,
-    //         },
-    //       ];
-    //     }
-
-    //     return prev.map((c) =>
-    //       c.id === convo.id
-    //         ? {
-    //             ...c,
-    //             lastMessage: msg.text,
-    //             lastMessageAt: msg.createdAt,
-    //             unreadCount:
-    //               !isActive && !isMine
-    //                 ? (c.unreadCount || 0) + 1
-    //                 : c.unreadCount,
-    //           }
-    //         : c
-    //     );
-    //   });
-
-    //   if (isActive) {
-    //     setMessages((prev) => {
-    //       if (prev.some((m) => m.messageId === msg.messageId)) return prev;
-    //       return [...prev, msg];
-    //     });
-
-    //     if (isAtBottomRef.current) {
-    //       setTimeout(
-    //         () =>
-    //           messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }),
-    //         50
-    //       );
-    //     }
-    //   }
-    // };
     const onReceive = async (msg) => {
-      console.log("📨 Received message:", msg);
       const isActive = msg.conversationId === conversationIdRef.current;
       const isMine = msg.senderId === loggedInUser.id;
 
-      // Check if conversation exists in our current list
       const existingConvo = conversationsRef.current.find(
         (c) => c.id === msg.conversationId
       );
 
       if (existingConvo) {
-        // ✅ Conversation exists - update without API call
-        console.log(
-          "✅ Found existing conversation, updating without API call"
-        );
-
         setConversations((prev) => {
           const updated = prev.map((c) =>
             c.id === msg.conversationId
@@ -207,7 +122,29 @@ export default function Home() {
               : c
           );
 
-          // Sort by most recent message (optional - keeps active conversations at top)
+          return updated.sort((a, b) => {
+            const aTime = a.lastMessageAt
+              ? new Date(a.lastMessageAt).getTime()
+              : 0;
+            const bTime = b.lastMessageAt
+              ? new Date(b.lastMessageAt).getTime()
+              : 0;
+            return bTime - aTime;
+          });
+        });
+
+        setAllConversations((prev) => {
+          const updated = prev.map((c) =>
+            c.id === msg.conversationId
+              ? {
+                  ...c,
+                  lastMessage: msg.text,
+                  lastMessageAt: msg.createdAt,
+                  senderId: msg.senderId,
+                }
+              : c
+          );
+
           return updated.sort((a, b) => {
             const aTime = a.lastMessageAt
               ? new Date(a.lastMessageAt).getTime()
@@ -219,12 +156,6 @@ export default function Home() {
           });
         });
       } else {
-        // ❌ Conversation doesn't exist - fetch from server
-        console.log(
-          "⚠️ Conversation not found, fetching from server:",
-          msg.conversationId
-        );
-
         try {
           const { data } = await axios.get(
             `/conversation/${msg.conversationId}`
@@ -233,9 +164,7 @@ export default function Home() {
 
           if (convo) {
             setConversations((prev) => {
-              // Double-check it wasn't added while we were fetching
               if (prev.some((c) => c.id === convo.id)) {
-                // Already exists, just update it
                 const updated = prev.map((c) =>
                   c.id === msg.conversationId
                     ? {
@@ -247,7 +176,6 @@ export default function Home() {
                     : c
                 );
 
-                // Sort by most recent
                 return updated.sort((a, b) => {
                   const aTime = a.lastMessageAt
                     ? new Date(a.lastMessageAt).getTime()
@@ -259,7 +187,6 @@ export default function Home() {
                 });
               }
 
-              // Add new conversation
               const newConvo = {
                 id: convo.id,
                 user: convo.user,
@@ -270,7 +197,32 @@ export default function Home() {
 
               const updated = [newConvo, ...prev];
 
-              // Sort by most recent
+              return updated.sort((a, b) => {
+                const aTime = a.lastMessageAt
+                  ? new Date(a.lastMessageAt).getTime()
+                  : 0;
+                const bTime = b.lastMessageAt
+                  ? new Date(b.lastMessageAt).getTime()
+                  : 0;
+                return bTime - aTime;
+              });
+            });
+
+            setAllConversations((prev) => {
+              if (prev.some((c) => c.id === convo.id)) {
+                return prev;
+              }
+
+              const newConvo = {
+                id: convo.id,
+                user: convo.user,
+                lastMessage: msg.text,
+                lastMessageAt: msg.createdAt,
+                unreadCount: isActive || isMine ? 0 : 1,
+              };
+
+              const updated = [newConvo, ...prev];
+
               return updated.sort((a, b) => {
                 const aTime = a.lastMessageAt
                   ? new Date(a.lastMessageAt).getTime()
@@ -283,7 +235,7 @@ export default function Home() {
             });
           }
         } catch (e) {
-          console.error("❌ Failed loading conversation:", e);
+          console.error("Failed loading conversation:", e);
           return;
         }
       }
@@ -303,6 +255,7 @@ export default function Home() {
         }
       }
     };
+
     const onTyping = ({ conversationId, userId }) => {
       if (
         conversationId === conversationIdRef.current &&
@@ -324,7 +277,6 @@ export default function Home() {
     };
 
     const onLastSeen = ({ userId, lastSeen }) => {
-      console.log("User last seen updated:", userId);
       setOnlineUsers((prev) => prev.filter((id) => id !== userId));
 
       setSelectedUser((prev) =>
@@ -336,10 +288,15 @@ export default function Home() {
           c.user?.id === userId ? { ...c, user: { ...c.user, lastSeen } } : c
         )
       );
+
+      setAllConversations((prev) =>
+        prev.map((c) =>
+          c.user?.id === userId ? { ...c, user: { ...c.user, lastSeen } } : c
+        )
+      );
     };
 
     const onOnline = (id) => {
-      console.log("User came online:", id);
       setOnlineUsers((prev) => {
         if (prev.includes(id)) return prev;
         return [...prev, id];
@@ -347,7 +304,6 @@ export default function Home() {
     };
 
     const onOffline = (id) => {
-      console.log("User went offline:", id);
       setOnlineUsers((prev) => prev.filter((x) => x !== id));
     };
 
@@ -361,7 +317,6 @@ export default function Home() {
       );
     };
 
-    // Register all listeners
     socket.on("messages_read", onRead);
     socket.on("user_online", onOnline);
     socket.on("user_offline", onOffline);
@@ -370,11 +325,7 @@ export default function Home() {
     socket.on("user_stop_typing", onStopTyping);
     socket.on("user_last_seen_updated", onLastSeen);
 
-    console.log("All socket event listeners registered");
-
-    // Cleanup
     return () => {
-      console.log("Cleaning up socket event listeners");
       socket.off("messages_read", onRead);
       socket.off("receive_message", onReceive);
       socket.off("user_online", onOnline);
@@ -385,7 +336,6 @@ export default function Home() {
     };
   }, [loggedInUser]);
 
-  // Load initial conversation from URL
   useEffect(() => {
     if (!loggedInUser) return;
 
@@ -401,6 +351,20 @@ export default function Home() {
           if (!convo) return;
           setSelectedUser(convo.user);
           setConversations((prev) => {
+            if (prev.some((c) => c.id === convo.id)) return prev;
+            return [
+              ...prev,
+              {
+                id: convo.id,
+                user: convo.user,
+                lastMessage: convo.messages?.[0]?.text ?? "",
+                lastMessageAt: convo.messages?.[0]?.createdAt ?? null,
+                unreadCount: 0,
+              },
+            ];
+          });
+
+          setAllConversations((prev) => {
             if (prev.some((c) => c.id === convo.id)) return prev;
             return [
               ...prev,
@@ -452,6 +416,20 @@ export default function Home() {
               },
             ];
           });
+
+          setAllConversations((prev) => {
+            if (prev.some((c) => c.id === convoId)) return prev;
+            return [
+              ...prev,
+              {
+                id: convoId,
+                user,
+                lastMessage: conversation.messages?.[0]?.text ?? "",
+                lastMessageAt: conversation.messages?.[0]?.createdAt ?? null,
+                unreadCount: 0,
+              },
+            ];
+          });
         } else {
           setConversationId(null);
           conversationIdRef.current = null;
@@ -473,37 +451,36 @@ export default function Home() {
     run();
   }, [loggedInUser]);
 
-  // Load conversations list
   useEffect(() => {
     if (!loggedInUser) return;
 
-    loadConversations(false);
+    loadConversations();
   }, [loggedInUser]);
 
   useEffect(() => {
-    const t = setTimeout(() => loadConversations(false), 300);
-    return () => clearTimeout(t);
-  }, [convoSearch]);
+    if (convoSearch.trim()) {
+      const filtered = allConversations.filter((c) => {
+        const userName = c.user?.firstName?.toLowerCase() || "";
+        const searchTerm = convoSearch.toLowerCase();
+        return userName.includes(searchTerm);
+      });
+      setConversations(filtered);
+    } else {
+      setConversations(allConversations);
+    }
+  }, [convoSearch, allConversations]);
 
-  const loadConversations = async (loadMore = false) => {
+  const loadConversations = async () => {
     if (isFetchingRef.current) return;
     isFetchingRef.current = true;
 
-    const params = {
-      limit: 20,
-    };
+    const { data } = await axios.get("/conversation/list");
 
-    if (convoCursor) params.cursor = convoCursor;
-    if (convoSearch.trim()) params.search = convoSearch.trim();
+    const { conversations: convos } = data;
 
-    const { data } = await axios.get("/conversation/list", { params });
+    setConversations(convos);
+    setAllConversations(convos);
 
-    const { conversations: convos, nextCursor } = data;
-
-    setConversations((prev) => (loadMore ? [...prev, ...convos] : convos));
-
-    setConvoCursor(nextCursor);
-    setConvoHasMore(Boolean(nextCursor));
     isFetchingRef.current = false;
   };
 
@@ -605,6 +582,10 @@ export default function Home() {
       prev.map((x) => (x.id === c.id ? { ...x, unreadCount: 0 } : x))
     );
 
+    setAllConversations((prev) =>
+      prev.map((x) => (x.id === c.id ? { ...x, unreadCount: 0 } : x))
+    );
+
     setSelectedUser(c.user);
     setConversationId(c.id);
     conversationIdRef.current = c.id;
@@ -643,6 +624,11 @@ export default function Home() {
       socket.emit("check_online", { userId: selectedUser.id });
 
       setConversations((prev) => {
+        if (prev.some((c) => c.id === convoId)) return prev;
+        return [...prev, { id: convoId, user: selectedUser, unreadCount: 0 }];
+      });
+
+      setAllConversations((prev) => {
         if (prev.some((c) => c.id === convoId)) return prev;
         return [...prev, { id: convoId, user: selectedUser, unreadCount: 0 }];
       });
@@ -700,11 +686,6 @@ export default function Home() {
     return new Date(date).toLocaleString();
   }
 
-  // Debug: Log online users whenever they change
-  useEffect(() => {
-    console.log("Online users state updated:", onlineUsers);
-  }, [onlineUsers]);
-
   const getProfileUrl = (user) => {
     if (user.role === "COMPANY")
       return user.companyProfile?.profilePicture?.url;
@@ -726,10 +707,7 @@ export default function Home() {
             <input
               placeholder="Search users..."
               value={convoSearch}
-              onChange={(e) => {
-                setConvoSearch(e.target.value);
-                setConvoCursor(null);
-              }}
+              onChange={(e) => setConvoSearch(e.target.value)}
               className="bg-transparent outline-none text-sm text-[#CDCECE] placeholder-[#6A6B6C] w-full"
             />
 
@@ -744,64 +722,59 @@ export default function Home() {
           </div>
         </div>
 
-        <div
-          className="border-t border-[#1B1C1E] overflow-y-auto"
-          onScroll={(e) => {
-            const el = e.currentTarget;
-            const bottom =
-              el.scrollHeight - el.scrollTop - el.clientHeight < 50;
+        <div className="border-t border-[#1B1C1E] overflow-y-auto">
+          {conversations.length == 0 ? (
+            <div className="py-2 text-center text-g-200 border-b border-g-600">
+              No conversations found.
+            </div>
+          ) : (
+            conversations.map((c) => {
+              const user = c.user;
+              const userId = user.id;
+              const isOnline = onlineUsers.includes(userId);
 
-            if (bottom && convoHasMore) {
-              loadConversations(true);
-            }
-          }}
-        >
-          {conversations.map((c) => {
-            const user = c.user;
-            const userId = user.id;
-            const isOnline = onlineUsers.includes(userId);
-
-            return (
-              <div
-                key={user.id}
-                className={`flex items-center gap-3 px-3 py-3 border-b border-[#1B1C1E] cursor-pointer hover:bg-[#1B1C1E]
+              return (
+                <div
+                  key={user.id}
+                  className={`flex items-center gap-3 px-3 py-3 border-b border-[#1B1C1E] cursor-pointer hover:bg-[#1B1C1E]
                 ${selectedUser?.id === userId ? "bg-[#1B1C1E]" : ""}`}
-                onClick={() => handleSelectConversation(c)}
-              >
-                <div className="relative">
-                  {getProfileUrl(user) ? (
-                    <Image
-                      src={getProfileUrl(user)}
-                      height={48}
-                      width={48}
-                      alt={`user-${user.firstName}-profile`}
-                      className=" h-12 w-12 rounded-full"
-                    />
-                  ) : (
-                    <div className="w-12 h-12 rounded-full bg-gray-500 flex items-center justify-center text-[#CDCECE]">
-                      {user.firstName?.charAt(0).toUpperCase()}
-                    </div>
-                  )}
+                  onClick={() => handleSelectConversation(c)}
+                >
+                  <div className="relative">
+                    {getProfileUrl(user) ? (
+                      <Image
+                        src={getProfileUrl(user)}
+                        height={48}
+                        width={48}
+                        alt={`user-${user.firstName}-profile`}
+                        className=" h-12 w-12 rounded-full"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-gray-500 flex items-center justify-center text-[#CDCECE]">
+                        {user.firstName?.charAt(0).toUpperCase()}
+                      </div>
+                    )}
 
-                  <span
-                    className={`absolute top-0 right-0 w-3 h-3 rounded-full border-2 border-[#111214]
+                    <span
+                      className={`absolute top-0 right-0 w-3 h-3 rounded-full border-2 border-[#111214]
                     ${isOnline ? "bg-[#16A600]" : "bg-[#DB0000]"}`}
-                  />
-                </div>
+                    />
+                  </div>
 
-                <div className="flex-1 overflow-hidden">
-                  <p className="text-sm font-medium text-[#CDCECE] truncate">
-                    {user.firstName}
-                  </p>
+                  <div className="flex-1 overflow-hidden">
+                    <p className="text-sm font-medium text-[#CDCECE] truncate">
+                      {user.firstName}
+                    </p>
 
-                  <p className="text-xs text-[#9C9C9D] truncate">
-                    {c.senderId == loggedInUser.id && "You: "}
-                    {c.lastMessage}
-                  </p>
+                    <p className="text-xs text-[#9C9C9D] truncate">
+                      {c.senderId == loggedInUser.id && "You: "}
+                      {c.lastMessage}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       </div>
 
@@ -943,7 +916,7 @@ export default function Home() {
                       </p>
                     </div>
                     {isSelf &&
-                      (getProfileUrl(selectedUser) ? (
+                      (getProfileUrl(loggedInUser) ? (
                         <Image
                           src={getProfileUrl(loggedInUser)}
                           height={48}
