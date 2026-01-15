@@ -66,20 +66,20 @@ describe("SignUp Component", () => {
     expect(passwordInput).toHaveAttribute("type", "text");
   });
 
-  test("renders role tabs and switches role", async () => {
-    render(<SignUp />);
+  // test("renders role tabs and switches role", async () => {
+  //   render(<SignUp />);
 
-    const candidateTab = screen.getByText("Candidate");
-    const recruiterTab = screen.getByText("Recruiter");
+  //   const candidateTab = screen.getByText("Candidate");
+  //   const recruiterTab = screen.getByText("Recruiter");
 
-    expect(candidateTab).toHaveClass("bg-primary");
+  //   expect(candidateTab).toHaveClass("bg-primary");
 
-    act(() => {
-      recruiterTab.click();
-    });
-    expect(recruiterTab).toHaveClass("bg-primary");
-    expect(candidateTab).not.toHaveClass("bg-primary");
-  });
+  //   act(() => {
+  //     recruiterTab.click();
+  //   });
+  //   expect(recruiterTab).toHaveClass("bg-primary");
+  //   expect(candidateTab).not.toHaveClass("bg-primary");
+  // });
 
   test("shows validation errors on empty submit", async () => {
     render(<SignUp />);

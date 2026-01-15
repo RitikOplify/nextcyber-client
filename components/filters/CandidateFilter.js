@@ -1,305 +1,219 @@
-import { useState, useEffect, useCallback, use } from "react";
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
 import { X, RotateCcw } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { asyncGetCandidates } from "@/store/actions/candidateAction";
 import RangeFilter from "../ui/RangeFilter";
-import { asyncGetDropdown } from "@/store/actions/dropdownAction";
 import SelectField from "../SelectField";
+import { asyncGetDropdown } from "@/store/actions/dropdownAction";
+
+const DEFAULT_FILTERS = {
+  contractType: "TEMPORARY",
+  remotePolicy: "onsite",
+  salaryRange: [0, 0],
+  experienceRange: { min: 0, max: 10 },
+  skills: [],
+};
 
 export default function CandidateFilter({
   isOpen,
   onClose,
-  filterData = {},
-  setFilterData = () => {},
+  filterData = DEFAULT_FILTERS,
+  setFilterData,
   setLoading,
+  handleApplyFilters,
+  handleResetFilters,
 }) {
-  // Local state
-  const [FormData, setFormData] = useState({
-    contractType: filterData.contractType || "TEMPORARY",
-    remotePolicy: filterData.remotePolicy || "onsite",
-    salaryRange: filterData.salaryRange || [0, 0],
-    experienceRange: filterData.experienceRange || { min: 0, max: 10 },
-    skills: filterData.skills || [],
-  });
   const dispatch = useDispatch();
-  const [loadingLocal, setLoadingLocal] = useState({
-    resetLoading: false,
-    applyLoading: false,
-  });
-  const { skillsDropdown } = useSelector((state) => state.dropdown);
+  const { skillsDropdown = [] } = useSelector((state) => state.dropdown);
 
-  // Sync with external filterData
+  const [formState, setFormState] = useState(DEFAULT_FILTERS);
+  const [loading, setLocalLoading] = useState({
+    apply: false,
+    reset: false,
+  });
+
   useEffect(() => {
-    if (filterData) {
-      setFormData({
-        contractType: filterData.contractType || "TEMPORARY",
-        remotePolicy: filterData.remotePolicy || "onsite",
-        experienceRange: filterData.experienceRange,
-        salaryRange: filterData.salaryRange,
-        skills: filterData.skills,
-      });
-    }
+    setFormState({ ...DEFAULT_FILTERS, ...filterData });
   }, [filterData]);
 
-  const fetchDropdowns = useCallback(() => {
-    if (skillsDropdown?.length === 0)
+  useEffect(() => {
+    if (!skillsDropdown.length) {
       dispatch(asyncGetDropdown({ name: "skills" }));
-  }, [skillsDropdown, dispatch]);
+    }
+  }, [dispatch, skillsDropdown.length]);
 
-  const handleContractTypeChange = (type) => {
-    setFormData((prev) => ({ ...prev, contractType: type }));
-    setFilterData((prev) => ({ ...prev, contractType: type }));
-  };
+  const updateField = useCallback((key, value) => {
+    setFormState((prev) => ({ ...prev, [key]: value }));
+  }, []);
 
-  const handleRemotePolicyChange = (policy) => {
-    setFormData((prev) => ({ ...prev, remotePolicy: policy }));
-    setFilterData((prev) => ({ ...prev, remotePolicy: policy }));
-  };
+  const handleReset = async () => {
+    setLocalLoading({ reset: true, apply: false });
+    setLoading(true);
 
-  const handleAddSkill = () => {
-    if (skillInput.trim()) {
-      const newSkills = [...(filterData.skills || []), skillInput.trim()];
-      setFilterData({ ...filterData, skills: newSkills });
+    setFormState(DEFAULT_FILTERS);
+    setFilterData(DEFAULT_FILTERS);
+
+    try {
+      await handleResetFilters();
+    } finally {
+      setLocalLoading({ reset: false, apply: false });
+      setLoading(false);
     }
   };
 
-  const handleRemoveSkill = (skillToRemove) => {
-    const updatedSkills = (filterData.skills || []).filter(
-      (s) => s !== skillToRemove
-    );
-    setFilterData({ ...filterData, skills: updatedSkills });
-  };
-
-  const handleReset = () => {
-    setLoadingLocal((prev) => ({ ...prev, resetLoading: true }));
+  const handleApply = async () => {
+    setLocalLoading({ apply: true, reset: false });
     setLoading(true);
-    setFormData({
-      contractType: "TEMPORARY",
-      remotePolicy: "onsite",
-      salaryRange: [0, 0],
-      experienceRange: { min: 0, max: 10 },
-      skills: [],
-    });
 
-    setFilterData({
-      location: "",
-      experienceRange: { min: 0, max: 10 },
-      skills: [],
-      salaryRange: [0, 0],
-      contractType: "TEMPORARY",
-      remotePolicy: "onsite",
-    });
-    dispatch(asyncGetCandidates())
-      .then(() => {
-        setLoading(false);
-        setLoadingLocal((prev) => ({ ...prev, resetLoading: false }));
-      })
-      .finally(() => {
-        setLoading(false);
-        setLoadingLocal((prev) => ({ ...prev, resetLoading: false }));
-      });
-    console.log("Filters have been reset", FormData.experienceRange);
-  };
+    setFilterData(formState);
 
-  const handleApply = () => {
-    setLoadingLocal((prev) => ({ ...prev, applyLoading: true }));
-    setLoading(true);
-    setFilterData({
-      ...filterData,
-      contractType: FormData.contractType,
-      remotePolicy: FormData.remotePolicy,
-      salaryRange: [FormData.salaryRange[0], FormData.salaryRange[1]],
-      experienceRange: FormData.experienceRange,
-      skills: FormData.skills,
-    });
     const params = {
-      contractType: FormData.contractType?.toUpperCase(),
-      remotePolicy: FormData.remotePolicy?.toUpperCase(),
+      contractType: formState.contractType,
+      remotePolicy: formState.remotePolicy,
       salary:
-        FormData.salaryRange[0] && FormData.salaryRange[1]
-          ? `${FormData.salaryRange[0]}-${FormData.salaryRange[1]}`
+        formState.salaryRange[0] && formState.salaryRange[1]
+          ? `${formState.salaryRange[0]}-${formState.salaryRange[1]}`
           : null,
-      experience: `${FormData.experienceRange.min}-${FormData.experienceRange.max}`,
-      skills: FormData.skills.join(",") || [],
+      experience: `${formState.experienceRange.min}-${formState.experienceRange.max}`,
+      skills: formState.skills.join(","),
     };
-    console.log("Applying filters with params:", params);
-    dispatch(asyncGetCandidates(params))
-      .then(() => {
-        setLoading(false);
-        setLoadingLocal((prev) => ({ ...prev, applyLoading: false }));
-      })
-      .finally(() => {
-        setLoadingLocal((prev) => ({ ...prev, applyLoading: false }));
-        onClose();
-      });
-  };
 
-  useEffect(() => {
-    fetchDropdowns();
-  }, [fetchDropdowns]);
+    try {
+      await handleApplyFilters(params);
+      onClose();
+    } finally {
+      setLocalLoading({ apply: false, reset: false });
+      setLoading(false);
+    }
+  };
 
   if (!isOpen) return null;
 
   return (
-    <div className="absolute top-0 right-0 z-50 w-full max-w-[360px] backdrop-blur-[40px] bg-g-900/40 text-g-100 max-h-screen p-6 flex flex-col">
-      <div className="flex items-center justify-between mb-8">
+    <div className="absolute top-0 right-0 z-50 w-full max-w-[360px] bg-g-900/40 backdrop-blur-[40px] text-g-100 h-screen p-6 flex flex-col">
+      <div className="flex justify-between mb-6">
         <h2 className="text-xl font-semibold">Filters</h2>
-        <button
-          onClick={onClose}
-          className="text-gray-400 hover:text-g-200 transition-colors"
-        >
-          <X className="w-5 h-5" />
+        <button onClick={onClose}>
+          <X className="w-5 h-5 text-gray-400 hover:text-white" />
         </button>
       </div>
 
-      <div className="overflow-y-auto pr-2 flex-1 pb-24">
-        {/* Contract Type */}
-        <div className="mb-8">
-          <h3 className="text-sm font-medium mb-4">Contract Type</h3>
-          <div className="space-y-3">
-            {[
-              { value: "TEMPORARY", label: "Temporary employment" },
-              { value: "PERMANENT", label: "Fixed term" },
-              { value: "FREELANCE", label: "Freelance" },
-              { value: "INTERNSHIP", label: "Internship" },
-            ].map(({ value, label }) => (
-              <label
-                key={value}
-                className="flex items-center cursor-pointer group"
-              >
-                <input
-                  type="checkbox"
-                  checked={FormData.contractType === value}
-                  onChange={() => handleContractTypeChange(value)}
-                  className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary cursor-pointer"
-                />
-                <span className="ml-3 text-sm text-gray-300 group-hover:text-white transition-colors">
-                  {label}
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
+      <div className="flex-1 overflow-y-auto pr-2 pb-28">
+        <FilterGroup title="Contract Type">
+          {["TEMPORARY", "PERMANENT", "FREELANCE", "INTERNSHIP"].map((type) => (
+            <RadioItem
+              key={type}
+              checked={formState.contractType === type}
+              label={type}
+              onChange={() => updateField("contractType", type)}
+            />
+          ))}
+        </FilterGroup>
 
-        {/* Remote Policy */}
-        <div className="mb-8">
-          <h3 className="text-sm font-medium mb-4">Remote Policy</h3>
-          <div className="space-y-3">
-            {[
-              { value: "onsite", label: "On-site" },
-              { value: "hybrid", label: "Hybrid" },
-              { value: "remote", label: "Remote" },
-            ].map(({ value, label }) => (
-              <label
-                key={value}
-                className="flex items-center cursor-pointer group"
-              >
-                <input
-                  type="checkbox"
-                  checked={FormData.remotePolicy === value}
-                  onChange={() => handleRemotePolicyChange(value)}
-                  className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary cursor-pointer"
-                />
-                <span className="ml-3 text-sm text-gray-300 group-hover:text-white transition-colors">
-                  {label}
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
+        <FilterGroup title="Remote Policy">
+          {["onsite", "hybrid", "remote"].map((policy) => (
+            <RadioItem
+              key={policy}
+              checked={formState.remotePolicy === policy}
+              label={policy}
+              onChange={() => updateField("remotePolicy", policy)}
+            />
+          ))}
+        </FilterGroup>
 
-        {/* Salary */}
-        <div className="mb-8">
-          <h3 className="text-sm font-medium mb-4">Salary</h3>
+        <FilterGroup title="Salary">
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs text-gray-400 mb-2">Min.</label>
+            {["Min", "Max"].map((label, i) => (
               <input
-                type="text"
-                value={FormData.salaryRange[0]}
+                key={label}
+                type="number"
+                value={formState.salaryRange[i]}
                 onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    salaryRange: [e.target.value, prev.salaryRange[1]],
-                  }))
+                  updateField("salaryRange", [
+                    i === 0 ? +e.target.value : formState.salaryRange[0],
+                    i === 1 ? +e.target.value : formState.salaryRange[1],
+                  ])
                 }
-                placeholder="e.g. 50,000"
-                className="w-full rounded-lg px-3 py-2.5 text-sm bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C] focus:outline-none mb-3"
+                placeholder={label}
+                className="bg-g-700 border border-g-500 rounded-lg px-3 py-2.5 text-sm outline-none w-full text-g-300"
               />
-            </div>
-            <div>
-              <label className="block text-xs text-gray-400 mb-2">Max.</label>
-              <input
-                type="text"
-                value={FormData.salaryRange[1]}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    salaryRange: [prev.salaryRange[0], e.target.value],
-                  }))
-                }
-                placeholder="e.g. 150,000"
-                className="w-full rounded-lg px-3 py-2.5 text-sm bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C] focus:outline-none mb-3"
-              />
-            </div>
+            ))}
           </div>
-        </div>
+        </FilterGroup>
 
-        {/* Experience Range - Fixed & Improved */}
-        <div className="mb-8">
-          <h3 className="text-sm font-medium mb-4">Experience</h3>
+        <FilterGroup title="Experience">
           <RangeFilter
             min={0}
             max={10}
             step={1}
-            value={FormData.experienceRange}
-            onChange={(newRange) => {
-              setFormData((prev) => ({ ...prev, experienceRange: newRange }));
-            }}
+            value={formState.experienceRange}
+            onChange={(value) => updateField("experienceRange", value)}
           />
-        </div>
+        </FilterGroup>
 
-        {/* Skills */}
-        <div className="mb-8">
-          <SelectField
-            label="Skills"
-            options={skillsDropdown}
-            value={FormData?.skills}
-            onChange={(value) =>
-              setFormData((prev) => ({ ...prev, skills: value }))
-            }
-            multiple={true}
-            onAdd={handleAddSkill}
-            placeholder="Type a skill and press Add"
-            selectedOptions={FormData?.skills || []}
-            onRemove={handleRemoveSkill}
-            isCreatable={true}
-          />
-        </div>
+        <SelectField
+          label="Skills"
+          options={skillsDropdown}
+          value={formState.skills}
+          onChange={(value) => updateField("skills", value)}
+          multiple
+          isCreatable
+        />
       </div>
 
-      {/* Action Buttons */}
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-g-900/80 backdrop-blur-md border-t border-neutral-800">
+      <div className="fixed bottom-0 left-0 right-0 bg-g-900/80 border-t border-neutral-800 p-6">
         <div className="max-w-[360px] mx-auto flex gap-3">
-          <button
-            disabled={loadingLocal.resetLoading}
+          <ActionButton
+            loading={loading.reset}
+            icon={<RotateCcw className="w-4 h-4" />}
+            text="Reset"
             onClick={handleReset}
-            className="flex-1 flex items-center justify-center gap-2 bg-g-700 hover:bg-neutral-750 text-gray-300 py-3 rounded-lg transition-colors font-medium cursor-pointer"
-          >
-            <RotateCcw className="w-4 h-4" />
-            <span>{loadingLocal.resetLoading ? "Resetting..." : "Reset"}</span>
-          </button>
-          <button
-            disabled={loadingLocal.applyLoading}
+            variant="secondary"
+          />
+          <ActionButton
+            loading={loading.apply}
+            text="Apply Filters"
             onClick={handleApply}
-            className="flex-1 bg-primary hover:bg-primary-dark text-white py-3 rounded-lg transition-colors font-medium cursor-pointer"
-          >
-            <span>
-              {loadingLocal.applyLoading ? "Applying..." : "Apply Filters"}
-            </span>
-          </button>
+            variant="primary"
+          />
         </div>
       </div>
     </div>
   );
 }
+
+const FilterGroup = ({ title, children }) => (
+  <div className="mb-8">
+    <h3 className="text-sm font-medium mb-4">{title}</h3>
+    {children}
+  </div>
+);
+
+const RadioItem = ({ checked, label, onChange }) => (
+  <label className="flex items-center gap-3 cursor-pointer mb-2">
+    <input
+      type="checkbox"
+      checked={checked}
+      onChange={onChange}
+      className="w-4 h-4 rounded border-gray-600 checked:bg-primary"
+    />
+    <span className="text-sm text-gray-300 capitalize">{label}</span>
+  </label>
+);
+
+const ActionButton = ({ loading, text, onClick, icon, variant }) => (
+  <button
+    disabled={loading}
+    onClick={onClick}
+    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-medium
+      ${
+        variant === "primary"
+          ? "bg-primary text-white"
+          : "bg-g-700 text-gray-300"
+      }`}
+  >
+    {icon}
+    {loading ? `${text}...` : text}
+  </button>
+);

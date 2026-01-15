@@ -211,6 +211,10 @@ export default function ShortlistingsPage() {
           onClose={handleToggleFilter}
           setFilterData={setFilterData}
           setLoading={setLoading}
+          handleApplyFilters={(params) =>
+            dispatch(asyncShortlistedCandidates(params))
+          }
+          handleResetFilters={() => dispatch(asyncShortlistedCandidates())}
         />
       )}
     </>
