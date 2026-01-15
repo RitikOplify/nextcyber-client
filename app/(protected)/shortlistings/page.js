@@ -11,11 +11,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import CandidateFilter from "@/components/filters/CandidateFilter";
 import AdvancePagination from "@/components/ui/AdvancePagination";
-<<<<<<< Updated upstream
 import Search from "@/components/ui/Search";
 import { removeShortlistedCandidates } from "@/store/slices/candidateSlice";
-=======
->>>>>>> Stashed changes
 
 export default function ShortlistingsPage() {
   const { user } = useSelector((state) => state.auth);
@@ -166,7 +163,6 @@ export default function ShortlistingsPage() {
           </div>
         </div>
 
-<<<<<<< Updated upstream
         <div className="overflow-y-auto max-h-full mt-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {loading ? (
@@ -175,16 +171,6 @@ export default function ShortlistingsPage() {
               </div>
             ) : shortlistedCandidates?.length > 0 ? (
               shortlistedCandidates.map((candidate, index) => (
-=======
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {loading ? (
-            <div className="flex justify-center items-center col-span-full py-10">
-              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-            </div>
-          ) : shortlistedCandidates?.length > 0 ? (
-            <>
-              {shortlistedCandidates?.map((candidate, index) => (
->>>>>>> Stashed changes
                 <StudentCard
                   key={candidate.id}
                   candidate={candidate}
@@ -209,7 +195,6 @@ export default function ShortlistingsPage() {
         </div>
 
         {shortlistedCandidates?.length > 0 && !loading && (
-<<<<<<< Updated upstream
           <div className="sticky bottom-0 flex justify-center mt-5">
             <AdvancePagination
               currentPage={page}
@@ -217,13 +202,6 @@ export default function ShortlistingsPage() {
               onPageChange={(page) => setPage(page)}
             />
           </div>
-=======
-          <AdvancePagination
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={(page) => setPage(page)}
-          />
->>>>>>> Stashed changes
         )}
       </div>
       {showFilter && (
