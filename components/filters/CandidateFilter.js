@@ -1,45 +1,61 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, use } from "react";
 import { X, RotateCcw } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { asyncGetCandidates } from "@/store/actions/candidateAction";
 import RangeFilter from "../ui/RangeFilter";
+<<<<<<< Updated upstream
+import { asyncGetDropdown } from "@/store/actions/dropdownAction";
+import SelectField from "../SelectField";
+=======
+>>>>>>> Stashed changes
 
 export default function CandidateFilter({
   isOpen,
   onClose,
-  filterData={},
-  setFilterData=() => {},
+  filterData = {},
+  setFilterData = () => {},
   setLoading,
 }) {
   // Local state
-  const [selectedContractType, setSelectedContractType] = useState("TEMPORARY");
-  const [selectedRemotePolicy, setSelectedRemotePolicy] = useState("onsite");
-  const [skillInput, setSkillInput] = useState("");
-  const [minSalary, setMinSalary] = useState(filterData.salaryRange?.[0] || "");
-  const [maxSalary, setMaxSalary] = useState(filterData.salaryRange?.[1] || "");
-  const [experienceRange, setExperienceRange] = useState({ min: 0, max: 10 }); // [min, max] in years
+  const [FormData, setFormData] = useState({
+    contractType: filterData.contractType || "TEMPORARY",
+    remotePolicy: filterData.remotePolicy || "onsite",
+    salaryRange: filterData.salaryRange || [0, 0],
+    experienceRange: filterData.experienceRange || { min: 0, max: 10 },
+    skills: filterData.skills || [],
+  });
   const dispatch = useDispatch();
   const [loadingLocal, setLoadingLocal] = useState({
-    resetLoaing: false,
+    resetLoading: false,
     applyLoading: false,
   });
+  const { skillsDropdown } = useSelector((state) => state.dropdown);
 
   // Sync with external filterData
   useEffect(() => {
     if (filterData) {
-      setSelectedContractType(filterData.contractType || "TEMPORARY");
-      setSelectedRemotePolicy(filterData.remotePolicy || "onsite");
-      setExperienceRange(filterData.experienceRange);
+      setFormData({
+        contractType: filterData.contractType || "TEMPORARY",
+        remotePolicy: filterData.remotePolicy || "onsite",
+        experienceRange: filterData.experienceRange,
+        salaryRange: filterData.salaryRange,
+        skills: filterData.skills,
+      });
     }
   }, [filterData]);
 
+  const fetchDropdowns = useCallback(() => {
+    if (skillsDropdown?.length === 0)
+      dispatch(asyncGetDropdown({ name: "skills" }));
+  }, [skillsDropdown, dispatch]);
+
   const handleContractTypeChange = (type) => {
-    setSelectedContractType(type);
+    setFormData((prev) => ({ ...prev, contractType: type }));
     setFilterData((prev) => ({ ...prev, contractType: type }));
   };
 
   const handleRemotePolicyChange = (policy) => {
-    setSelectedRemotePolicy(policy);
+    setFormData((prev) => ({ ...prev, remotePolicy: policy }));
     setFilterData((prev) => ({ ...prev, remotePolicy: policy }));
   };
 
@@ -47,7 +63,6 @@ export default function CandidateFilter({
     if (skillInput.trim()) {
       const newSkills = [...(filterData.skills || []), skillInput.trim()];
       setFilterData({ ...filterData, skills: newSkills });
-      setSkillInput("");
     }
   };
 
@@ -61,12 +76,13 @@ export default function CandidateFilter({
   const handleReset = () => {
     setLoadingLocal((prev) => ({ ...prev, resetLoading: true }));
     setLoading(true);
-    setSelectedContractType("TEMPORARY");
-    setSelectedRemotePolicy("onsite");
-    setMinSalary("");
-    setMaxSalary("");
-    setExperienceRange({ min: 0, max: 10 });
-    setSkillInput("");
+    setFormData({
+      contractType: "TEMPORARY",
+      remotePolicy: "onsite",
+      salaryRange: [0, 0],
+      experienceRange: { min: 0, max: 10 },
+      skills: [],
+    });
 
     setFilterData({
       location: "",
@@ -85,7 +101,7 @@ export default function CandidateFilter({
         setLoading(false);
         setLoadingLocal((prev) => ({ ...prev, resetLoading: false }));
       });
-    console.log("Filters have been reset", experienceRange);
+    console.log("Filters have been reset", FormData.experienceRange);
   };
 
   const handleApply = () => {
@@ -93,17 +109,21 @@ export default function CandidateFilter({
     setLoading(true);
     setFilterData({
       ...filterData,
-      contractType: selectedContractType,
-      remotePolicy: selectedRemotePolicy,
-      salaryRange: [minSalary, maxSalary],
-      experienceRange,
+      contractType: FormData.contractType,
+      remotePolicy: FormData.remotePolicy,
+      salaryRange: [FormData.salaryRange[0], FormData.salaryRange[1]],
+      experienceRange: FormData.experienceRange,
+      skills: FormData.skills,
     });
     const params = {
-      contractType: selectedContractType?.toUpperCase(),
-      remotePolicy: selectedRemotePolicy?.toUpperCase(),
-      salary: minSalary && maxSalary ? `${minSalary}-${maxSalary}` : null,
-      experience: `${experienceRange.min}-${experienceRange.max}`,
-      skills: filterData.skills.join(",") || [],
+      contractType: FormData.contractType?.toUpperCase(),
+      remotePolicy: FormData.remotePolicy?.toUpperCase(),
+      salary:
+        FormData.salaryRange[0] && FormData.salaryRange[1]
+          ? `${FormData.salaryRange[0]}-${FormData.salaryRange[1]}`
+          : null,
+      experience: `${FormData.experienceRange.min}-${FormData.experienceRange.max}`,
+      skills: FormData.skills.join(",") || [],
     };
     console.log("Applying filters with params:", params);
     dispatch(asyncGetCandidates(params))
@@ -116,6 +136,10 @@ export default function CandidateFilter({
         onClose();
       });
   };
+
+  useEffect(() => {
+    fetchDropdowns();
+  }, [fetchDropdowns]);
 
   if (!isOpen) return null;
 
@@ -148,7 +172,7 @@ export default function CandidateFilter({
               >
                 <input
                   type="checkbox"
-                  checked={selectedContractType === value}
+                  checked={FormData.contractType === value}
                   onChange={() => handleContractTypeChange(value)}
                   className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary cursor-pointer"
                 />
@@ -175,7 +199,7 @@ export default function CandidateFilter({
               >
                 <input
                   type="checkbox"
-                  checked={selectedRemotePolicy === value}
+                  checked={FormData.remotePolicy === value}
                   onChange={() => handleRemotePolicyChange(value)}
                   className="w-4 h-4 rounded border-2 border-gray-600 checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary cursor-pointer"
                 />
@@ -195,8 +219,13 @@ export default function CandidateFilter({
               <label className="block text-xs text-gray-400 mb-2">Min.</label>
               <input
                 type="text"
-                value={minSalary}
-                onChange={(e) => setMinSalary(e.target.value)}
+                value={FormData.salaryRange[0]}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    salaryRange: [e.target.value, prev.salaryRange[1]],
+                  }))
+                }
                 placeholder="e.g. 50,000"
                 className="w-full rounded-lg px-3 py-2.5 text-sm bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C] focus:outline-none mb-3"
               />
@@ -205,8 +234,13 @@ export default function CandidateFilter({
               <label className="block text-xs text-gray-400 mb-2">Max.</label>
               <input
                 type="text"
-                value={maxSalary}
-                onChange={(e) => setMaxSalary(e.target.value)}
+                value={FormData.salaryRange[1]}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    salaryRange: [prev.salaryRange[0], e.target.value],
+                  }))
+                }
                 placeholder="e.g. 150,000"
                 className="w-full rounded-lg px-3 py-2.5 text-sm bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C] focus:outline-none mb-3"
               />
@@ -217,45 +251,89 @@ export default function CandidateFilter({
         {/* Experience Range - Fixed & Improved */}
         <div className="mb-8">
           <h3 className="text-sm font-medium mb-4">Experience</h3>
+<<<<<<< Updated upstream
+=======
+
+          {/* <div className="flex justify-between text-sm text-gray-300 mb-5">
+            <span>
+              {minExp === 0
+                ? "Fresher"
+                : `${minExp} year${minExp > 1 ? "s" : ""}`}
+            </span>
+            <span>
+              {maxExp === 10
+                ? "10+ years"
+                : `${maxExp} year${maxExp > 1 ? "s" : ""}`}
+            </span>
+          </div>
+          <div className="relative h-10 px-1">
+            <div className="absolute inset-x-0 top-4 h-1.5 bg-neutral-700 rounded-full"></div>
+
+            <div
+              className="absolute top-4 h-1.5 bg-blue-600 rounded-full transition-all"
+              style={{
+                left: `${(minExp / 10) * 100}%`,
+                right: `${100 - (maxExp / 10) * 100}%`,
+              }}
+            />
+
+            <input
+              type="range"
+              min="0"
+              max="10"
+              value={minExp}
+              onChange={(e) => handleExperienceChange(0, e.target.value)}
+              className="absolute w-full h-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-g-900 [&::-webkit-slider-thumb]:cursor-pointer focus:[&::-webkit-slider-thumb]:ring-4 focus:[&::-webkit-slider-thumb]:ring-primaborder-primary/30"
+              style={{ zIndex: minExp > maxExp - 1 ? 3 : 2 }}
+            />
+
+            <input
+              type="range"
+              min="0"
+              max="10"
+              value={maxExp}
+              onChange={(e) => handleExperienceChange(1, e.target.value)}
+              className="absolute w-full h-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-g-900 [&::-webkit-slider-thumb]:cursor-pointer focus:[&::-webkit-slider-thumb]:ring-4 focus:[&::-webkit-slider-thumb]:ring-primaborder-primary/30"
+              style={{ zIndex: maxExp < minExp + 1 ? 3 : 2 }}
+            />
+          </div>
+          <div className="flex justify-between mt-4 text-xs text-gray-500">
+            <span>0 yrs</span>
+            <span>10+ yrs</span>
+          </div> */}
+
+>>>>>>> Stashed changes
           <RangeFilter
             min={0}
             max={10}
             step={1}
-            value={experienceRange}
+<<<<<<< Updated upstream
+            value={FormData.experienceRange}
             onChange={(newRange) => {
-              setExperienceRange(newRange);
-              setFilterData({ ...filterData, experienceRange: newRange });
+              setFormData((prev) => ({ ...prev, experienceRange: newRange }));
             }}
+=======
+            onChange={({ min, max }) => handleExperienceChange(0, min) || handleExperienceChange(1, max)}
+>>>>>>> Stashed changes
           />
         </div>
 
         {/* Skills */}
         <div className="mb-8">
-          <h3 className="text-sm font-medium mb-4">Skills</h3>
-          <input
-            type="text"
-            placeholder="Type skill and press Enter"
-            value={skillInput}
-            onChange={(e) => setSkillInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleAddSkill()}
-            className="w-full rounded-lg px-3 py-2.5 text-sm bg-g-700 border border-g-500 outline-none text-g-300 placeholder-[#6A6B6C] focus:outline-none mb-3"
+          <SelectField
+            label="Skills"
+            options={skillsDropdown}
+            value={FormData?.skills}
+            onChange={(value) =>
+              setFormData((prev) => ({ ...prev, skills: value }))
+            }
+            multiple={true}
+            onAdd={handleAddSkill}
+            placeholder="Type a skill and press Add"
+            selectedOptions={FormData?.skills || []}
+            onRemove={handleRemoveSkill}
+            isCreatable={true}
           />
-          <div className="flex flex-wrap gap-2">
-            {filterData?.skills?.map((skill, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-2 bg-g-700 rounded-full px-3 py-1.5 text-sm text-gray-300"
-              >
-                <span>{skill}</span>
-                <button
-                  onClick={() => handleRemoveSkill(skill)}
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 
@@ -263,7 +341,7 @@ export default function CandidateFilter({
       <div className="fixed bottom-0 left-0 right-0 p-6 bg-g-900/80 backdrop-blur-md border-t border-neutral-800">
         <div className="max-w-[360px] mx-auto flex gap-3">
           <button
-            disabled={loadingLocal.resetLoaing}
+            disabled={loadingLocal.resetLoading}
             onClick={handleReset}
             className="flex-1 flex items-center justify-center gap-2 bg-g-700 hover:bg-neutral-750 text-gray-300 py-3 rounded-lg transition-colors font-medium cursor-pointer"
           >

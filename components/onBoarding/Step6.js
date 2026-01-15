@@ -1,9 +1,11 @@
 "use client";
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { ArrowUpToLine } from "lucide-react";
 import SelectField from "@/components/SelectField";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import LocationSearchInput from "../helper/LocationSearchInput";
+import { asyncGetDropdown } from "@/store/actions/dropdownAction";
 
 const Step6 = ({ files, setFiles, showErrors = true }) => {
   const {
@@ -20,6 +22,9 @@ const Step6 = ({ files, setFiles, showErrors = true }) => {
   const selectedHeadquarter = watch("headquarter");
   const selectedLanguage = watch("languages");
   const profileImage = watch("profilePicture");
+  const dispatch = useDispatch();
+
+  const { rolesInCompanyDropdown } = useSelector((state) => state.dropdown);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -29,6 +34,15 @@ const Step6 = ({ files, setFiles, showErrors = true }) => {
       setValue("profilePicture", imageURL);
     }
   };
+
+  const fetchDropdowns = useCallback(() => {
+    if (rolesInCompanyDropdown?.length === 0)
+      dispatch(asyncGetDropdown({ name: "rolesInCompany" }));
+  }, [dispatch]);
+
+  useEffect(() => {
+    fetchDropdowns();
+  }, [fetchDropdowns]);
 
   const pillClass = (isActive) =>
     `px-2 py-1 rounded-full border transition text-xs leading-4 font-medium ${
@@ -149,13 +163,20 @@ const Step6 = ({ files, setFiles, showErrors = true }) => {
             </div>
 
             <div>
-              <SelectField
-                label="Location"
-                name="location"
-                placeholder="Search"
-                options={["Pune", "Mumbai", "Delhi", "Bangalore"]}
-                showErrors={showErrors}
-                rules={{ required: "Location is required" }}
+              <label className="block mb-2 text-sm font-medium text-g-200 leading-5">
+                Location
+              </label>
+              <LocationSearchInput
+                selectedPlace={selectedLocation}
+                onPlaceSelected={(locationData) =>
+                  setValue(
+                    "location",
+                    locationData.city && locationData.state
+                      ? `${locationData?.city}, ${locationData?.state}, ${locationData?.country}`
+                      : "",
+                    { shouldValidate: true, shouldDirty: true }
+                  )
+                }
               />
               {selectedLocation && (
                 <button className={`${pillClass()} mt-4`}>
@@ -213,7 +234,7 @@ const Step6 = ({ files, setFiles, showErrors = true }) => {
                 label="Role within the company"
                 name="roleWithCompany"
                 placeholder="Search"
-                options={["FOUNDER", "CEO", "HR_MANAGER"]}
+                options={rolesInCompanyDropdown || []}
                 showErrors={showErrors}
                 rules={{ required: "Role is required" }}
               />
@@ -267,13 +288,20 @@ const Step6 = ({ files, setFiles, showErrors = true }) => {
             </div>
 
             <div>
-              <SelectField
-                label="Headquarter"
-                name="headquarter"
-                placeholder="Search"
-                options={["Pune", "Mumbai", "Delhi", "Bangalore"]}
-                showErrors={showErrors}
-                rules={{ required: "Headquarter is required" }}
+              <label className="block mb-2 text-sm font-medium text-g-200 leading-5">
+                Headquarter Location
+              </label>
+              <LocationSearchInput
+                selectedPlace={selectedHeadquarter}
+                onPlaceSelected={(locationData) =>
+                  setValue(
+                    "headquarter",
+                    locationData.city && locationData.state
+                      ? `${locationData?.city}, ${locationData?.state}, ${locationData?.country}`
+                      : "",
+                    { shouldValidate: true, shouldDirty: true }
+                  )
+                }
               />
               {selectedHeadquarter && (
                 <button className={`${pillClass()} mt-4`}>

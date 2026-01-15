@@ -42,7 +42,7 @@ function CompaniesPage() {
       ...Object.fromEntries(
         Object.entries({
           search: debouncedSearchTerm,
-          location: locationSearch || "" ,
+          location: locationSearch || "",
           industry: filterData.industry,
           companySize: filterData.companySize,
         }).filter(([_, value]) => value !== "")
@@ -86,7 +86,7 @@ function CompaniesPage() {
 
   const clearOnUnmount = () => {
     dispatch(removeCompanies());
-  }
+  };
 
   return (
     <>
@@ -107,7 +107,9 @@ function CompaniesPage() {
               selectedPlace={locationSearch}
               onPlaceSelected={(locationData) =>
                 setLocationSearch(
-                 (locationData.city && locationData.state) ? `${locationData?.city}, ${locationData?.state}, ${locationData?.country}` : ""
+                  locationData.city && locationData.state
+                    ? `${locationData?.city}, ${locationData?.state}, ${locationData?.country}`
+                    : ""
                 )
               }
               clearOnUnmount={clearOnUnmount}
@@ -160,13 +162,15 @@ function CompaniesPage() {
         </div>
       </div>
 
-      <CompanyFilter
-        isOpen={showFilter}
-        onClose={handleToggleFilter}
-        filterData={filterData}
-        setFilterData={setFilterData}
-        setLoading={setLoading}
-      />
+      {showFilter && (
+        <CompanyFilter
+          isOpen={showFilter}
+          onClose={handleToggleFilter}
+          filterData={filterData}
+          setFilterData={setFilterData}
+          setLoading={setLoading}
+        />
+      )}
     </>
   );
 }
