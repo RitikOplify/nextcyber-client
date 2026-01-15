@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { currencyFormatter } from "@/helper";
 import Image from "next/image";
+import Link from "next/link";
 
 const StudentCard = ({
   candidate,
@@ -80,10 +81,13 @@ const StudentCard = ({
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <button className="flex-1 flex items-center justify-center gap-2 border border-g-500 hover:bg-primary text-gray-300 py-2.5 rounded-lg transition-colors cursor-pointer">
+          <Link
+            href={`/messages?user=${candidate.user.id}`}
+            className="flex-1 flex items-center justify-center gap-2 border border-g-500 hover:bg-primary text-gray-300 py-2.5 rounded-lg transition-colors cursor-pointer"
+          >
             <MessageCircleMore className="w-4 h-4" />
             <span className="text-sm">Chat</span>
-          </button>
+          </Link>
           <button className="flex-1 flex items-center justify-center gap-2 border border-g-500 hover:bg-primary text-gray-300 py-2.5 rounded-lg transition-colors cursor-pointer">
             <ArrowUpRight className="w-4 h-4" />
             <span className="text-sm">Profile</span>
