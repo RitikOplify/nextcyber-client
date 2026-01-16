@@ -106,115 +106,7 @@ export default function ResumeBuilder({
   const [prompt, setPrompt] = useState(promptInput);
   const [uploadedFile, setUploadedFile] = useState(resumeInput);
   const [loading, setLoading] = useState(false);
-  const [resume, setResume] = useState({
-    personalDetails: {
-      firstName: "Pradeep",
-      lastName: "Gusain",
-      email: "pradeepg@gmail.com",
-      phone: null,
-      jobTitle: "Full Stack Developer",
-      city: "Pune",
-      state: "Maharashtra",
-      country: null,
-      zipCode: null,
-    },
-    socialLinks: [
-      {
-        url: "https://linkedin.com/in/example",
-        label: "LinkedIn",
-      },
-      {
-        url: "https://github.com/example",
-        label: "GitHub",
-      },
-      {
-        url: "https://example.com",
-        label: "Personal",
-      },
-    ],
-    professionalSummary:
-      "Results-oriented Full Stack Developer with 3 years of experience specializing in MERN stack development, with a strong focus on building robust and scalable e-commerce platforms. Proven ability to deliver high-quality web applications from concept to deployment, utilizing modern technologies and best practices in software engineering. Adept at collaborating with cross-functional teams to achieve project goals and enhance user experiences.",
-    workExperience: [
-      {
-        company: "Company ABC",
-        position: "MERN Stack Developer",
-        startDate: "2021-07",
-        endDate: "2025-12",
-        highlights: [
-          "Developed and maintained scalable web applications using MongoDB, Express.js, React, and Node.js, improving application responsiveness by 30%.",
-          "Collaborated with UI/UX designers and product managers to implement new features aligned with user requirements and business goals.",
-          "Implemented RESTful APIs and integrated third-party services to enhance application functionality and user experience.",
-          "Conducted code reviews and wrote unit tests to ensure code quality and reduce bugs by 20%.",
-        ],
-      },
-      {
-        company: "Company XYZ",
-        position: "Front-End Developer (React)",
-        startDate: "2020-01",
-        endDate: "2021-06",
-        highlights: [
-          "Designed and developed responsive user interfaces using React, Redux, HTML5, and CSS3, increasing user engagement by 15%.",
-          "Optimized front-end performance through code splitting and lazy loading, reducing initial load time by 25%.",
-          "Collaborated with back-end developers to integrate RESTful APIs and ensure seamless data flow.",
-        ],
-      },
-    ],
-    skills: [
-      "MongoDB",
-      "Express.js",
-      "React",
-      "Node.js",
-      "Python",
-      "Java",
-      "JavaScript",
-      "DevOps Tools",
-      "Jenkins",
-      "Docker",
-      "CI/CD",
-      "Tomcat",
-      "Linux",
-      "Shell Scripting",
-      "Angular",
-      "Spring Boot",
-      "HTML5",
-      "CSS3",
-      "WebSockets",
-      "REST APIs",
-      "OracleDB",
-    ],
-    projects: [
-      {
-        name: "Real-Time Chat Application using React and Express",
-        highlights: [
-          "Developed and maintained scalable web applications using MongoDB, Express.js, React, and Node.js, improving application responsiveness by 30%.",
-          "Collaborated with UI/UX designers and product managers to implement new features aligned with user requirements and business goals.",
-        ],
-        link: "https://linkedin.com/in/example",
-        startDate: "2021-07",
-        endDate: "2025-12",
-      },
-    ],
-    education: [
-      {
-        institution: "University of Technology",
-        degree: "Bachelor of Science",
-        field: "Computer Science",
-        startYear: 2015,
-        endYear: 2019,
-        highlights: [
-          "Relevant coursework: Data Structures, Algorithms, Web Development, Database Systems, Software Engineering.",
-          "Completed capstone project focused on developing a full-stack web application using the MERN stack.",
-        ],
-      },
-    ],
-    certifications: [
-      {
-        name: "Full Stack Web Development - MERN",
-        url: "https://linkedin.com/in/example",
-      },
-    ],
-    hobbies: ["Book Reading", "Cricket", "Travelling"],
-  });
+  const [resume, setResume] = useState();
   const [error, setError] = useState(null);
   const [activeSection, setActiveSection] = useState(null);
   const [expandedSubItems, setExpandedSubItems] = useState({});
@@ -715,6 +607,12 @@ export default function ResumeBuilder({
           >
             <Sparkles size={20} />
             <span>Try Again</span>
+          </button>
+          <button
+            onClick={() => setShowResumeBuilder(false)}
+            className={`flex gap-2 items-center text-white px-4 py-2 bg-primary text-sm rounded-lg cursor-pointer hover:bg-primary/90 transition-colors opacity-100`}
+          >
+            Go Back
           </button>
         </div>
       ) : (
