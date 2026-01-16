@@ -134,18 +134,6 @@ export default function Page() {
   const updateApplicationStatus = (applicationId, newStatus) => {
     // Dispatch an action to update the application status
     dispatch(asyncUpdateApplicationStatus(applicationId, newStatus));
-    dispatch(
-      asyncGetJobApplicants(
-        {
-          id,
-          page,
-          limit: pageSize,
-          status: status?.toUpperCase() ?? "",
-          search,
-        },
-        setLoading
-      )
-    );
   };
 
   const columns = [
@@ -195,7 +183,6 @@ export default function Page() {
             {showDropdown && (
               <div className="absolute mt-1 bg-g-700 border border-g-500 rounded shadow-lg z-10">
                 {[
-                  { label: "INVITED", value: "INVITED" },
                   { label: "SHORTLISTED", value: "SHORTLISTED" },
                   { label: "INTERVIEW", value: "INTERVIEW_SCHEDULED" },
 
