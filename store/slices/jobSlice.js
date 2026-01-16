@@ -29,9 +29,24 @@ export const jobReducer = createSlice({
       state.applications = action.payload.jobs;
       state.totalApplicationsPages = action.payload.totalPages;
     },
+    updateAppliedJobStatus: (state, action) => {
+      const { applicationId, newStatus } = action.payload;
+      const applicationIndex = state.appliedJob.findIndex(
+        (app) => app.id === applicationId
+      );
+      if (applicationIndex !== -1) {
+        state.appliedJob[applicationIndex].status = newStatus;
+      }
+    },
   },
 });
 
-export const { setJobs, setAppliedJobs, addAppliedJobs, setApplications, removeJobs } =
-  jobReducer.actions;
+export const {
+  setJobs,
+  setAppliedJobs,
+  addAppliedJobs,
+  setApplications,
+  removeJobs,
+  updateAppliedJobStatus,
+} = jobReducer.actions;
 export default jobReducer.reducer;

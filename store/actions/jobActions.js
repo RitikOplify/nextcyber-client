@@ -5,7 +5,12 @@ import {
   jobApplicantsApi,
   updateApplicationStatusApi,
 } from "@/api/jobApi";
-import { setApplications, setAppliedJobs, setJobs } from "../slices/jobSlice";
+import {
+  setApplications,
+  setAppliedJobs,
+  setJobs,
+  updateAppliedJobStatus,
+} from "../slices/jobSlice";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/utils/errMessage";
 
@@ -45,28 +50,32 @@ export const asyncGetCreatedJobs = (query, setLoading) => async (dispatch) => {
   }
 };
 
-export const asyncGetJobApplicants = (params, setIsLoading) => async (dispatch) => {
-  setIsLoading?.(true);
-  try {
-    const { data } = await jobApplicantsApi(params);
-    dispatch(setApplications(data.data));
-    return data?.application || [];
-  } catch (error) {
-    toast.error(getErrorMessage(error, "Failed to fetch Applicants"));
-    return [];
-  } finally {
-    setIsLoading?.(false);
-  }
-};
+export const asyncGetJobApplicants =
+  (params, setIsLoading) => async (dispatch) => {
+    setIsLoading?.(true);
+    try {
+      const { data } = await jobApplicantsApi(params);
+      dispatch(setApplications(data.data));
+      return data?.application || [];
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Failed to fetch Applicants"));
+      return [];
+    } finally {
+      setIsLoading?.(false);
+    }
+  };
 
-
-export const asyncUpdateApplicationStatus = (applicationId, newStatus) => async (dispatch) => {
-  try {
-    // Assuming there's an API endpoint to update application status
-    await updateApplicationStatusApi(applicationId, newStatus);
-    toast.success("Application status updated successfully");
-    // Optionally, you can dispatch an action to refresh the applications list
-  } catch (error) {
-    toast.error(getErrorMessage(error, "Failed to update application status"));
-  }
-};
+export const asyncUpdateApplicationStatus =
+  (applicationId, newStatus) => async (dispatch) => {
+    try {
+      // Assuming there's an API endpoint to update application status
+      await updateApplicationStatusApi(applicationId, newStatus);
+      dispatch(updateAppliedJobStatus({ applicationId, newStatus }));
+      toast.success("Application status updated successfully");
+      // Optionally, you can dispatch an action to refresh the applications list
+    } catch (error) {
+      toast.error(
+        getErrorMessage(error, "Failed to update application status")
+      );
+    }
+  };
