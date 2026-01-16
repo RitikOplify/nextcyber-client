@@ -41,9 +41,8 @@ function CompaniesPage() {
       page,
       ...Object.fromEntries(
         Object.entries({
-          search: debouncedSearchTerm,
           location: locationSearch || "",
-          industry: filterData.industry,
+          industry: debouncedSearchTerm,
           companySize: filterData.companySize,
         }).filter(([_, value]) => value !== "")
       ),
@@ -74,7 +73,8 @@ function CompaniesPage() {
   const handleSearch = () => {
     setLoading(true);
     const params = buildParams();
-    dispatch(asyncGetCompanies(buildParams(), setLoading)).then((data) => {
+    console.log("Searching with params:", params )
+    dispatch(asyncGetCompanies(params, setLoading)).then((data) => {
       setTotalPages(data?.totalPages || 1);
       setLoading(false);
     });

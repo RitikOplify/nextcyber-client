@@ -16,7 +16,7 @@ function Search({
   }, [value]);
 
   useEffect(() => {
-    return () => clearOnUnmount && setValue("");
+    return () => clearOnUnmount() && setValue("");
   }, []);
 
   return (
