@@ -26,6 +26,7 @@ import {
   Trash2,
   Save,
 } from "lucide-react";
+import axios from "@/utils/axios";
 
 // Section configuration
 const SECTION_CONFIG = [
@@ -209,9 +210,6 @@ export default function ResumeBuilder({
     certifications: [
       {
         name: "Full Stack Web Development - MERN",
-        issuer: "Oplify Solutions Pvt. Ltd.",
-        year: 2025,
-        credentialId: "OSPLFSWDP738926001",
         url: "https://linkedin.com/in/example",
       },
     ],
@@ -247,60 +245,40 @@ export default function ResumeBuilder({
     setLoading(true);
 
     try {
-      // Step 1: Upload file to get base64 data
       const formData = new FormData();
       formData.append("resume", uploadedFile);
-
-      const uploadRes = await fetch(
-        "http://localhost:7500/api/v1/resume/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
+      formData.append(
+        "prompt",
+        "Analyze this resume file and create an enhanced, professional version. Extract all information accurately and improve the presentation while maintaining truthfulness."
       );
+      formData.append("model", "gemini-1.5-pro"); // or dynamic
 
-      if (!uploadRes.ok) {
-        throw new Error(`Upload failed: ${uploadRes.statusText}`);
+      const res = await axios.post("/student/resume/generate", formData, {
+        withCredentials: true,
+        // ❌ do NOT set Content-Type
+      });
+
+      const data = res.data;
+
+      if (!data.success) {
+        throw new Error(data.message || "Resume generation failed");
       }
 
-      const uploadData = await uploadRes.json();
-
-      if (!uploadData.success) {
-        throw new Error(uploadData.message || "Failed to upload resume");
-      }
-
-      // Step 2: Generate resume by sending file data to Gemini
-      const genRes = await fetch(
-        "http://localhost:8500/api/v1/resume/generate",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            prompt:
-              "Analyze this resume file and create an enhanced, professional version. Extract all information accurately and improve the presentation while maintaining truthfulness.",
-            uploadedFileData: uploadData.fileData,
-          }),
-        }
-      );
-
-      if (!genRes.ok) {
-        throw new Error(`Generation failed: ${genRes.statusText}`);
-      }
-
-      const genData = await genRes.json();
-
-      if (!genData.success) {
-        throw new Error(genData.message || "Failed to generate resume");
-      }
-
-      setResume(genData.resume);
+      setResume(data.resume);
       setShowModal(false);
       setModalStep("choice");
       setUploadedFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     } catch (err) {
-      console.error("Upload error:", err);
-      setError(err?.message || "Failed to process resume");
+      console.error("Resume error:", err);
+      setError(
+        err?.response?.data?.message ||
+          err.message ||
+          "Failed to generate resume"
+      );
     } finally {
       setLoading(false);
     }
@@ -316,26 +294,16 @@ export default function ResumeBuilder({
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:7500/api/v1/resume/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: "demo-user",
-          prompt,
-        }),
+      const dataPay = {
+        prompt: prompt.trim(),
+      };
+      const res = await axios.post(`/student/resume/generate`, dataPay, {
+        withCredentials: true,
       });
 
-      if (!res.ok) {
-        throw new Error(`Request failed: ${res.statusText}`);
-      }
+      console.log("response", res);
 
-      const data = await res.json();
-
-      if (!data.success) {
-        throw new Error(data.message || "Failed to generate resume");
-      }
-
-      setResume(data.resume);
+      setResume(res.data.resume);
       setShowModal(false);
       setModalStep("choice");
       setPrompt("");
@@ -347,32 +315,28 @@ export default function ResumeBuilder({
     }
   };
 
-  const enhanceSection = async (sectionKey, enhancementPrompt) => {
+  const enhanceSection = async (sectionKey, itemIndex, enhancementPrompt) => {
     if (!resume) return;
 
     try {
-      const res = await fetch(
-        "http://localhost:7500/api/v1/resume/enhance-section",
+      const res = await axios.post(
+        `/student/resume/enhance-section`,
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            resume,
-            sectionKey,
-            prompt: enhancementPrompt || "Improve clarity and impact",
-          }),
+          resume,
+          sectionKey,
+          prompt: enhancementPrompt || "Improve clarity and impact",
+          itemIndex,
+        },
+        {
+          withCredentials: true,
         }
       );
 
-      if (!res.ok) {
+      if (!res.data.success) {
         throw new Error(`Enhancement failed: ${res.statusText}`);
       }
 
-      const data = await res.json();
-
-      if (!data.success) {
-        throw new Error(data.message || "Enhancement failed");
-      }
+      const data = await res.data;
 
       setResume(data.resume);
     } catch (err) {
@@ -756,7 +720,7 @@ export default function ResumeBuilder({
       ) : (
         <div className="w-full h-full flex bg-g-700">
           {/* Left Sidebar - Form Editor */}
-          <div className="w-[30%] flex flex-col">
+          <div className="w-[40%] flex flex-col">
             <div className="w-full flex items-center gap-5 p-5 pb-0 mb-5">
               {resume && (
                 <>
@@ -771,11 +735,17 @@ export default function ResumeBuilder({
                     <Download className="w-4 h-4" />
                     Download as PDF
                   </button>
+                  <button
+                    onClick={() => setShowResumeBuilder(false)}
+                    className={`flex gap-2 items-center text-white px-4 py-2 bg-primary text-sm rounded-lg cursor-pointer hover:bg-primary/90 transition-colors opacity-100`}
+                  >
+                    Go Back
+                  </button>
                 </>
               )}
             </div>
             <div
-              className="w-full flex h-full flex-col flex-1 gap-3 p-5 pt-0 overflow-y-scroll text-g-200"
+              className="w-full flex h-full flex-col flex-1 gap-3 p-5 pr-0 pt-0 overflow-y-scroll text-g-200"
               ref={leftContainerRef}
             >
               {SECTION_CONFIG.map((section) => (
@@ -801,7 +771,7 @@ export default function ResumeBuilder({
           </div>
 
           {/* Right Side - Resume Preview */}
-          <div className="w-[70%] p-5 h-full overflow-y-scroll">
+          <div className="w-[60%] p-5 h-full overflow-y-scroll">
             <ResumePreview
               resume={resume}
               onSectionClick={onPreviewSectionClick}
@@ -868,9 +838,7 @@ function SectionEditor({
             />
           </div>
 
-          {(section.key === "professionalSummary" ||
-            // section.key === "workExperience" ||
-            section.key === "projects") && (
+          {section.key === "professionalSummary" && (
             <div className="flex items-center gap-4 mt-4">
               <input
                 type="text"
@@ -878,7 +846,7 @@ function SectionEditor({
                 onChange={(e) => setEnhancePrompt(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleEnhance()}
                 placeholder="Give prompt"
-                className="flex-1 px-4 py-3 text-sm leading-5 outline-none bg-g-700 text-g-300 rounded-lg "
+                className="flex-1 px-4 py-3 text-sm leading-5 outline-none bg-g-700 text-g-200 rounded-lg "
               />
               <button
                 onClick={handleEnhance}
@@ -911,7 +879,7 @@ function SectionForm({
   setExpandedSubItems, // ADD THIS
 }) {
   const inputClass =
-    "w-full px-4 py-3 text-sm text-g-300 leading-5 hide-scrollbar bg-g-700 rounded-lg outline-none";
+    "w-full px-4 py-3 text-sm text-g-200 leading-5 hide-scrollbar bg-g-700 rounded-lg outline-none";
   const labelClass = "block text-xs font-medium text-g-200 leading-4 mb-1";
 
   // Personal Details Form
@@ -1237,7 +1205,7 @@ function SectionForm({
                   }
                   className="w-full px-4 py-3 flex items-center justify-between hover:bg-g-400 transition-colors text-g-200 font-semibold"
                 >
-                  <div className="leading-6 flex items-center gap-2.5">
+                  <div className="leading-6 flex items-center text-sm gap-2.5">
                     <div
                       onClick={(e) => {
                         e.stopPropagation();
@@ -1524,7 +1492,7 @@ function SectionForm({
                   }
                   className="w-full px-4 py-3 flex items-center justify-between hover:bg-g-400 transition-colors text-g-200 font-semibold"
                 >
-                  <div className="leading-6 flex items-center gap-2.5">
+                  <div className="leading-6 flex text-sm items-center gap-2.5">
                     <div
                       onClick={(e) => {
                         e.stopPropagation();
@@ -1764,7 +1732,7 @@ function SectionForm({
                   }
                   className="w-full px-4 py-3 flex items-center justify-between hover:bg-g-400 transition-colors text-g-200 font-semibold"
                 >
-                  <div className="leading-6 flex items-center gap-2.5">
+                  <div className="leading-6 flex text-sm items-center gap-2.5">
                     <div
                       onClick={(e) => {
                         e.stopPropagation();
@@ -1981,7 +1949,7 @@ function SectionForm({
                   }
                   className="w-full px-4 py-3 flex items-center justify-between hover:bg-g-400 transition-colors text-g-200 font-semibold"
                 >
-                  <div className="leading-6 flex items-center gap-2.5">
+                  <div className="leading-6 flex text-sm items-center gap-2.5">
                     <div
                       onClick={(e) => {
                         e.stopPropagation();
@@ -2366,14 +2334,7 @@ function ResumePreview({ resume, onSectionClick }) {
                       </a>
                     )}
                   </p>
-
-                  <span className="font-medium text-g-400 leading-5 text-sm">
-                    {cert.year}
-                  </span>
                 </div>
-                <p className="font-regular text-g-400 flex items-center gap-1.5 leading-5 text-xs">
-                  Issuer - {cert.issuer} | Credential ID - {cert.credentialId}
-                </p>
               </div>
             ))}
           </div>

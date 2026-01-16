@@ -48,7 +48,7 @@ const MyNextgenCV = () => {
 
   return (
     <>
-      {true ? (
+      {showResumeBuilder ? (
         // old one but working -
         // <ResumeBuilderPrev
         //   promptInput={prompt}
