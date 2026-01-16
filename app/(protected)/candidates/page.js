@@ -74,7 +74,8 @@ export default function CandidatesPage() {
     });
   };
 
-  const handleFetchCandidates = (params) => {
+  const handleFetchCandidates = () => {
+    const params = buildParams();
     setLoading(true);
     dispatch(asyncGetCandidates(params)).then(() => setLoading(false));
   };
@@ -96,14 +97,7 @@ export default function CandidatesPage() {
   };
 
   useEffect(() => {
-    const params = buildParams();
-    if (debounceSearchTerm) {
-      setLoading(true);
-      dispatch(asyncGetCandidates(params)).then(() => setLoading(false));
-    }
-
-    if (candidates.length === 0) handleFetchCandidates(params);
-    else setLoading(false);
+    handleFetchCandidates();
   }, [debounceSearchTerm, page, locationSearch]);
 
   const clearOnUnmount = () => {
@@ -201,7 +195,7 @@ export default function CandidatesPage() {
           setFilterData={setFilterData}
           setLoading={setLoading}
           handleApplyFilters={(params) => dispatch(asyncGetCandidates(params))}
-          handleResetFilters={()=> dispatch(asyncGetCandidates())}
+          handleResetFilters={() => dispatch(asyncGetCandidates())}
         />
       )}
     </>
