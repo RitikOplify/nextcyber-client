@@ -3,7 +3,10 @@
 import { BriefcaseBusiness, EyeIcon, Loader2, Undo2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { asyncGetJobApplicants } from "@/store/actions/jobActions";
+import {
+  asyncGetJobApplicants,
+  asyncUpdateApplicationStatus,
+} from "@/store/actions/jobActions";
 import Link from "next/link";
 import Table from "@/components/ui/Table";
 import Pagination from "@/components/Pagination";
@@ -14,17 +17,23 @@ const STATUS_STYLES = {
   APPLIED: "bg-g-50 text-g-400!",
   INVITED: "bg-[#16A600]",
   SHORTLISTED: "bg-[#FFAB00]",
-  INTERVIEW: "bg-[#0066FF]",
+  INTERVIEW_SCHEDULED: "bg-[#0066FF]",
   INTERVIEWED: "bg-[#7846EF]",
   HIRED: "bg-[#16A600]",
+  REJECTED: "bg-[#FF3B30]",
 };
 
 const tabs = [
-  { label: "Applied", value:"APPLIED", count: 0, active: true },
-  { label: "Shortlisted", value:"SHORTLISTED", count: 12, active: false },
-  { label: "Invited to Interview", value:"INTERVIEW_SCHEDULED", count: 7, active: false },
-  { label: "Rejected", value:"REJECTED", count: 4, active: false },
-  { label: "Hired", value:"HIRED", count: 1, active: false },
+  { label: "Applied", value: "APPLIED", count: 0, active: true },
+  { label: "Shortlisted", value: "SHORTLISTED", count: 0, active: false },
+  {
+    label: "Invited to Interview",
+    value: "INTERVIEW_SCHEDULED",
+    count: 0,
+    active: false,
+  },
+  { label: "Rejected", value: "REJECTED", count: 0, active: false },
+  { label: "Hired", value: "HIRED", count: 0, active: false },
 ];
 
 function JobDetailsHeader({ status, setStatus }) {
@@ -68,7 +77,7 @@ function JobDetailsHeader({ status, setStatus }) {
               }`}
             >
               {tab.count}
-            </span> 
+            </span>
             {tab.value === status && (
               <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"></div>
             )}
@@ -122,6 +131,23 @@ export default function Page() {
     });
   };
 
+  const updateApplicationStatus = (applicationId, newStatus) => {
+    // Dispatch an action to update the application status
+    dispatch(asyncUpdateApplicationStatus(applicationId, newStatus));
+    dispatch(
+      asyncGetJobApplicants(
+        {
+          id,
+          page,
+          limit: pageSize,
+          status: status?.toUpperCase() ?? "",
+          search,
+        },
+        setLoading
+      )
+    );
+  };
+
   const columns = [
     {
       label: "Job ID",
@@ -154,15 +180,50 @@ export default function Page() {
     {
       label: "Status",
       key: "status",
-      render: (row) => (
-        <span
-          className={`inline-flex px-3 py-1 text-xs text-white rounded-full ${
-            STATUS_STYLES[row.status]
-          }`}
-        >
-          {row.status}
-        </span>
-      ),
+      render: (row) => {
+        const [showDropdown, setShowDropdown] = useState(false);
+        return (
+          <div>
+            <span
+              onClick={() => setShowDropdown(!showDropdown)}
+              className={`inline-flex px-3 py-1 text-xs text-white rounded-full ${
+                STATUS_STYLES[row.status]
+              }`}
+            >
+              {row.status}
+            </span>
+            {showDropdown && (
+              <div className="absolute mt-1 bg-g-700 border border-g-500 rounded shadow-lg z-10">
+                {[
+                  { label: "INVITED", value: "INVITED" },
+                  { label: "SHORTLISTED", value: "SHORTLISTED" },
+                  { label: "INTERVIEW", value: "INTERVIEW_SCHEDULED" },
+
+                  { label: "HIRED", value: "HIRED" },
+                  { label: "REJECTED", value: "REJECTED" },
+                ].map((stat) => (
+                  <div
+                    key={stat.value}
+                    onClick={() => {
+                      setShowDropdown(false);
+                      updateApplicationStatus(row.id, stat.value);
+                    }}
+                    className="px-4 py-2 hover:bg-g-600 cursor-pointer"
+                  >
+                    <span
+                      className={`inline-flex px-3 py-1 text-xs text-white rounded-full ${
+                        STATUS_STYLES[stat.value]
+                      }`}
+                    >
+                      {stat.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      },
     },
   ];
 
@@ -174,8 +235,6 @@ export default function Page() {
       </p>
     </div>
   );
-
-
 
   return (
     <div>
@@ -192,21 +251,15 @@ export default function Page() {
           />
         </div>
 
-        {
-
-          loading ? (
-            <div className="flex justify-center items-center h-[60vh]">
-              <Loader2 className="w-8 h-8 text-gray-500 animate-spin" />
-            </div>
-          ) : applications?.length > 0 ? (
-            <Table columns={columns} data={applications} />
-          ) : (
-            <NotFound />
-          )
-
-        }
-
-       
+        {loading ? (
+          <div className="flex justify-center items-center h-[60vh]">
+            <Loader2 className="w-8 h-8 text-gray-500 animate-spin" />
+          </div>
+        ) : applications?.length > 0 ? (
+          <Table columns={columns} data={applications} />
+        ) : (
+          <NotFound />
+        )}
 
         <Pagination
           page={page}

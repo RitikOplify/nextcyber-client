@@ -3,6 +3,7 @@ import {
   companyjobApi,
   getJobsApi,
   jobApplicantsApi,
+  updateApplicationStatusApi,
 } from "@/api/jobApi";
 import { setApplications, setAppliedJobs, setJobs } from "../slices/jobSlice";
 import toast from "react-hot-toast";
@@ -55,5 +56,17 @@ export const asyncGetJobApplicants = (params, setIsLoading) => async (dispatch) 
     return [];
   } finally {
     setIsLoading?.(false);
+  }
+};
+
+
+export const asyncUpdateApplicationStatus = (applicationId, newStatus) => async (dispatch) => {
+  try {
+    // Assuming there's an API endpoint to update application status
+    await updateApplicationStatusApi(applicationId, newStatus);
+    toast.success("Application status updated successfully");
+    // Optionally, you can dispatch an action to refresh the applications list
+  } catch (error) {
+    toast.error(getErrorMessage(error, "Failed to update application status"));
   }
 };
