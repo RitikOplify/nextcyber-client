@@ -64,22 +64,15 @@ function JobsPage() {
 
   const fetchJobs = useCallback(() => {
     const params = buildParams();
-    if (debounceSearchTerm || locationSearch) {
-      setLoading(true);
-      dispatch(asyncGetJobs(params)).then(() => setLoading(false));
-    }
-
-    if (!debounceSearchTerm && !locationSearch) {
-      setLoading(true);
-      if (jobs?.length === 0)
-        dispatch(asyncGetJobs("")).then(() => setLoading(false));
-      else setLoading(false);
-    }
+    setLoading(true);
+    dispatch(asyncGetJobs(params)).then(() => setLoading(false));
   }, [buildParams, dispatch]);
 
   useEffect(() => {
-    fetchJobs();
-  }, [fetchJobs]);
+    if (jobs?.length === 0)
+      dispatch(asyncGetJobs("")).then(() => setLoading(false));
+    else setLoading(false);
+  }, []);
 
   useEffect(() => {
     if (user.role == "STUDENT" && appliedJob == 0)
@@ -116,6 +109,9 @@ function JobsPage() {
                 placeholder="Search jobs..."
                 className="w-full!"
                 clearOnUnmount={clearOnUnmount}
+                onClick={()=>{
+                  setSearchTerm(""); fetchJobs();
+                }}
               />
             </div>
 
