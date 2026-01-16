@@ -5,14 +5,15 @@ import { Input } from "@/components/ui/Input";
 import { SaveButton } from "@/components/ui/SaveButton";
 import { ImageUp, Info } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import SelectField from "@/components/SelectField";
 import { updateCompanyApi } from "@/api/companyApi";
 import { getErrorMessage } from "@/utils/errMessage";
 import validateImage from "@/helper/validateImage";
 import toast from "react-hot-toast";
 import TipsCard from "@/components/TipsCard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { asyncGetDropdown } from "@/store/actions/dropdownAction";
 
 function UploadBox({ title, onChange, error, validationRules, tips }) {
   const inputRef = useRef(null);
@@ -114,6 +115,8 @@ export default function Profile() {
 
   const { user } = useSelector((state) => state.auth);
   const company = user?.companyProfile;
+  const dispatch = useDispatch();
+  const { rolesInCompanyDropdown } = useSelector((state) => state.dropdown);
 
   const [roleWithCompany, setRoleWithCompany] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -138,6 +141,11 @@ export default function Profile() {
 
     setRoleWithCompany(company.roleWithCompany || "");
   }, [user, company, reset]);
+
+  const fetchDropdowns = useCallback(() => {
+    if (rolesInCompanyDropdown?.length === 0)
+      dispatch(asyncGetDropdown({ name: "rolesInCompany" }));
+  }, [dispatch]);
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
@@ -181,6 +189,17 @@ export default function Profile() {
       setIsSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    fetchDropdowns();
+  }, [fetchDropdowns]);
+
+   const pillClass = (isActive) =>
+    `px-2 py-1 rounded-full border transition text-xs leading-4 font-medium ${
+      isActive
+        ? "bg-primary text-white border-primary"
+        : "bg-g-600 text-g-200 border-g-500 hover:bg-g-700"
+    }`;
 
   return (
     <form
@@ -293,15 +312,18 @@ export default function Profile() {
         <div>
           <SelectField
             label="Role within the company"
+            name="roleWithCompany"
             placeholder="Search"
-            options={[
-              { value: "FOUNDER", label: "Founder" },
-              { value: "CEO", label: "Ceo" },
-              { value: "HR_MANAGER", label: "Hr Manager" },
-            ]}
-            value={roleWithCompany}
-            onChange={(role) => setRoleWithCompany(role)}
+            options={rolesInCompanyDropdown || []}
+            onChange={(val) => setRoleWithCompany(val)}
+            error={errors.roleWithCompany?.message}
+            rules={{ required: "Role is required" }}
           />
+          {roleWithCompany && (
+            <button className={`${pillClass()} mt-4 capitalize`}>
+              {roleWithCompany.toLowerCase()}
+            </button>
+          )}
         </div>
 
         <Controller

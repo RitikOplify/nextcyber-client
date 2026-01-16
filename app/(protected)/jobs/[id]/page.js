@@ -22,8 +22,8 @@ const STATUS_STYLES = {
 const tabs = [
   { label: "Applied", value:"APPLIED", count: 0, active: true },
   { label: "Shortlisted", value:"SHORTLISTED", count: 12, active: false },
-  { label: "Invited to Interview", value:"INVITED", count: 7, active: false },
-  { label: "Interviewed", value:"INTERVIEWED", count: 4, active: false },
+  { label: "Invited to Interview", value:"INTERVIEW_SCHEDULED", count: 7, active: false },
+  { label: "Rejected", value:"REJECTED", count: 4, active: false },
   { label: "Hired", value:"HIRED", count: 1, active: false },
 ];
 
