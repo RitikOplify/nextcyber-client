@@ -7,7 +7,7 @@ function Search({
   placeholder,
   className,
   onClick,
-  clearOnUnmount,
+  clearOnUnmount = () => {},
 }) {
   const searchTermRef = useRef(value);
 
