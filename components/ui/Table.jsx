@@ -13,7 +13,7 @@ export default function Table({
     <div className="w-full bg-g-600">
       <div className={`overflow-y-auto`} style={{ maxHeight }}>
         <table className="min-w-full table-fixed border-separate border-spacing-0 text-sm">
-          <thead className="bg-g-600 text-g-200 sticky top-0 z-40 ">
+          <thead className="bg-g-600 text-g-200 sticky top-0 ">
             <tr className="whitespace-nowrap">
               {columns.map((col, index) => (
                 <th
