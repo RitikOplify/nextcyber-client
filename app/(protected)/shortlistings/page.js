@@ -134,6 +134,7 @@ export default function ShortlistingsPage() {
                 )
               }
               clearOnUnmount={clearOnUnmount}
+              handleClear={handleClearSearch}
             />
           </div>
 
