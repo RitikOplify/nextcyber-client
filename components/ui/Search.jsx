@@ -6,7 +6,7 @@ function Search({
   setValue,
   placeholder,
   className,
-  onClick,
+  handleClear = () => {},
   clearOnUnmount = () => {},
 }) {
   const searchTermRef = useRef(value);
@@ -16,7 +16,7 @@ function Search({
   }, [value]);
 
   useEffect(() => {
-    return () => clearOnUnmount() && setValue("");
+    return () => (value.length > 0 ? clearOnUnmount?.() && setValue("") : null);
   }, []);
 
   return (
@@ -30,7 +30,7 @@ function Search({
           className="bg-transparent text-sm text-[#9C9C9D] outline-none w-full"
         />
         {value && (
-          <button onClick={onClick || (() => setValue(""))}>
+          <button onClick={handleClear}>
             <X
               size={20}
               className=" text-g-200 cursor-pointer hover:text-g-100 shrink-0"

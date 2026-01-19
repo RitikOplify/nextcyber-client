@@ -138,7 +138,7 @@ export default function JobFilter({
   if (!isOpen) return null;
 
   return (
-    <div className="absolute top-0 right-0 z-90 w-full max-w-[360px] backdrop-blur-[40px] bg-g-900/40 text-g-100 max-h-screen p-6 flex flex-col">
+    <div className="absolute top-0 right-0 z-90 w-full max-w-[360px] backdrop-blur-[40px] bg-g-900/40 text-g-100 h-screen p-6 flex flex-col">
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-xl font-semibold">Filters</h2>
         <button
