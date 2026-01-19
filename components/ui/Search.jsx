@@ -16,7 +16,9 @@ function Search({
   }, [value]);
 
   useEffect(() => {
-    return () => (value.length > 0 ? clearOnUnmount?.() && setValue("") : null);
+    return () => {
+      if (searchTermRef.current.length > 0) clearOnUnmount?.();
+    };
   }, []);
 
   return (

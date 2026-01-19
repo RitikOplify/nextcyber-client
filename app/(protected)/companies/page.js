@@ -75,6 +75,7 @@ function CompaniesPage() {
 
   const clearOnUnmount = () => {
     dispatch(removeCompanies());
+    setSearchTerm("");
     return true;
   };
 
