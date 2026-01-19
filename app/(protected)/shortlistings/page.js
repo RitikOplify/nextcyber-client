@@ -17,14 +17,14 @@ import { removeShortlistedCandidates } from "@/store/slices/candidateSlice";
 export default function ShortlistingsPage() {
   const { user } = useSelector((state) => state.auth);
   const { shortlistedCandidates, totalPages } = useSelector(
-    (state) => state.candidate
+    (state) => state.candidate,
   );
   const [page, setPage] = useState(1);
   const [pageLimit, setPageLimit] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [debounceSearchTerm, setDebounceSearchTerm] = useState("");
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [locationSearch, setLocationSearch] = useState("");
   const dispatch = useDispatch();
   const [showFilter, setShowFilter] = useState(false);
@@ -38,12 +38,6 @@ export default function ShortlistingsPage() {
     remotePolicy: "",
     experienceRange: [0, 1],
   });
-
-  const handleClearSearch = () => {
-    setLoading(true);
-    setSearchTerm("");
-    dispatch(asyncShortlistedCandidates()).then(() => setLoading(false));
-  };
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -64,26 +58,17 @@ export default function ShortlistingsPage() {
       ...Object.fromEntries(
         Object.entries({
           search: debounceSearchTerm, // Use debounced search term
-        }).filter(([_, value]) => value !== "")
+        }).filter(([_, value]) => value !== ""),
       ),
     };
     return params;
-  }, [page, debounceSearchTerm, locationSearch]);
+  }, [page, debounceSearchTerm, locationSearch, pageLimit]);
 
   const handleFetchCandidates = () => {
     setLoading(true);
-    const params = buildParams();
-    if (debounceSearchTerm) {
-      dispatch(asyncShortlistedCandidates(params)).then(() =>
-        setLoading(false)
-      );
-    }
-
-    if (shortlistedCandidates.length === 0)
-      dispatch(asyncShortlistedCandidates(params)).then(() =>
-        setLoading(false)
-      );
-    else setLoading(false);
+    dispatch(asyncShortlistedCandidates(buildParams())).then(() =>
+      setLoading(false),
+    );
   };
 
   const handleFavoriteToggle = async (candidate) => {
@@ -94,11 +79,11 @@ export default function ShortlistingsPage() {
       ? dispatch(
           asyncRemoveCandidateFromFavorite(
             candidate.id,
-            user?.companyProfile.id
-          )
+            user?.companyProfile.id,
+          ),
         )
       : dispatch(
-          asyncAddCandidateToFavorite(candidate.id, user?.companyProfile.id)
+          asyncAddCandidateToFavorite(candidate.id, user?.companyProfile.id),
         );
   };
 
@@ -109,12 +94,19 @@ export default function ShortlistingsPage() {
   };
 
   useEffect(() => {
-    handleFetchCandidates();
-  }, [page, debounceSearchTerm, locationSearch]);
+    if (shortlistedCandidates?.length === 0) handleFetchCandidates();
+  }, []);
 
   const clearOnUnmount = () => {
     dispatch(removeShortlistedCandidates());
   };
+
+  const handleClearSearch = () => {
+    setLoading(true);
+    setSearchTerm("");
+    dispatch(asyncShortlistedCandidates()).then(() => setLoading(false));
+  };
+
   return (
     <>
       <div className="h-[calc(100vh-100.6px)] grid grid-rows-[auto_1fr_auto] relative overflow-y-hidden!">
@@ -126,7 +118,7 @@ export default function ShortlistingsPage() {
               setValue={setSearchTerm}
               placeholder="Search candidates..."
               className="w-full!"
-              onClick={handleClearSearch}
+              handleClear={handleClearSearch}
               clearOnUnmount={clearOnUnmount}
             />
           </div>
@@ -138,7 +130,7 @@ export default function ShortlistingsPage() {
                 setLocationSearch(
                   locationData.city && locationData.state
                     ? `${locationData?.city}, ${locationData?.state}, ${locationData?.country}`
-                    : ""
+                    : "",
                 )
               }
               clearOnUnmount={clearOnUnmount}

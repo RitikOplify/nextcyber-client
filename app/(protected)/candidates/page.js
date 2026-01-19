@@ -20,7 +20,7 @@ export default function CandidatesPage() {
   const { candidates, totalPages } = useSelector((state) => state.candidate);
   const [page, setPage] = useState(1);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [debounceSearchTerm, setDebounceSearchTerm] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
@@ -36,12 +36,6 @@ export default function CandidatesPage() {
     remotePolicy: "",
     experienceRange: { min: 0, max: 10 },
   });
-
-  const handleClearSearch = () => {
-    setLoading(true);
-    setSearchTerm("");
-    dispatch(asyncGetCandidates()).then(() => setLoading(false));
-  };
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -61,7 +55,7 @@ export default function CandidatesPage() {
         Object.entries({
           search: debounceSearchTerm, // Use debounced search term
           location: locationSearch,
-        }).filter(([_, value]) => value !== "")
+        }).filter(([_, value]) => value !== ""),
       ),
     };
     return params;
@@ -88,20 +82,26 @@ export default function CandidatesPage() {
       ? dispatch(
           asyncRemoveCandidateFromFavorite(
             candidate.id,
-            user?.companyProfile.id
-          )
+            user?.companyProfile.id,
+          ),
         )
       : dispatch(
-          asyncAddCandidateToFavorite(candidate.id, user?.companyProfile.id)
+          asyncAddCandidateToFavorite(candidate.id, user?.companyProfile.id),
         );
   };
 
   useEffect(() => {
-    handleFetchCandidates();
-  }, [debounceSearchTerm, page, locationSearch]);
+    if (candidates?.length === 0) handleFetchCandidates();
+  }, []);
 
   const clearOnUnmount = () => {
     dispatch(removeCandidates());
+  };
+
+  const handleClearSearch = () => {
+    setLoading(true);
+    setSearchTerm("");
+    dispatch(asyncGetCandidates()).then(() => setLoading(false));
   };
 
   return (
@@ -114,7 +114,7 @@ export default function CandidatesPage() {
               setValue={setSearchTerm}
               placeholder="Search candidates..."
               className="w-full!"
-              onClick={handleClearSearch}
+              handleClear={handleClearSearch}
               clearOnUnmount={clearOnUnmount}
             />
           </div>
@@ -126,7 +126,7 @@ export default function CandidatesPage() {
                 setLocationSearch(
                   locationData.city && locationData.state
                     ? `${locationData?.city}, ${locationData?.state}, ${locationData?.country}`
-                    : ""
+                    : "",
                 )
               }
             />

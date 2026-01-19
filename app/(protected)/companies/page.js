@@ -12,7 +12,7 @@ import { removeCompanies } from "@/store/slices/companySlice";
 
 function CompaniesPage() {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { companies } = useSelector((state) => state.companies);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -44,7 +44,7 @@ function CompaniesPage() {
           location: locationSearch || "",
           industry: debouncedSearchTerm,
           companySize: filterData.companySize,
-        }).filter(([_, value]) => value !== "")
+        }).filter(([_, value]) => value !== ""),
       ),
     };
     return params;
@@ -53,27 +53,16 @@ function CompaniesPage() {
   const fetchCompanies = useCallback(() => {
     setLoading(true);
     const params = buildParams();
-    if (debouncedSearchTerm) {
-      dispatch(asyncGetCompanies(params, setLoading)).then((data) => {
-        setTotalPages(data?.totalPages || 1);
-        setLoading(false);
-      });
-    }
-
-    if (companies?.length === 0 && !debouncedSearchTerm) {
-      dispatch(asyncGetCompanies("", setLoading)).then((data) => {
-        setTotalPages(data?.totalPages || 1);
-        setLoading(false);
-      });
-    } else {
+    dispatch(asyncGetCompanies(params, setLoading)).then((data) => {
+      setTotalPages(data?.totalPages || 1);
       setLoading(false);
-    }
+    });
   }, [dispatch, buildParams]);
 
   const handleSearch = () => {
     setLoading(true);
     const params = buildParams();
-    console.log("Searching with params:", params )
+    console.log("Searching with params:", params);
     dispatch(asyncGetCompanies(params, setLoading)).then((data) => {
       setTotalPages(data?.totalPages || 1);
       setLoading(false);
@@ -81,11 +70,18 @@ function CompaniesPage() {
   };
 
   useEffect(() => {
-    fetchCompanies();
-  }, [fetchCompanies]);
+    if (companies?.length === 0) fetchCompanies();
+  }, []);
 
   const clearOnUnmount = () => {
     dispatch(removeCompanies());
+    return true;
+  };
+
+  const handleClearSearch = () => {
+    setLoading(true);
+    setSearchTerm("");
+    dispatch(asyncGetCompanies()).then(() => setLoading(false));
   };
 
   return (
@@ -99,6 +95,7 @@ function CompaniesPage() {
               placeholder="Search companies..."
               className="w-full!"
               clearOnUnmount={clearOnUnmount}
+              handleClear={handleClearSearch}
             />
           </div>
 
@@ -109,7 +106,7 @@ function CompaniesPage() {
                 setLocationSearch(
                   locationData.city && locationData.state
                     ? `${locationData?.city}, ${locationData?.state}, ${locationData?.country}`
-                    : ""
+                    : "",
                 )
               }
               clearOnUnmount={clearOnUnmount}

@@ -7,94 +7,78 @@ import JobApplyModel from "@/components/modal/JobApply";
 import JobDetailsModal from "@/components/modal/JobDetailsModal";
 import AdvancePagination from "@/components/ui/AdvancePagination";
 import Search from "@/components/ui/Search";
-import { asyncGetAppliedJob, asyncGetJobs } from "@/store/actions/jobActions";
+import { asyncGetJobs } from "@/store/actions/jobActions";
 import { removeJobs } from "@/store/slices/jobSlice";
 import { Loader2, SlidersHorizontal } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 function JobsPage() {
-  const [activeTab, setActiveTab] = useState("Browse Jobs");
   const [jobOpen, setJobOpen] = useState(false);
   const [jobId, setJobId] = useState(null);
-  const { user } = useSelector((state) => state.auth);
   const { jobs } = useSelector((state) => state.jobs);
   const [selectedJob, setSelectedJob] = useState(null);
   const dispatch = useDispatch();
-  const { appliedJob } = useSelector((state) => state.jobs);
   const [searchTerm, setSearchTerm] = useState("");
-  const [debounceSearchTerm, setDebounceSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [locationSearch, setLocationSearch] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [filterData, setFilterData] = useState({
-    contractType: "TEMPORARY",
-    remotePolicy: "onsite",
+    contractType: "",
+    remotePolicy: "",
     skills: [],
     salaryRange: [],
     experienceRange: { min: 0, max: 10 },
   });
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const handleToggleFilter = () => {
-    setIsFilterOpen(!isFilterOpen);
+  const handleToggleFilter = () => setIsFilterOpen(!isFilterOpen);
+
+  const clearOnUnmount = () => {
+    dispatch(removeJobs());
+    return true;
   };
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebounceSearchTerm(searchTerm);
-    }, 500);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [searchTerm]);
 
   const buildParams = useCallback(() => {
     const params = {
       page,
       ...Object.fromEntries(
         Object.entries({
-          search: debounceSearchTerm, // Use debounced search term
           location: locationSearch || "",
-        }).filter(([_, value]) => value !== "")
+          title: searchTerm,
+          contractType: filterData.contractType,
+          remotePolicy: filterData.remotePolicy,
+        }).filter(([_, value]) => value !== ""),
       ),
     };
     return params;
-  }, [page, debounceSearchTerm, locationSearch]);
+  }, [page, searchTerm, locationSearch, filterData]);
 
   const fetchJobs = useCallback(() => {
-    const params = buildParams();
     setLoading(true);
-    dispatch(asyncGetJobs(params)).then(() => setLoading(false));
-  }, [buildParams, dispatch]);
+    dispatch(asyncGetJobs(buildParams(), setLoading)).then(() =>
+      setLoading(false),
+    );
+  }, [buildParams]);
 
   useEffect(() => {
-    if (jobs?.length === 0)
-      dispatch(asyncGetJobs("")).then(() => setLoading(false));
-    else setLoading(false);
+    console.log("Jobs updated:", jobs.length);
+    if (jobs?.length === 0) fetchJobs();
   }, []);
-
-  useEffect(() => {
-    if (user.role == "STUDENT" && appliedJob == 0)
-      dispatch(asyncGetAppliedJob());
-  }, []);
-
-  const applyJob = async (id) => {
-    setJobId(id);
-    setJobOpen(true);
-  };
-  const truncateChars = (text, limit = 10) => {
-    if (!text) return "";
-    return text.length > limit ? text.slice(0, limit) + "..." : text;
-  };
 
   const handleSearch = () => {
     setPage(1);
     fetchJobs();
   };
 
-  const clearOnUnmount = () => {
-    dispatch(removeJobs());
+  const applyJob = (id) => {
+    setJobId(id);
+    setJobOpen(true);
+  };
+
+  const handleClearSearch = () => {
+    setLoading(true);
+    setSearchTerm("");
+    dispatch(asyncGetJobs()).then(() => setLoading(false));
   };
 
   return (
@@ -109,9 +93,7 @@ function JobsPage() {
                 placeholder="Search jobs..."
                 className="w-full!"
                 clearOnUnmount={clearOnUnmount}
-                onClick={()=>{
-                  setSearchTerm(""); fetchJobs();
-                }}
+                handleClear={handleClearSearch}
               />
             </div>
 
@@ -122,7 +104,7 @@ function JobsPage() {
                   setLocationSearch(
                     locationData.city && locationData.state
                       ? `${locationData?.city}, ${locationData?.state}, ${locationData?.country}`
-                      : ""
+                      : "",
                   )
                 }
                 clearOnUnmount={clearOnUnmount}
