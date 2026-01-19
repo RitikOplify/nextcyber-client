@@ -95,6 +95,8 @@ export default function CandidatesPage() {
   }, []);
 
   const clearOnUnmount = () => {
+    console.log("Clearing candidates on unmount");
+    setSearchTerm("");
     dispatch(removeCandidates());
   };
 
