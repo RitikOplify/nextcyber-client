@@ -110,6 +110,7 @@ function CompaniesPage() {
                 )
               }
               clearOnUnmount={clearOnUnmount}
+              handleClear={handleClearSearch}
             />
           </div>
 

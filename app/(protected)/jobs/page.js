@@ -108,6 +108,7 @@ function JobsPage() {
                   )
                 }
                 clearOnUnmount={clearOnUnmount}
+                handleClear={handleClearSearch}
               />
             </div>
 

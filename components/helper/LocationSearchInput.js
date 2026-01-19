@@ -8,6 +8,7 @@ export default function LocationSearchInput({
   value,
   onPlaceSelected,
   clearOnUnmount,
+  handleClear = () => {},
 }) {
   const {
     placesService,
@@ -150,6 +151,7 @@ export default function LocationSearchInput({
             setSelectedLocation(null);
             onPlaceSelected?.({});
             setDropdownVisible(false);
+            handleClear();
           }}
         />
       ) : (
