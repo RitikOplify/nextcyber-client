@@ -141,8 +141,7 @@ function JobsPage() {
                   onClick={handleToggleFilter}
                   className="bg-primary/90 rounded-lg px-4 py-3.5 text-gray-300 cursor-pointer flex items-center gap-2"
                 >
-                  <SlidersHorizontal className="h-4 w-4" />
-                  <span>Filters Applied</span>
+                  <span className="truncate">Filters Applied</span>
                 </button>
               ) : (
                 <button

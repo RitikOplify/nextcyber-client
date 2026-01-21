@@ -72,7 +72,7 @@ export default function AdvancePagination({
                 ? "bg-g-400 text-white font-medium"
                 : page === "..."
                 ? "text-gray-500 cursor-default hover:bg-transparent"
-                : "bg-gray-200 text-gray-700 "
+                : "bg-gray-200 text-gray-700 cursor-pointer hover:bg-g-400 hover:text-white"
             }`}
           >
             {page}

@@ -170,7 +170,7 @@ export default function ShortlistingsPage() {
             {isFilterApplied() ? (
               <button
                 onClick={handleToggleFilter}
-                className="bg-primary/90 rounded-lg px-4 py-3.5 text-gray-300 cursor-pointer flex items-center gap-2"
+                className="bg-primary/90 rounded-lg px-4 py-3.5 text-gray-300 cursor-pointer flex items-center gap-2 truncate"
               >
                 <span className="truncate">Filters Applied</span>
               </button>
