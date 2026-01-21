@@ -7,6 +7,7 @@ import JobApplyModel from "@/components/modal/JobApply";
 import JobDetailsModal from "@/components/modal/JobDetailsModal";
 import AdvancePagination from "@/components/ui/AdvancePagination";
 import Search from "@/components/ui/Search";
+import useDidChange from "@/hooks/useDidChange";
 import { asyncGetJobs } from "@/store/actions/jobActions";
 import { removeJobs } from "@/store/slices/jobSlice";
 import { Loader2, SlidersHorizontal } from "lucide-react";
@@ -16,11 +17,11 @@ import { useDispatch, useSelector } from "react-redux";
 function JobsPage() {
   const [jobOpen, setJobOpen] = useState(false);
   const [jobId, setJobId] = useState(null);
-  const { jobs } = useSelector((state) => state.jobs);
+  const { jobs, currentJobPage } = useSelector((state) => state.jobs);
   const [selectedJob, setSelectedJob] = useState(null);
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(currentJobPage || 1);
   const [locationSearch, setLocationSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [filterData, setFilterData] = useState({
@@ -44,7 +45,7 @@ function JobsPage() {
       ...Object.fromEntries(
         Object.entries({
           location: locationSearch || "",
-          title: searchTerm,
+          Search: searchTerm,
           contractType: filterData.contractType,
           remotePolicy: filterData.remotePolicy,
         }).filter(([_, value]) => value !== ""),
@@ -80,6 +81,22 @@ function JobsPage() {
     setSearchTerm("");
     dispatch(asyncGetJobs()).then(() => setLoading(false));
   };
+
+  const isFilterApplied = () => {
+    return (
+      filterData.contractType ||
+      filterData.remotePolicy ||
+      (filterData.skills && filterData.skills.length > 0) ||
+      (filterData.salaryRange && filterData.salaryRange.length > 0) ||
+      (filterData.experienceRange &&
+        (filterData.experienceRange.min > 0 ||
+          filterData.experienceRange.max < 10))
+    );
+  };
+
+  useDidChange(page,() => {
+    fetchJobs();
+  });
 
   return (
     <>
@@ -119,13 +136,23 @@ function JobsPage() {
               >
                 Search
               </button>
-              <button
-                onClick={handleToggleFilter}
-                className="flex items-center gap-2 bg-g-600 rounded-lg px-12 py-3.5 text-gray-300 cursor-pointer"
-              >
-                <SlidersHorizontal className="w-4 h-4" />
-                Filter
-              </button>
+              {isFilterApplied() ? (
+                <button
+                  onClick={handleToggleFilter}
+                  className="bg-primary/90 rounded-lg px-4 py-3.5 text-gray-300 cursor-pointer flex items-center gap-2"
+                >
+                  <SlidersHorizontal className="h-4 w-4" />
+                  <span>Filters Applied</span>
+                </button>
+              ) : (
+                <button
+                  onClick={handleToggleFilter}
+                  className="flex items-center gap-2 bg-g-600 rounded-lg px-12 py-3.5 text-gray-300 cursor-pointer"
+                >
+                  <SlidersHorizontal className="w-4 h-4" />
+                  Filter
+                </button>
+              )}
             </div>
           </div>
 
@@ -167,7 +194,7 @@ function JobsPage() {
                     </div>
                   </div>
                   {selectedJob && (
-                    <div className="mx-auto absolute z-50 w-[calc(100%-40px)] md:static md:block md:w-[67.1%]">
+                    <div className="mx-auto absolute  w-[calc(100%-40px)] md:static md:block md:w-[67.1%]">
                       <JobDetailsModal
                         selectedJob={selectedJob}
                         onClose={() => setSelectedJob(null)}

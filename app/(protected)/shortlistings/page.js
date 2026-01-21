@@ -13,13 +13,14 @@ import CandidateFilter from "@/components/filters/CandidateFilter";
 import AdvancePagination from "@/components/ui/AdvancePagination";
 import Search from "@/components/ui/Search";
 import { removeShortlistedCandidates } from "@/store/slices/candidateSlice";
+import useDidChange from "@/hooks/useDidChange";
 
 export default function ShortlistingsPage() {
   const { user } = useSelector((state) => state.auth);
-  const { shortlistedCandidates, totalPages } = useSelector(
+  const { shortlistedCandidates, totalPages, shortlistingCurrentPage } = useSelector(
     (state) => state.candidate,
   );
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(shortlistingCurrentPage || 1);
   const [pageLimit, setPageLimit] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [debounceSearchTerm, setDebounceSearchTerm] = useState("");
@@ -33,10 +34,13 @@ export default function ShortlistingsPage() {
     location: "",
     experience: "",
     skills: [],
-    salaryRange: [0, 0],
+    salaryRange: {
+      min: 0,
+      max: 0,
+    },
     contractType: "",
     remotePolicy: "",
-    experienceRange: [0, 1],
+    experienceRange: { min: 0, max: 10 },
   });
 
   useEffect(() => {
@@ -64,12 +68,12 @@ export default function ShortlistingsPage() {
     return params;
   }, [page, debounceSearchTerm, locationSearch, pageLimit]);
 
-  const handleFetchCandidates = () => {
+  const handleFetchCandidates = useCallback(() => {
     setLoading(true);
     dispatch(asyncShortlistedCandidates(buildParams())).then(() =>
       setLoading(false),
     );
-  };
+  }, [buildParams]);
 
   const handleFavoriteToggle = async (candidate) => {
     console.log("Toggling favorite for candidate:", candidate);
@@ -97,6 +101,10 @@ export default function ShortlistingsPage() {
     if (shortlistedCandidates?.length === 0) handleFetchCandidates();
   }, []);
 
+  useDidChange(page, () => {
+    handleFetchCandidates();
+  }, [page, pageLimit]);
+
   const clearOnUnmount = () => {
     dispatch(removeShortlistedCandidates());
   };
@@ -105,6 +113,19 @@ export default function ShortlistingsPage() {
     setLoading(true);
     setSearchTerm("");
     dispatch(asyncShortlistedCandidates()).then(() => setLoading(false));
+  };
+
+  const isFilterApplied = () => {
+    return (
+      filterData.contractType ||
+      filterData.remotePolicy ||
+      (filterData.skills && filterData.skills.length > 0) ||
+      (filterData.salaryRange &&
+        (filterData.salaryRange.min > 0 || filterData.salaryRange.max > 0)) ||
+      (filterData.experienceRange &&
+        (filterData.experienceRange.min > 0 ||
+          filterData.experienceRange.max < 10))
+    );
   };
 
   return (
@@ -146,13 +167,22 @@ export default function ShortlistingsPage() {
               Search
             </button>
 
-            <button
-              onClick={handleToggleFilter}
-              className="flex items-center gap-2 bg-g-600 border border-g-600 rounded-lg px-12 py-3.5 text-gray-300 cursor-pointer"
-            >
-              <SlidersHorizontal className="w-4 h-4" />
-              Filter
-            </button>
+            {isFilterApplied() ? (
+              <button
+                onClick={handleToggleFilter}
+                className="bg-primary/90 rounded-lg px-4 py-3.5 text-gray-300 cursor-pointer flex items-center gap-2"
+              >
+                <span className="truncate">Filters Applied</span>
+              </button>
+            ) : (
+              <button
+                onClick={handleToggleFilter}
+                className="flex items-center gap-2 bg-g-600 rounded-lg px-12 py-3.5 text-gray-300 cursor-pointer"
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+                Filter
+              </button>
+            )}
           </div>
         </div>
 

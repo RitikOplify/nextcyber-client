@@ -9,6 +9,7 @@ import AdvancePagination from "@/components/ui/AdvancePagination";
 import CompanyFilter from "@/components/filters/CompanyFilter";
 import Search from "@/components/ui/Search";
 import { removeCompanies } from "@/store/slices/companySlice";
+import useDidChange from "@/hooks/useDidChange";
 
 function CompaniesPage() {
   const dispatch = useDispatch();
@@ -84,6 +85,10 @@ function CompaniesPage() {
     setSearchTerm("");
     dispatch(asyncGetCompanies()).then(() => setLoading(false));
   };
+
+  useDidChange(page, () => {
+    fetchCompanies();
+  });
 
   return (
     <>
