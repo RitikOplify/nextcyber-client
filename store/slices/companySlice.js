@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   companies: [],
+  currentPage: 1,
 };
 
 export const companyReducer = createSlice({
@@ -8,9 +9,10 @@ export const companyReducer = createSlice({
   initialState,
   reducers: {
     setCompany: (state, action) => {
-      state.companies = action.payload;
+      state.companies = action.payload.companies;
+      state.currentPage = action.payload.page;
     },
-   removeCompanies: (state) => {
+    removeCompanies: (state) => {
       state.companies = [];
     },
   },

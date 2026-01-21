@@ -17,8 +17,8 @@ export default function JobFilter({
   if (!isOpen) return null;
   // Local state
   const [FormData, setFormData] = useState({
-    contractType: filterData.contractType || "TEMPORARY",
-    remotePolicy: filterData.remotePolicy || "onsite",
+    contractType: filterData.contractType || "",
+    remotePolicy: filterData.remotePolicy || "",
     minSalary: "",
     maxSalary: "",
     experienceRange: filterData.experienceRange || { min: 0, max: 10 },
@@ -34,8 +34,8 @@ export default function JobFilter({
   useEffect(() => {
     if (filterData) {
       setFormData({
-        contractType: filterData.contractType || "TEMPORARY",
-        remotePolicy: filterData.remotePolicy || "onsite",
+        contractType: filterData.contractType || "",
+        remotePolicy: filterData.remotePolicy || "",
         experienceRange: filterData.experienceRange,
         skills: filterData.skills,
       });
@@ -66,7 +66,7 @@ export default function JobFilter({
 
   const handleRemoveSkill = (skillToRemove) => {
     const updatedSkills = (filterData.skills || []).filter(
-      (s) => s !== skillToRemove
+      (s) => s !== skillToRemove,
     );
     setFilterData({ ...filterData, skills: updatedSkills });
   };
@@ -84,12 +84,11 @@ export default function JobFilter({
     });
 
     setFilterData({
-      location: "",
-      experienceRange: { min: 0, max: 10 },
+      contractType: "",
+      remotePolicy: "",
       skills: [],
-      salaryRange: [0, 0],
-      contractType: "TEMPORARY",
-      remotePolicy: "onsite",
+      salaryRange: [],
+      experienceRange: { min: 0, max: 10 },
     });
     dispatch(asyncGetJobs())
       .then(() => {

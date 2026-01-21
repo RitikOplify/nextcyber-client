@@ -4,8 +4,14 @@ import Link from "next/link";
 import QuillContentViewer from "../QuillContentViewer";
 
 const CompanyCard = ({ company }) => {
+  const truncateText = (text, maxLength) => {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength) + "...";
+  };
   return (
     <div className="w-full bg-g-700 rounded-[10px] overflow-hidden shadow-2xl p-4 border border-g-500 min-h-full">
+      <div className="flex flex-col h-full justify-between">
+      <div>
       <div
         className="h-28 rounded-[10px]"
         style={{
@@ -38,6 +44,7 @@ const CompanyCard = ({ company }) => {
           {company?.companyName}
         </h2>
       </div>
+      </div>
 
       <div className="flex flex-col justify-between h-[250px] ">
 
@@ -47,8 +54,8 @@ const CompanyCard = ({ company }) => {
             "Innovating the future, one step at a time."}
         </p>
         <span className="text-g-100  leading-relaxed mb-4 line-clamp-3">
-          {company?.about ? (
-            <QuillContentViewer html={company.about} />
+          {company?.about && company?.about.length > 0 ? (
+            <QuillContentViewer html={truncateText(company.about, 100)} />
           ) : (
             "Google LLC is an American multinational technology corporation focused on information technology, online advertising..."
           )}
@@ -77,6 +84,7 @@ const CompanyCard = ({ company }) => {
         <button className="bg-primary text-white p-3.5 rounded-lg transition-colors cursor-pointer">
           <Globe className="w-5 h-5" />
         </button>
+      </div>
       </div>
       </div>
     </div>

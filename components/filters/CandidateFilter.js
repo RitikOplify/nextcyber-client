@@ -8,11 +8,12 @@ import SelectField from "../SelectField";
 import { asyncGetDropdown } from "@/store/actions/dropdownAction";
 
 const DEFAULT_FILTERS = {
-  contractType: "TEMPORARY",
-  remotePolicy: "onsite",
-  salaryRange: [0, 0],
-  experienceRange: { min: 0, max: 10 },
+  experience: "",
   skills: [],
+  salaryRange: { min: 0, max: 0 },
+  contractType: "",
+  remotePolicy: "",
+  experienceRange: { min: 0, max: 10 },
 };
 
 export default function CandidateFilter({
@@ -72,8 +73,8 @@ export default function CandidateFilter({
       contractType: formState.contractType,
       remotePolicy: formState.remotePolicy,
       salary:
-        formState.salaryRange[0] && formState.salaryRange[1]
-          ? `${formState.salaryRange[0]}-${formState.salaryRange[1]}`
+        formState.salaryRange.min && formState.salaryRange.max
+          ? `${formState.salaryRange.min}-${formState.salaryRange.max}`
           : null,
       experience: `${formState.experienceRange.min}-${formState.experienceRange.max}`,
       skills: formState.skills.join(","),
@@ -137,13 +138,13 @@ export default function CandidateFilter({
                 </label>
                 <input
                   key={label.label}
-                  value={formState.salaryRange[i] || ""}
+                  value={i === 0 ? formState.salaryRange.min : formState.salaryRange.max || ""}
                   placeholder={label.placeholder}
                   onChange={(e) =>
-                    updateField("salaryRange", [
-                      i === 0 ? +e.target.value : formState.salaryRange[0],
-                      i === 1 ? +e.target.value : formState.salaryRange[1],
-                    ])
+                    updateField("salaryRange", {
+                      ...formState.salaryRange,
+                      [i === 0 ? "min" : "max"]: +e.target.value,
+                    })
                   }
                   className="bg-g-700 border border-g-500 rounded-lg px-3 py-3 text-sm outline-none w-full text-g-300"
                 />

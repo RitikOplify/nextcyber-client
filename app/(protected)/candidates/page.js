@@ -14,11 +14,13 @@ import toast from "react-hot-toast";
 import AdvancePagination from "@/components/ui/AdvancePagination";
 import Search from "@/components/ui/Search";
 import { removeCandidates } from "@/store/slices/candidateSlice";
+import useDidChange from "@/hooks/useDidChange";
 
 export default function CandidatesPage() {
   const { user } = useSelector((state) => state.auth);
-  const { candidates, totalPages } = useSelector((state) => state.candidate);
-  const [page, setPage] = useState(1);
+  const { candidates, totalPages, candidateCurrentPage } = useSelector((state) => state.candidate);
+  const [page, setPage] = useState(candidateCurrentPage || 1);
+  const pageRef = useRef(page);
 
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -28,10 +30,9 @@ export default function CandidatesPage() {
   const [showFilter, setShowFilter] = useState(false);
   const handleToggleFilter = () => setShowFilter(!showFilter);
   const [filterData, setFilterData] = useState({
-    location: "",
     experience: "",
     skills: [],
-    salaryRange: [0, 0],
+    salaryRange: { min: 0, max: 0 },
     contractType: "",
     remotePolicy: "",
     experienceRange: { min: 0, max: 10 },
@@ -106,6 +107,25 @@ export default function CandidatesPage() {
     dispatch(asyncGetCandidates()).then(() => setLoading(false));
   };
 
+  const isFilterApplied = () => {
+    console.log("Checking if filters are applied:", filterData);
+    return (
+      filterData.contractType ||
+      filterData.remotePolicy ||
+      (filterData.skills && filterData.skills.length > 0) ||
+      (filterData.salaryRange &&
+        (filterData.salaryRange.min > 0 || filterData.salaryRange.max > 0)) ||
+      (filterData.experienceRange &&
+        (filterData.experienceRange.min > 0 ||
+          filterData.experienceRange.max < 10))
+    );
+  };
+
+  useDidChange(page, () => {
+    handleFetchCandidates();
+  }, [page, totalPages]);
+
+
   return (
     <>
       <div className="h-[calc(100vh-100.6px)] grid grid-rows-[auto_1fr_auto] relative overflow-y-hidden!">
@@ -143,13 +163,22 @@ export default function CandidatesPage() {
               Search
             </button>
 
-            <button
-              onClick={handleToggleFilter}
-              className="flex items-center gap-2 bg-g-600 border border-g-600 rounded-lg px-12 py-3.5 text-gray-300 cursor-pointer"
-            >
-              <SlidersHorizontal className="w-4 h-4" />
-              Filter
-            </button>
+            {isFilterApplied() ? (
+              <button
+                onClick={handleToggleFilter}
+                className="bg-primary/90 rounded-lg px-4 py-3.5 text-gray-300 cursor-pointer flex items-center gap-2"
+              >
+                <span className="truncate">Filters Applied</span>
+              </button>
+            ) : (
+              <button
+                onClick={handleToggleFilter}
+                className="flex items-center gap-2 bg-g-600 rounded-lg px-12 py-3.5 text-gray-300 cursor-pointer"
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+                Filter
+              </button>
+            )}
           </div>
         </div>
 

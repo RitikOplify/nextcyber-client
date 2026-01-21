@@ -1,10 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 const initialState = {
   jobs: [],
   applications: [],
   totalApplicationsPages: null,
   totalJobsPages: null,
   appliedJob: [],
+  currentJobPage: 1,
 };
 
 export const jobReducer = createSlice({
@@ -14,6 +15,7 @@ export const jobReducer = createSlice({
     setJobs: (state, action) => {
       state.jobs = action.payload.jobs;
       state.totalJobsPages = action.payload.totalPages;
+      state.currentJobPage = action.payload.page;
     },
     removeJobs: (state) => {
       state.jobs = [];

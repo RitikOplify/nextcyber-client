@@ -8,7 +8,7 @@ export const asyncGetCompanies = (query, setIsLoading) => async (dispatch) => {
   try {
     const { data } = await getCompaniesApi(query);
 
-    dispatch(setCompany(data.companies.companies));
+    dispatch(setCompany(data.companies));
   } catch (error) {
     toast.error(getErrorMessage(error, "Failed to fetch companies"));
   } finally {

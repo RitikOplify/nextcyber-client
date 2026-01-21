@@ -3,6 +3,8 @@ const initialState = {
   candidates: [],
   shortlistedCandidates: [],
   totalPages: 0,
+  candidateCurrentPage: 1,
+  shortlistingCurrentPage: 1,
 };
 
 export const candidateReducer = createSlice({
@@ -12,6 +14,7 @@ export const candidateReducer = createSlice({
     setCandidates: (state, action) => {
       state.candidates = action.payload.students;
       state.totalPages = action.payload.pagination.totalPages;
+      state.candidateCurrentPage = action.payload.pagination.page;
     },
     removeCandidates: (state) => {
       state.candidates = [];
@@ -20,6 +23,7 @@ export const candidateReducer = createSlice({
     setShortlistedCandidates: (state, action) => {
       state.shortlistedCandidates = action.payload.students;
       state.totalPages = action.payload?.pagination?.totalPages || 1;
+      state.shortlistingCurrentPage = action.payload?.pagination?.page || 1;
     },
     removeShortlistedCandidates: (state) => {
       state.shortlistedCandidates = [];
