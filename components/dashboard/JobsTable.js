@@ -3,6 +3,7 @@ import { companyjobApi } from "@/api/jobApi";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { ArrowUpRight, MessageSquareMore, Star } from "lucide-react";
+import Link from "next/link";
 
 function JobsTable() {
   const [jobs, setJobs] = useState([]);
@@ -113,7 +114,7 @@ function JobsTable() {
                         <span
                           className={`px-2 py-1 rounded-full text-xs leading-4 text-white font-medium bg-dark-green`}
                         >
-                          {application.status}
+                          {application.status.split("_").join(" ")}
                         </span>
                       </td>
 
@@ -130,9 +131,9 @@ function JobsTable() {
                           <button>
                             <Star size={20} />
                           </button>
-                          <button>
+                          <Link href={`/messages?user=${student.userId}`}>
                             <MessageSquareMore size={20} />
-                          </button>
+                          </Link>
                           <button>
                             <ArrowUpRight size={20} />
                           </button>
