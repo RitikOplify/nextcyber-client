@@ -90,6 +90,10 @@ function CompaniesPage() {
     fetchCompanies();
   });
 
+  const isFilterApplied = () => {
+    return filterData.industry || filterData.companySize || filterData.location;
+  };
+
   return (
     <>
       <div className="h-[calc(100vh-100.6px)] grid grid-rows-[auto_1fr_auto] relative overflow-y-hidden!">
@@ -128,13 +132,22 @@ function CompaniesPage() {
               Search
             </button>
 
-            <button
-              onClick={handleToggleFilter}
-              className="flex items-center gap-2 bg-g-600 border border-g-600 rounded-lg px-12 py-3.5 text-gray-300 cursor-pointer"
-            >
-              <SlidersHorizontal className="w-4 h-4" />
-              Filter
-            </button>
+            {isFilterApplied() ? (
+              <button
+                onClick={handleToggleFilter}
+                className="bg-primary/90 rounded-lg px-4 py-3.5 text-gray-300 cursor-pointer flex items-center gap-2"
+              >
+                <span className="truncate">Filters Applied</span>
+              </button>
+            ) : (
+              <button
+                onClick={handleToggleFilter}
+                className="flex items-center gap-2 bg-g-600 rounded-lg px-12 py-3.5 text-gray-300 cursor-pointer"
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+                Filter
+              </button>
+            )}
           </div>
         </div>
 
