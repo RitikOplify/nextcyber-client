@@ -94,6 +94,25 @@ function CompaniesPage() {
     return filterData.industry || filterData.companySize || filterData.location;
   };
 
+  const filterDataRef = React.useRef(filterData);
+
+  useEffect(() => {
+    filterDataRef.current = filterData;
+  }, [filterData]);
+
+  useEffect(() => {
+    return () => {
+      const currentFilter = filterDataRef.current;
+      if (
+        currentFilter.industry ||
+        currentFilter.companySize ||
+        currentFilter.location
+      ) {
+        clearOnUnmount();
+      }
+    };
+  }, []);
+
   return (
     <>
       <div className="h-[calc(100vh-100.6px)] grid grid-rows-[auto_1fr_auto] relative overflow-y-hidden!">

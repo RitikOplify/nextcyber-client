@@ -132,7 +132,7 @@ export default function CandidateFilter({
               },
               { label: "Max", placeholder: "e.g. 150000" },
             ].map((label, i) => (
-              <div>
+              <div key={i}>
                 <label className="text-sm text-gray-300 mb-2 block">
                   {label.label}
                 </label>

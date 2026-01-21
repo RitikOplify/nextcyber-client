@@ -18,7 +18,9 @@ import useDidChange from "@/hooks/useDidChange";
 
 export default function CandidatesPage() {
   const { user } = useSelector((state) => state.auth);
-  const { candidates, totalPages, candidateCurrentPage } = useSelector((state) => state.candidate);
+  const { candidates, totalPages, candidateCurrentPage } = useSelector(
+    (state) => state.candidate,
+  );
   const [page, setPage] = useState(candidateCurrentPage || 1);
   const pageRef = useRef(page);
 
@@ -121,10 +123,32 @@ export default function CandidatesPage() {
     );
   };
 
+  const filterDataRef = useRef(filterData);
+
+  useEffect(() => {
+    filterDataRef.current = filterData;
+  }, [filterData]);
+
+  useEffect(() => {
+    return () => {
+      const filters = filterDataRef.current;
+      if (
+        filters.contractType ||
+        filters.remotePolicy ||
+        (filters.skills && filters.skills.length > 0) ||
+        (filters.salaryRange &&
+          (filters.salaryRange.min > 0 || filters.salaryRange.max > 0)) ||
+        (filters.experienceRange &&
+          (filters.experienceRange.min > 0 || filters.experienceRange.max < 10))
+      ) {
+        clearOnUnmount();
+      }
+    };
+  }, []);
+
   useDidChange(page, () => {
     handleFetchCandidates();
   }, [page, totalPages]);
-
 
   return (
     <>

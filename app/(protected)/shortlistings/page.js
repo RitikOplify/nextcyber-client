@@ -128,6 +128,30 @@ export default function ShortlistingsPage() {
     );
   };
 
+  const filterDataRef = useRef(filterData);
+
+  useEffect(() => {
+    filterDataRef.current = filterData;
+  }, [filterData]);
+
+  useEffect(() => {
+    return () => {
+      const filters = filterDataRef.current;
+      if (
+        filters.contractType ||
+        filters.remotePolicy ||
+        (filters.skills && filters.skills.length > 0) ||
+        (filters.salaryRange &&
+          (filters.salaryRange.min > 0 || filters.salaryRange.max > 0)) ||
+        (filters.experienceRange &&
+          (filters.experienceRange.min > 0 ||
+            filters.experienceRange.max < 10))
+      ) {
+        clearOnUnmount();
+      }
+    };
+  }, []);
+
   return (
     <>
       <div className="h-[calc(100vh-100.6px)] grid grid-rows-[auto_1fr_auto] relative overflow-y-hidden!">

@@ -93,8 +93,29 @@ function JobsPage() {
           filterData.experienceRange.max < 10))
     );
   };
+  const filterRef = React.useRef(filterData);
 
-  useDidChange(page,() => {
+  useEffect(() => {
+    filterRef.current = filterData;
+  }, [filterData]);
+
+  useEffect(() => {
+    return () => {
+      const filters = filterRef.current;
+      if (
+        filters.contractType ||
+        filters.remotePolicy ||
+        (filters.skills && filters.skills.length > 0) ||
+        (filters.salaryRange && filters.salaryRange.length > 0) ||
+        (filters.experienceRange &&
+          (filters.experienceRange.min > 0 || filters.experienceRange.max < 10))
+      ) {
+        clearOnUnmount();
+      }
+    };
+  }, []);
+
+  useDidChange(page, () => {
     fetchJobs();
   });
 
