@@ -125,6 +125,7 @@ export default function CompanyFilter({
             value={filterData.sectors || []}
             onChange={(value) => {
               setFilterData({ ...filterData, sectors: value });
+              setFormData({ ...FormData, sectors: value });
             }}
             multiple
             onAdd={handleAddSector}
