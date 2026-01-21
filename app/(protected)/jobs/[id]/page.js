@@ -178,7 +178,7 @@ export default function Page() {
                 STATUS_STYLES[row.status]
               }`}
             >
-              {row.status}
+              {row?.status?.split("_")?.join(" ")}
             </span>
             {showDropdown && (
               <div className="absolute mt-1 bg-g-700 border border-g-500 rounded shadow-lg z-10">
