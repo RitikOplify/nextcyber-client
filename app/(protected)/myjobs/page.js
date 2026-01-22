@@ -35,7 +35,7 @@ const Page = () => {
       key: "appliedDate",
       render: (row) => <span>{timeFormatter(row?.appliedDate)}</span>,
     },
-    { label: "Status", key: "status" },
+    { label: "Status", key: "status", render: (row) => <span>{row?.status?.split("_").join(" ")}</span> },
   ];
 
   const fetchJobs = () => {

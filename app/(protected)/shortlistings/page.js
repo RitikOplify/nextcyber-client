@@ -262,6 +262,7 @@ export default function ShortlistingsPage() {
             dispatch(asyncShortlistedCandidates(params))
           }
           handleResetFilters={() => dispatch(asyncShortlistedCandidates())}
+          isFilterApplied={isFilterApplied}
         />
       )}
     </>

@@ -11,6 +11,7 @@ export default function CompanyFilter({
   filterData,
   setFilterData,
   setLoading,
+  isFilterApplied,
 }) {
   const [FormData, setFormData] = useState({
     location: filterData.location || "",
@@ -91,7 +92,7 @@ export default function CompanyFilter({
         <h2 className="text-xl font-semibold">Filters</h2>
         <button
           onClick={onClose}
-          className="text-gray-400 hover:text-g-200 transition-colors"
+          className="text-gray-400 hover:text-g-200 transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -141,7 +142,7 @@ export default function CompanyFilter({
       <div className="fixed bottom-0 left-0 right-0 p-6 bg-g-900/80 backdrop-blur-md border-t border-neutral-800">
         <div className="max-w-[360px] mx-auto flex gap-3">
           <button
-            disabled={loadingLocal.resetLoading}
+            disabled={loadingLocal.resetLoading || !isFilterApplied()}
             onClick={handleReset}
             className="flex-1 flex items-center justify-center gap-2 bg-g-700 hover:bg-neutral-750 text-gray-300 py-3 rounded-lg transition-colors font-medium cursor-pointer"
           >
@@ -149,7 +150,7 @@ export default function CompanyFilter({
             <span>{loadingLocal.resetLoading ? "Resetting..." : "Reset"}</span>
           </button>
           <button
-            disabled={loadingLocal.applyLoading}
+            disabled={loadingLocal.applyLoading || !isFilterApplied()}
             onClick={handleApply}
             className="flex-1 bg-primary hover:bg-primary-dark text-white py-3 rounded-lg transition-colors font-medium cursor-pointer"
           >

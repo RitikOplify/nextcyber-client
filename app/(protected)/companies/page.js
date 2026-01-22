@@ -205,6 +205,7 @@ function CompaniesPage() {
           filterData={filterData}
           setFilterData={setFilterData}
           setLoading={setLoading}
+          isFilterApplied={isFilterApplied}
         />
       )}
     </>

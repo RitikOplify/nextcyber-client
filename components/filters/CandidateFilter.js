@@ -24,6 +24,7 @@ export default function CandidateFilter({
   setLoading,
   handleApplyFilters,
   handleResetFilters,
+  isFilterApplied,
 }) {
   const dispatch = useDispatch();
   const { skillsDropdown = [] } = useSelector((state) => state.dropdown);
@@ -46,6 +47,7 @@ export default function CandidateFilter({
 
   const updateField = useCallback((key, value) => {
     setFormState((prev) => ({ ...prev, [key]: value }));
+    setFilterData((prev) => ({ ...prev, [key]: value }));
   }, []);
 
   const handleReset = async () => {
@@ -95,7 +97,7 @@ export default function CandidateFilter({
     <div className="absolute top-0 right-0 z-50 w-full max-w-[360px] bg-g-900/40 backdrop-blur-[40px] text-g-100 h-screen p-6 flex flex-col">
       <div className="flex justify-between mb-6">
         <h2 className="text-xl font-semibold">Filters</h2>
-        <button onClick={onClose}>
+        <button onClick={onClose} className="cursor-pointer">
           <X className="w-5 h-5 text-gray-400 hover:text-white" />
         </button>
       </div>
@@ -181,12 +183,14 @@ export default function CandidateFilter({
             text="Reset"
             onClick={handleReset}
             variant="secondary"
+            isFilterApplied={isFilterApplied}
           />
           <ActionButton
             loading={loading.apply}
             text="Apply Filters"
             onClick={handleApply}
             variant="primary"
+            isFilterApplied={isFilterApplied}
           />
         </div>
       </div>
@@ -213,11 +217,11 @@ const RadioItem = ({ checked, label, onChange }) => (
   </label>
 );
 
-const ActionButton = ({ loading, text, onClick, icon, variant }) => (
+const ActionButton = ({ loading, text, onClick, icon, variant, isFilterApplied }) => (
   <button
-    disabled={loading}
+    disabled={loading || !isFilterApplied()}
     onClick={onClick}
-    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-medium
+    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-medium cursor-pointer
       ${
         variant === "primary"
           ? "bg-primary text-white"

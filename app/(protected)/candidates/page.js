@@ -182,7 +182,7 @@ export default function CandidatesPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => handleSearchCandidates(buildParams())}
-              className="bg-primary rounded-lg px-8 py-3.5 text-gray-300"
+              className="bg-primary rounded-lg px-8 py-3.5 text-gray-300 cursor-pointer"
             >
               Search
             </button>
@@ -252,6 +252,7 @@ export default function CandidatesPage() {
           setLoading={setLoading}
           handleApplyFilters={(params) => dispatch(asyncGetCandidates(params))}
           handleResetFilters={() => dispatch(asyncGetCandidates())}
+          isFilterApplied={isFilterApplied}
         />
       )}
     </>
