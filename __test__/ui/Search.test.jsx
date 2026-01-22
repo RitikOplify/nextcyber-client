@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  render,
-  screen,
-  fireEvent,
-  cleanup,
-} from "@testing-library/react";
+import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Search from "@/components/ui/Search";
 
@@ -14,122 +9,97 @@ describe("Search Component", () => {
     cleanup();
   });
 
+  const setup = (props = {}) => {
+    const defaultProps = {
+      value: "",
+      setValue: jest.fn(),
+      placeholder: "Search here",
+      handleClear: jest.fn(),
+      clearOnUnmount: jest.fn(),
+    };
+
+    return render(<Search {...defaultProps} {...props} />);
+  };
 
   test("renders input with placeholder", () => {
-    render(
-      <Search
-        value=""
-        setValue={jest.fn()}
-        placeholder="Search jobs"
-      />
-    );
+    setup();
 
     expect(
-      screen.getByPlaceholderText("Search jobs")
+      screen.getByPlaceholderText("Search here")
     ).toBeInTheDocument();
   });
 
+  test("renders search icon", () => {
+    setup();
 
-  test("calls setValue on typing", () => {
-    const setValue = jest.fn();
-
-    render(
-      <Search
-        value=""
-        setValue={setValue}
-        placeholder="Search"
-      />
-    );
-
-    fireEvent.change(
-      screen.getByPlaceholderText("Search"),
-      { target: { value: "React" } }
-    );
-
-    expect(setValue).toHaveBeenCalledWith("React");
+    // lucide icons render as svg
+    const svgs = document.querySelectorAll("svg");
+    expect(svgs.length).toBeGreaterThan(0);
   });
 
+  test("updates value on input change", () => {
+    const setValue = jest.fn();
+    setup({ setValue });
 
-  test("shows clear button when value exists", () => {
-    render(
-      <Search
-        value="React"
-        setValue={jest.fn()}
-        placeholder="Search"
-      />
-    );
+    const input = screen.getByPlaceholderText("Search here");
 
-    expect(
-      screen.getByRole("button")
-    ).toBeInTheDocument();
+    fireEvent.change(input, { target: { value: "react" } });
+
+    expect(setValue).toHaveBeenCalledWith("react");
   });
 
-  test("clears value when clear button is clicked", () => {
-    const setValue = jest.fn();
+  test("shows clear (X) button when value exists", () => {
+    setup({ value: "hello" });
 
-    render(
-      <Search
-        value="React"
-        setValue={setValue}
-        placeholder="Search"
-      />
-    );
+    const clearButton = screen.getByRole("button");
+    expect(clearButton).toBeInTheDocument();
+  });
+
+  test("does not show clear button when value is empty", () => {
+    setup({ value: "" });
+
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
+
+  test("calls handleClear when clear button is clicked", () => {
+    const handleClear = jest.fn();
+    setup({ value: "text", handleClear });
 
     fireEvent.click(screen.getByRole("button"));
 
-    expect(setValue).toHaveBeenCalledWith("");
+    expect(handleClear).toHaveBeenCalledTimes(1);
   });
 
+  test("calls clearOnUnmount if value exists", () => {
+    const clearOnUnmount = jest.fn();
 
-  test("uses custom onClick when provided", () => {
-    const onClick = jest.fn();
-
-    render(
-      <Search
-        value="React"
-        setValue={jest.fn()}
-        onClick={onClick}
-        placeholder="Search"
-      />
-    );
-
-    fireEvent.click(screen.getByRole("button"));
-
-    expect(onClick).toHaveBeenCalled();
-  });
-
-
-  test("clears value on unmount when clearOnUnmount is true", () => {
-    const setValue = jest.fn();
-
-    const { unmount } = render(
-      <Search
-        value="React"
-        setValue={setValue}
-        placeholder="Search"
-        clearOnUnmount={true}
-      />
-    );
+    const { unmount } = setup({
+      value: "persisted",
+      clearOnUnmount,
+    });
 
     unmount();
 
-    expect(setValue).toHaveBeenCalledWith("");
+    expect(clearOnUnmount).toHaveBeenCalledTimes(1);
   });
 
-  test("does not clear value on unmount when clearOnUnmount is false", () => {
-    const setValue = jest.fn();
+  test("does NOT call clearOnUnmount if value is empty", () => {
+    const clearOnUnmount = jest.fn();
 
-    const { unmount } = render(
-      <Search
-        value="React"
-        setValue={setValue}
-        placeholder="Search"
-        clearOnUnmount={false}
-      />
-    );
+    const { unmount } = setup({
+      value: "",
+      clearOnUnmount,
+    });
 
     unmount();
 
-    expect(setValue).not.toHaveBeenCalled();
+    expect(clearOnUnmount).not.toHaveBeenCalled();
+  });
+
+  test("applies custom className", () => {
+    setup({ className: "custom-class" });
+
+    const wrapper = document.querySelector(".custom-class");
+    expect(wrapper).toBeInTheDocument();
   });
 });

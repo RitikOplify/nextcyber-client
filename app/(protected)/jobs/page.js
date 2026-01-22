@@ -152,6 +152,7 @@ function JobsPage() {
 
             <div className="flex gap-3">
               <button
+                disabled={loading || searchTerm.trim() === ""}
                 onClick={handleSearch}
                 className="bg-primary rounded-lg px-8 py-3.5 text-gray-300 cursor-pointer"
               >

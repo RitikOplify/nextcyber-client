@@ -39,7 +39,7 @@ const SelectField = ({
 
   const filteredOptions = isSearch
     ? normalizedOptions.filter((opt) =>
-        opt?.label?.toLowerCase()?.includes(search.toLowerCase())
+        opt?.label?.toLowerCase()?.includes(search.toLowerCase()),
       )
     : normalizedOptions;
 
@@ -138,8 +138,8 @@ const SelectField = ({
                           ? `bg-primary/80 text-white `
                           : "hover:bg-g-700"
                         : currentValue === option.value
-                        ? "bg-primary/80 text-white"
-                        : "hover:bg-g-600"
+                          ? "bg-primary/80 text-white"
+                          : "hover:bg-g-600"
                     }`}
                   >
                     {option.label}
@@ -216,7 +216,9 @@ const SelectField = ({
                     {search && (
                       <X
                         size={16}
-                        className=" text-g-200 cursor-pointer hover:text-g-100 shrink-0"
+                        role="button"
+                        aria-label="Clear search"
+                        className="text-g-200 cursor-pointer hover:text-g-100 shrink-0"
                         onClick={() => setSearch("")}
                       />
                     )}
@@ -249,8 +251,8 @@ const SelectField = ({
                               ? `bg-primary/80 text-white `
                               : "hover:bg-g-600"
                             : value === option.value
-                            ? "bg-primary/80 text-white"
-                            : "hover:bg-g-600"
+                              ? "bg-primary/80 text-white"
+                              : "hover:bg-g-600"
                         }`}
                       >
                         {option.label}
