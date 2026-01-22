@@ -122,7 +122,7 @@ export default function JobTable() {
                       statusColors[job.status]
                     }`}
                   >
-                    {job.status}
+                    {job?.status?.split("_").join(" ")}
                   </span>
                 </td>
               </tr>

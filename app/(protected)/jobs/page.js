@@ -253,6 +253,7 @@ function JobsPage() {
           setFilterData={setFilterData}
           onClose={() => setIsFilterOpen(false)}
           setLoading={setLoading}
+          isFilterApplied={isFilterApplied}
         />
       )}
     </>
