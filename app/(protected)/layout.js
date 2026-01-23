@@ -110,7 +110,7 @@ function ProtectedLayout({ children }) {
                 </span>
               </button>
 
-              <div className="w-9 h-9 bg-g-500 rounded-full flex items-center justify-center">
+              <div className="w-9 h-9 bg-g-500 rounded-full flex items-center justify-center overflow-hidden">
                 <Image
                   src={
                     user.role == "STUDENT"

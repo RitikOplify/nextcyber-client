@@ -2,6 +2,7 @@ import {
   appliedJobApi,
   companyjobApi,
   getJobsApi,
+  getJobsByAIApi,
   jobApplicantsApi,
   updateApplicationStatusApi,
 } from "@/api/jobApi";
@@ -9,6 +10,7 @@ import {
   setApplications,
   setAppliedJobs,
   setJobs,
+  setJobsByAI,
   updateAppliedJobStatus,
 } from "../slices/jobSlice";
 import toast from "react-hot-toast";
@@ -19,6 +21,18 @@ export const asyncGetJobs = (query, setIsLoading) => async (dispatch) => {
   try {
     const { data } = await getJobsApi(query);
     dispatch(setJobs(data.data));
+  } catch (error) {
+    toast.error(getErrorMessage(error, "Failed to fetch Jobs"));
+  } finally {
+    setIsLoading?.(false);
+  }
+};
+
+export const asyncGetJobsByAI = (query, setIsLoading) => async (dispatch) => {
+  setIsLoading?.(true);
+  try {
+    const { data } = await getJobsByAIApi(query);
+    dispatch(setJobsByAI(data.matches));
   } catch (error) {
     toast.error(getErrorMessage(error, "Failed to fetch Jobs"));
   } finally {

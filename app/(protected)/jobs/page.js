@@ -10,7 +10,8 @@ import Search from "@/components/ui/Search";
 import useDidChange from "@/hooks/useDidChange";
 import { asyncGetJobs } from "@/store/actions/jobActions";
 import { removeJobs } from "@/store/slices/jobSlice";
-import { Loader2, SlidersHorizontal } from "lucide-react";
+import { Loader2, SlidersHorizontal, Sparkles } from "lucide-react";
+import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -48,7 +49,7 @@ function JobsPage() {
           Search: searchTerm,
           contractType: filterData.contractType,
           remotePolicy: filterData.remotePolicy,
-        }).filter(([_, value]) => value !== ""),
+        }).filter(([_, value]) => value !== "")
       ),
     };
     return params;
@@ -57,7 +58,7 @@ function JobsPage() {
   const fetchJobs = useCallback(() => {
     setLoading(true);
     dispatch(asyncGetJobs(buildParams(), setLoading)).then(() =>
-      setLoading(false),
+      setLoading(false)
     );
   }, [buildParams]);
 
@@ -123,8 +124,8 @@ function JobsPage() {
     <>
       <div className="mx-auto max-h-[calc(100vh-100.6px)] overflow-auto">
         <>
-          <div className="sticky top-0 z-10 flex flex-col md:flex-row gap-4 items-center">
-            <div className="relative w-full md:w-2/5">
+          <div className="sticky top-0 z-10 grid gap-5 grid-cols-3">
+            <div className="w-full relative">
               <Search
                 value={searchTerm}
                 setValue={setSearchTerm}
@@ -135,14 +136,14 @@ function JobsPage() {
               />
             </div>
 
-            <div className="relative w-full md:w-2/5">
+            <div className="w-full relative">
               <LocationSearchInput
                 selectedPlace={locationSearch}
                 onPlaceSelected={(locationData) =>
                   setLocationSearch(
                     locationData.city && locationData.state
                       ? `${locationData?.city}, ${locationData?.state}, ${locationData?.country}`
-                      : "",
+                      : ""
                   )
                 }
                 clearOnUnmount={clearOnUnmount}
@@ -150,14 +151,15 @@ function JobsPage() {
               />
             </div>
 
-            <div className="flex gap-3">
+            <div className="w-full relative grid gap-2.5 grid-cols-4">
               <button
                 disabled={loading || searchTerm.trim() === ""}
                 onClick={handleSearch}
-                className="bg-primary rounded-lg px-8 py-3.5 text-gray-300 cursor-pointer"
+                className="bg-primary rounded-lg text-gray-300 cursor-pointer flex items-center justify-center"
               >
                 Search
               </button>
+
               {isFilterApplied() ? (
                 <button
                   onClick={handleToggleFilter}
@@ -168,12 +170,19 @@ function JobsPage() {
               ) : (
                 <button
                   onClick={handleToggleFilter}
-                  className="flex items-center gap-2 bg-g-600 rounded-lg px-12 py-3.5 text-gray-300 cursor-pointer"
+                  className="bg-g-600 rounded-lg text-gray-300 cursor-pointer flex items-center justify-center gap-2"
                 >
                   <SlidersHorizontal className="w-4 h-4" />
                   Filter
                 </button>
               )}
+              <Link
+                href={"/jobs/ai-suggested-jobs"}
+                className="bg-primary rounded-lg  text-gray-300 cursor-pointer hover:text-g-50 col-span-2 flex items-center justify-center gap-2.5"
+              >
+                <Sparkles size={20} />
+                Search with AI
+              </Link>
             </div>
           </div>
 
@@ -239,14 +248,6 @@ function JobsPage() {
         </>
       </div>
 
-      <JobApplyModel
-        id={jobId}
-        isOpen={jobOpen}
-        onClose={() => {
-          setJobOpen(false);
-          setJobId(null);
-        }}
-      />
       {isFilterOpen && (
         <JobFilter
           isOpen={isFilterOpen}
