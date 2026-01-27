@@ -5,7 +5,7 @@ import JobsTable from "@/components/jobs/JobsTable";
 import { useState } from "react";
 
 const AddNewJob = () => {
-  const [activeTab, setActiveTab] = useState("postJob");
+  const [activeTab, setActiveTab] = useState("jobList");
 
   return (
     <section>

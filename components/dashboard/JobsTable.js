@@ -41,9 +41,9 @@ function JobsTable() {
               List of candidates who applied for the job.
             </p>
           </div>
-          <button className="text-g-200 text-sm font-medium leading-5 bg-g-600 rounded-full border border-g-500 py-2 px-4 h-fit cursor-pointer">
+          <Link href="/add-new-job" className="text-g-200 text-sm font-medium leading-5 bg-g-600 rounded-full border border-g-500 py-2 px-4 h-fit cursor-pointer">
             View all
-          </button>
+          </Link>
         </div>
 
         <table className="w-full text-left overflow-hidden mt-5">

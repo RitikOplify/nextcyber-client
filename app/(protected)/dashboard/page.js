@@ -21,6 +21,7 @@ import RecruitmentPipeline from "@/components/dashboard/RecruitmentPipeline";
 import { asyncGetAppliedJob } from "@/store/actions/jobActions";
 import ProfileScoringModal from "@/components/modal/ProfileScoreModal";
 import ExperienceModal from "@/components/modal/ExperienceModal";
+import CompanyScoreModel from "@/components/modal/CompanyScoreModel";
 
 function DashboardPage() {
   const dispatch = useDispatch();
@@ -213,13 +214,15 @@ function DashboardPage() {
                       </div>
                     </div>
                   </div>
-                )
+                ),
               )}
             </div>
           </div>
           {user.role == "STUDENT" && (
             <>
-              <ProfileTabs openExperienceModal={() => setIsExpModalOpen(true)} />
+              <ProfileTabs
+                openExperienceModal={() => setIsExpModalOpen(true)}
+              />
               <div className="bg-gradient-to-b from-g-500 to-g-600 p-0.5 mt-5 rounded-[10px] overflow-hidden">
                 <div className=" p-5 bg-g-600 rounded-lg">
                   <h4 className=" flex text-g-100 font-semibold text-base leading-4 items-center gap-2">
@@ -331,7 +334,10 @@ function DashboardPage() {
               <h6 className="  font-semibold leading-[150%]">
                 Profile Completion
               </h6>
-              <button onClick={() => setIsModalOpen(true)} className=" bg-g-400 px-2 py-1 text-[9px] font-semibold leading-[100%] rounded-full cursor-pointer">
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className=" bg-g-400 px-2 py-1 text-[9px] font-semibold leading-[100%] rounded-full cursor-pointer"
+              >
                 Suggestions
               </button>
             </div>
@@ -501,13 +507,21 @@ function DashboardPage() {
           </div>
         </div>
       </div>
-      {user && isModalOpen && (
-        <ProfileScoringModal
-          data={user?.studentProfile?.profileScore}
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
+      {isModalOpen &&
+        user &&
+        (user?.role === "COMPANY" ? (
+          <CompanyScoreModel
+            profileScore={user?.companyProfile?.profileScore}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
+        ) : (
+          <ProfileScoringModal
+            data={user?.studentProfile?.profileScore}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
+        ))}
       {user && isExpModalOpen && (
         <ExperienceModal
           data={user?.studentProfile?.workExperience}

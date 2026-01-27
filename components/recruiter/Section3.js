@@ -46,6 +46,7 @@ function Section3() {
             trigger: card,
             start: "top 80%",
             toggleActions: "play none none none",
+            // scrub: true,
           },
         });
 
