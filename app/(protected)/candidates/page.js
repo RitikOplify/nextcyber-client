@@ -181,7 +181,10 @@ export default function CandidatesPage() {
 
           <div className="flex items-center gap-3">
             <button
-              disabled={loading || searchTerm.trim() === ""}
+              disabled={
+                loading ||
+                (searchTerm.trim() === "" && locationSearch.trim() === "")
+              }
               onClick={() => handleSearchCandidates(buildParams())}
               className="bg-primary rounded-lg px-8 py-3.5 text-gray-300 cursor-pointer"
             >

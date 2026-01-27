@@ -49,7 +49,7 @@ function JobsPage() {
           Search: searchTerm,
           contractType: filterData.contractType,
           remotePolicy: filterData.remotePolicy,
-        }).filter(([_, value]) => value !== "")
+        }).filter(([_, value]) => value !== ""),
       ),
     };
     return params;
@@ -58,7 +58,7 @@ function JobsPage() {
   const fetchJobs = useCallback(() => {
     setLoading(true);
     dispatch(asyncGetJobs(buildParams(), setLoading)).then(() =>
-      setLoading(false)
+      setLoading(false),
     );
   }, [buildParams]);
 
@@ -143,7 +143,7 @@ function JobsPage() {
                   setLocationSearch(
                     locationData.city && locationData.state
                       ? `${locationData?.city}, ${locationData?.state}, ${locationData?.country}`
-                      : ""
+                      : "",
                   )
                 }
                 clearOnUnmount={clearOnUnmount}
@@ -153,7 +153,10 @@ function JobsPage() {
 
             <div className="w-full relative grid gap-2.5 grid-cols-4">
               <button
-                disabled={loading || searchTerm.trim() === ""}
+                disabled={
+                  loading ||
+                  (searchTerm.trim() === "" && locationSearch.trim() === "")
+                }
                 onClick={handleSearch}
                 className="bg-primary rounded-lg text-gray-300 cursor-pointer flex items-center justify-center"
               >
