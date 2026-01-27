@@ -9,12 +9,12 @@
     "lint": "eslint",
     "test": "jest",
     "test:watch": "jest --watch"
-
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.1",
     "axios": "^1.13.2",
     "clsx": "^2.1.1",
+    "gsap": "^3.14.2",
     "lucide-react": "^0.556.0",
     "next": "16.0.7",
     "quill": "^2.0.3",
