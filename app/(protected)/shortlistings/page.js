@@ -17,9 +17,8 @@ import useDidChange from "@/hooks/useDidChange";
 
 export default function ShortlistingsPage() {
   const { user } = useSelector((state) => state.auth);
-  const { shortlistedCandidates, totalPages, shortlistingCurrentPage } = useSelector(
-    (state) => state.candidate,
-  );
+  const { shortlistedCandidates, totalPages, shortlistingCurrentPage } =
+    useSelector((state) => state.candidate);
   const [page, setPage] = useState(shortlistingCurrentPage || 1);
   const [pageLimit, setPageLimit] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
@@ -144,8 +143,7 @@ export default function ShortlistingsPage() {
         (filters.salaryRange &&
           (filters.salaryRange.min > 0 || filters.salaryRange.max > 0)) ||
         (filters.experienceRange &&
-          (filters.experienceRange.min > 0 ||
-            filters.experienceRange.max < 10))
+          (filters.experienceRange.min > 0 || filters.experienceRange.max < 10))
       ) {
         clearOnUnmount();
       }
@@ -185,7 +183,10 @@ export default function ShortlistingsPage() {
 
           <div className="flex items-center gap-3">
             <button
-              disabled={loading || searchTerm.trim() === ""}
+              disabled={
+                loading ||
+                (searchTerm.trim() === "" && locationSearch.trim() === "")
+              }
               onClick={handleSearch}
               className="bg-primary rounded-lg px-8 py-3.5 text-gray-300 cursor-pointer"
             >
