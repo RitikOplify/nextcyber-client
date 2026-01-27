@@ -110,8 +110,9 @@ export default function AccountDetails({ showErrors = true }) {
   const fileRef = useRef(null);
   const gender = watch("gender");
   const file = watch("profilePicture");
-  const bannerImage = watch("bannerImage");
+  const profileBanner = watch("profileBanner");
   const profilePicture = watch("profilePicture");
+
   const [preview, setPreview] = useState(null);
 
   useEffect(() => {
@@ -219,13 +220,13 @@ export default function AccountDetails({ showErrors = true }) {
         </div>
         <div className="w-1/2">
           <Controller
-            name="bannerImage"
+            name="profileBanner"
             control={control}
             render={({ field }) => (
               <UploadBox
                 title="Banner Image"
                 {...field}
-                error={errors.bannerImage?.message}
+                error={errors.profileBanner?.message}
                 validationRules={{
                   maxSizeMB: 3,
                   minWidth: 1200,
@@ -246,9 +247,9 @@ export default function AccountDetails({ showErrors = true }) {
             )}
           />
 
-          {bannerImage?.preview && (
+          {profileBanner?.preview && (
             <Image
-              src={bannerImage.preview}
+              src={profileBanner.preview}
               height={64}
               width={64}
               alt="Profile"
