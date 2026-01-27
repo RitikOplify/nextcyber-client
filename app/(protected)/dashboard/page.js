@@ -108,7 +108,12 @@ function DashboardPage() {
           <div className=" rounded-lg overflow-hidden">
             <div className="relative w-full h-[200px]">
               <Image
-                src="/company-banner.jpg"
+                src={
+                  (user?.role === "COMPANY"
+                    ? user?.companyProfile?.profileBanner?.url
+                    : user?.studentProfile?.profileBanner?.url) ||
+                  "/company-banner.jpg"
+                }
                 alt="user-banner"
                 fill
                 className="object-cover"
