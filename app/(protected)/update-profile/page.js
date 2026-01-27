@@ -41,7 +41,7 @@ export default function SettingsPage() {
       remotePolicy: "",
       resume: null,
       profilePicture: null,
-      bannerImage: null,
+      profileBanner: null,
     },
   });
 
@@ -71,7 +71,7 @@ export default function SettingsPage() {
       remotePolicy: sp.remotePolicy || "",
 
       profilePicture: sp.profilePicture || null,
-      bannerImage: sp.bannerImage || null,
+      profileBanner: sp.profileBanner || null,
     });
   }, [user, methods]);
 
