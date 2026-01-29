@@ -9,6 +9,7 @@ import {
   Share2,
 } from "lucide-react";
 import Image from "next/image";
+import JobApplyModel from "./JobApply";
 
 export default function JobDetailsModal({ selectedJob, onClose, applyJob }) {
   return (
@@ -51,7 +52,8 @@ export default function JobDetailsModal({ selectedJob, onClose, applyJob }) {
                 <Share2 size={20} className=" text-g-300" />
               </button>
               <button
-                onClick={() => applyJob(selectedJob?.id)}
+                onClick={() =>{
+                  applyJob(selectedJob.id)}}
                 className="bg-primary text-g-100 px-4 py-2 rounded-lg float-right font-medium cursor-pointer truncate"
               >
                 Apply Now

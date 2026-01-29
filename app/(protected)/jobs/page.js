@@ -262,12 +262,14 @@ function JobsPage() {
           isFilterApplied={isFilterApplied}
         />
       )}
-
-      <JobApplyModel
-        isOpen={jobOpen}
-        onClose={() => setJobOpen(false)}
-        jobId={jobId}
-      />
+      
+      {jobOpen && (
+        <JobApplyModel
+          isOpen={jobOpen}
+          onClose={() => setJobOpen(false)}
+          id={jobId}
+        />
+      )}
     </>
   );
 }
