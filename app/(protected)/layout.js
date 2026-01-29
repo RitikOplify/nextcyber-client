@@ -2,7 +2,7 @@
 import Sidebar from "@/components/navigation/SideBar";
 import ProfileSetting from "@/components/profile/ProfileSetting";
 import { asyncCurrentUser } from "@/store/actions/authActions";
-import { Bell, ChevronRight, Loader2, Menu } from "lucide-react";
+import { Bell, ChevronRight, Loader2, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -14,6 +14,10 @@ function ProtectedLayout({ children }) {
   const dispatch = useDispatch();
   const router = useRouter();
   const { user, isLoading } = useSelector((state) => state.auth);
+  const { notifications, notificationCount } = useSelector(
+    (state) => state.appSettings
+  );
+  const [notificationModal, setNotificationModal] = useState(false);
   const [profileSettingOpen, setProfileSettingOpen] = useState(false);
 
   const labelMap = {
@@ -103,10 +107,18 @@ function ProtectedLayout({ children }) {
               <Menu size={25} />
             </button>
             <div className="flex lg:hidden items-center space-x-4">
-              <button className="relative bg-g-400/50 transition-colors p-2 rounded-full cursor-pointer bg-g-4000 hover:bg-g-500">
+              <button
+                className="relative bg-g-400/50 transition-colors p-2 rounded-full cursor-pointer bg-g-4000 hover:bg-g-500"
+                onClick={() =>
+                  setNotificationModal(() => {
+                    // profileModal && setProfileModal(false);
+                    return !notificationModal;
+                  })
+                }
+              >
                 <Bell size={20} />
                 <span className="absolute -top-1 -right-1 bg-dark-red text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  3
+                  {notificationCount}
                 </span>
               </button>
 
@@ -126,6 +138,37 @@ function ProtectedLayout({ children }) {
               </div>
             </div>
           </div>
+          {notificationModal && (
+            <div className="w-full sm:w-[400px] min-h-[200px] absolute top-[64px] bg-white text-g-400 shadow-md right-0 flex flex-col p-5 z-[1000000]">
+              <div className="flex flex-col gap-5">
+                <div className="flex items-center justify-between w-full">
+                  <p className="font-semibold">Notifications</p>
+                  <X
+                    size={20}
+                    className="cursor-pointer"
+                    onClick={() => setNotificationModal(false)}
+                  />
+                </div>
+                <div>
+                  {notifications && notifications.length > 0 ? (
+                    notifications.map((notification, i) => (
+                      <div
+                        key={i}
+                        className="w-full p-3 mb-3 bg-g-100 rounded-md"
+                      >
+                        <p className="text-sm">{notification.data}</p>
+                        <span className="text-xs text-g-400">
+                          {new Date(notification.createdAt).toLocaleString()}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm">No new notifications</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
           <div className=" hidden text-[13px] lg:flex items-center font-normal justify-between text-text-secondary py-3 px-5 border-b border-g-500">
             <div className="flex items-center">
               {pathname !== "/dashboard" && (
@@ -158,10 +201,18 @@ function ProtectedLayout({ children }) {
               ))}
             </div>
             <div className="flex items-center gap-4 relative">
-              <button className="relative bg-g-400/50 transition-colors p-2 rounded-full cursor-pointer bg-g-4000 hover:bg-g-500">
+              <button
+                className="relative bg-g-400/50 transition-colors p-2 rounded-full cursor-pointer bg-g-4000 hover:bg-g-500"
+                onClick={() =>
+                  setNotificationModal(() => {
+                    // profileModal && setProfileModal(false);
+                    return !notificationModal;
+                  })
+                }
+              >
                 <Bell size={20} />
                 <span className="absolute -top-1 -right-1 bg-dark-red text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  3
+                  {notificationCount}
                 </span>
               </button>
 

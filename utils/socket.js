@@ -1,34 +1,41 @@
+// utils/socket.js
 import { io } from "socket.io-client";
 
-const SOCKET_URL = process.env.NEXT_PUBLIC_WEB_SOCKET_API_URL;
+let socket = null;
+const listeners = new Set();
 
-export const socket = io(SOCKET_URL, {
-  transports: ["websocket"],
-  withCredentials: true,
-  autoConnect: false,
-});
+export const createSocket = () => {
+  if (socket) return socket;
 
-socket.onAny((event, ...args) => {
-  console.log(`Socket Event: ${event}`, args);
-});
+  socket = io("http://localhost:8500", {
+    transports: ["websocket"],
+    withCredentials: true,
+  });
 
-let onlineUsersCache = [];
-const onlineUsersListeners = new Set();
+  socket.on("disconnect", () => {
+    console.log("❌ Socket disconnected");
+  });
 
-socket.on("online_users_init", (userIds) => {
-  onlineUsersCache = userIds || [];
+  // 🔥 notify subscribers
+  listeners.forEach((cb) => cb(socket));
 
-  onlineUsersListeners.forEach((listener) => listener(userIds || []));
-});
-
-export const subscribeToOnlineUsers = (callback) => {
-  onlineUsersListeners.add(callback);
-
-  if (onlineUsersCache.length > 0) {
-    callback(onlineUsersCache);
-  }
-
-  return () => onlineUsersListeners.delete(callback);
+  return socket;
 };
 
-export const getOnlineUsersCache = () => onlineUsersCache;
+export const onSocketReady = (cb) => {
+  listeners.add(cb);
+  if (socket) cb(socket); // immediate if already created
+};
+
+export const offSocketReady = (cb) => {
+  listeners.delete(cb);
+};
+
+export const disconnectSocket = () => {
+  if (socket) {
+    socket.disconnect();
+    socket = null;
+  }
+};
+
+export const getSocket = () => socket;
