@@ -7,7 +7,7 @@ const listeners = new Set();
 export const createSocket = () => {
   if (socket) return socket;
 
-  socket = io("http://localhost:8500", {
+  socket = io(process.env.NEXT_PUBLIC_PROD_SOCKET_API_URL, {
     transports: ["websocket"],
     withCredentials: true,
   });
