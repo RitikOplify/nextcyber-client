@@ -73,6 +73,7 @@ function JobsPage() {
   };
 
   const applyJob = (id) => {
+    console.log("Applying to job with ID:", id);
     setJobId(id);
     setJobOpen(true);
   };
@@ -261,6 +262,12 @@ function JobsPage() {
           isFilterApplied={isFilterApplied}
         />
       )}
+
+      <JobApplyModel
+        isOpen={jobOpen}
+        onClose={() => setJobOpen(false)}
+        jobId={jobId}
+      />
     </>
   );
 }
