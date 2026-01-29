@@ -6,7 +6,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { asyncCurrentUser } from "@/store/actions/authActions";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { socket } from "@/utils/socket";
+import { useNotifications } from "@/hooks/useNotifications";
+// import { socket } from "@/utils/socket";
 
 function Wrapper({ children }) {
   const pathname = usePathname();
@@ -40,18 +41,20 @@ function Wrapper({ children }) {
     authPages.includes(pathname) ||
     dynamicAuthPages.some((route) => pathname.startsWith(route));
 
-  useEffect(() => {
-    if (!user) return;
-    const handler = (notification) => {
-      toast(notification.data.message);
-    };
+  // useEffect(() => {
+  //   if (!user) return;
+  //   const handler = (notification) => {
+  //     toast(notification.data.message);
+  //   };
 
-    socket.on("notification", handler);
+  //   socket.on("notification", handler);
 
-    return () => {
-      socket.off("notification", handler);
-    };
-  }, []);
+  //   return () => {
+  //     socket.off("notification", handler);
+  //   };
+  // }, []);
+
+  useNotifications(); // 🔥 just call it
 
   useEffect(() => {
     if (user === null && !isAuthPage) {

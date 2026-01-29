@@ -1,6 +1,7 @@
 import { setUser, clearUser, setLoading } from "../slices/authSlice.js";
 import toast from "react-hot-toast";
 import { signIn, getCurrentUser, signOut, signUp } from "@/api/authApi.js";
+import { createSocket, disconnectSocket } from "@/utils/socket";
 
 const getErrorMessage = (error) =>
   error?.response?.data?.message ||
@@ -16,6 +17,7 @@ export const asyncSignupUser =
         success: (response) => {
           const { data } = response;
           dispatch(setUser(data.user));
+          createSocket();
           router.push("/dashboard");
           return data.message || "Signed up successfully!";
         },
@@ -39,6 +41,7 @@ export const asyncSigninUser =
         loading: "Signing in...",
         success: (response) => {
           const { data } = response;
+          createSocket();
           router.push("/dashboard");
           return data.message || "Signed in successfully!";
         },
@@ -63,6 +66,7 @@ export const asyncCurrentUser = () => async (dispatch) => {
     dispatch(clearUser());
   } finally {
     dispatch(setLoading(false));
+    createSocket();
   }
 };
 
@@ -79,5 +83,7 @@ export const asyncSignOutUser = () => async (dispatch) => {
     });
   } catch (error) {
     toast.error(getErrorMessage(error));
+  } finally {
+    disconnectSocket();
   }
 };

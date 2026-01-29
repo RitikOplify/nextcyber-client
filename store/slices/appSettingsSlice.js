@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   collapseSidebar: false,
+  notifications: [],
+  notificationCount: 0,
 };
 
 export const appSettings = createSlice({
@@ -10,9 +12,14 @@ export const appSettings = createSlice({
     toggleSidebar: (state, action) => {
       state.collapseSidebar = !state.collapseSidebar;
     },
+    setNotifications: (state, action) => {
+      console.log("🔔 Adding notification to state:", action.payload);
+      state.notifications = [...state.notifications, action.payload];
+      state.notificationCount += 1;
+    },
   },
 });
 
-export const { toggleSidebar } = appSettings.actions;
+export const { toggleSidebar, setNotifications } = appSettings.actions;
 
 export default appSettings.reducer;
