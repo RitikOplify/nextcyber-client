@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Plus, X } from "lucide-react";
+import LocationSearchInput from "../helper/LocationSearchInput";
 
 export default function JobDetails({ form, showErrors }) {
   const {
@@ -43,14 +44,12 @@ export default function JobDetails({ form, showErrors }) {
         <label className="text-g-200 font-medium leading-6 block mb-1">
           Job location
         </label>
-        <input
-          {...register("jobLocation", {
-            required: "Job location is required",
-          })}
-          placeholder="City or Remote"
-          className={`w-full py-4 px-5 rounded-lg border text-g-300 outline-none bg-g-700 ${errorClass(
-            "jobLocation"
-          )}`}
+        <LocationSearchInput
+          value={getValues("jobLocation") || ""}
+          onSelect={(location) =>
+            setValue("jobLocation", location, { shouldDirty: true })
+          }
+          className={errorClass("jobLocation")}
         />
 
         {showErrors && errors.jobLocation && (
