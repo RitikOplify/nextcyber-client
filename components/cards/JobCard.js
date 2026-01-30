@@ -11,9 +11,7 @@ import {
 import Image from "next/image";
 import { BiDollarCircle } from "react-icons/bi";
 
-const ImageSkeleton = () => (
-  <div className="w-15 h-15 bg-gray-300 rounded-2xl border-2 border-dark-yellow flex-shrink-0 animate-pulse" />
-);
+const ImageSkeleton = () => ( <div className="w-15 h-15 bg-gray-300 rounded-2xl border-2 border-dark-yellow flex-shrink-0 animate-pulse" />);
 
 const JobCard = ({ job, handleClick }) => {
   return (
