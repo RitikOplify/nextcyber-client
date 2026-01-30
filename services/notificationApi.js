@@ -15,4 +15,4 @@ export const markStudentNotificationAsReadApi = (notificationId) => {
 
 export const markCompanyNotificationAsReadApi = (notificationId) => {
   return axios.patch(`/company/mark-notification-as-read?notificationId=${notificationId}`);
-}   t
+}
