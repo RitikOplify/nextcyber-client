@@ -11,6 +11,10 @@ import {
 import Image from "next/image";
 import { BiDollarCircle } from "react-icons/bi";
 
+const ImageSkeleton = () => (
+  <div className="w-15 h-15 bg-gray-300 rounded-2xl border-2 border-dark-yellow flex-shrink-0 animate-pulse" />
+);
+
 const JobCard = ({ job, handleClick }) => {
   return (
     <div
@@ -21,14 +25,18 @@ const JobCard = ({ job, handleClick }) => {
         <div className="flex items-start justify-between mb-6">
           <div className="flex gap-4">
             <div className="w-15 h-15 bg-gray-300 rounded-2xl border-2 border-dark-yellow flex-shrink-0">
+              {job?.company?.profilePicture?.url ? (
               <Image
                 src={
-                  job?.company?.profilePicture?.url || job?.company?.profilePicture?.url}
+                  job?.company?.profilePicture?.url || job?.company?.profilePicture?.url }
                 alt={job?.company?.companyName || "Company Logo"}
                 width={60}
                 height={60}
                 className="w-15 h-15 object-contain rounded-2xl"
               />
+            ) : (
+              <ImageSkeleton />
+            )}
             </div>
 
             <div>
