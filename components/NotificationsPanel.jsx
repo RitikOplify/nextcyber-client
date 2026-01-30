@@ -32,11 +32,11 @@ export default function NotificationsPanel() {
 
   const fetchNotifications = () => {
     if (user?.role === "STUDENT") {
-      dispatch(asyncGetStudentNotifications({ limit: 10 }));
+     if (notifications.length === 0) dispatch(asyncGetStudentNotifications({ limit: 10 }));
     }
 
     if (user?.role === "COMPANY") {
-      dispatch(asyncGetCompanyNotifications({ limit: 10 }));
+     if (notifications.length === 0) dispatch(asyncGetCompanyNotifications({ limit: 10 }));
     }
   };
 
