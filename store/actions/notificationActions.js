@@ -1,7 +1,7 @@
 
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/utils/errMessage";
-import { getCompanyNotificationsApi, getStudentNotificationsApi, markCompanyNotificationAsReadApi, markStudentNotificationAsReadApi } from "@/api/notificationApi";
+import { getCompanyNotificationsApi, getStudentNotificationsApi, markCompanyNotificationAsReadApi, markStudentNotificationAsReadApi } from "@/services/notificationApi";
 import { setLoading, setNotifications } from "../slices/notificationSlice";
 export const asyncGetStudentNotifications = (query) => async (dispatch) => {
   try {
