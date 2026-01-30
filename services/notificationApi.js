@@ -10,9 +10,9 @@ export const getCompanyNotificationsApi = (query) => {
 };
 
 export const markStudentNotificationAsReadApi = (notificationId) => {
-  return axios.post(`/student/mark-notification-as-read?notificationId=${notificationId}`);
+  return axios.patch(`/student/mark-notification-as-read?notificationId=${notificationId}`);
 }
 
 export const markCompanyNotificationAsReadApi = (notificationId) => {
-  return axios.post(`/company/mark-notification-as-read?notificationId=${notificationId}`);
-}   
+  return axios.patch(`/company/mark-notification-as-read?notificationId=${notificationId}`);
+}   t
