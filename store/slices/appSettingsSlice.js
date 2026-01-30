@@ -13,7 +13,6 @@ export const appSettings = createSlice({
       state.collapseSidebar = !state.collapseSidebar;
     },
     setNotifications: (state, action) => {
-      console.log("🔔 Adding notification to state:", action.payload);
       state.notifications = [...state.notifications, action.payload];
       state.notificationCount += 1;
     },
