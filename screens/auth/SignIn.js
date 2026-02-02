@@ -1,5 +1,11 @@
 "use client";
-import React, { useCallback, useEffect, useState, useTransition } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { useForm } from "react-hook-form";
 import {
   Eye,
@@ -17,6 +23,12 @@ import { FaLinkedin } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import { asyncSigninUser } from "@/store/actions/authActions";
 import Link from "next/link";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import toast from "react-hot-toast";
+import { createSocket } from "@/utils/socket";
+import { setUser } from "@/store/slices/authSlice";
+import { getErrorMessage } from "@/utils/errMessage";
+import axios from "axios";
 
 const hasUpper = (s) => /[A-Z]/.test(s);
 const hasLower = (s) => /[a-z]/.test(s);
@@ -48,7 +60,7 @@ const hasSequentialChars = (s) => {
   return false;
 };
 
-const SignIn = () => {
+const SignInForm = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRole, setSelectedRole] = useState("STUDENT");
@@ -58,6 +70,7 @@ const SignIn = () => {
   const [isPending, startTransition] = useTransition();
   const urlTab = searchParams.get("role") || "STUDENT";
   const [activeTab, setActiveTab] = useState(urlTab);
+  const googleLoginRef = useRef(null);
 
   useEffect(() => setActiveTab(urlTab), [urlTab]);
 
@@ -93,7 +106,6 @@ const SignIn = () => {
     dispatch(asyncSigninUser(data, setLoading, router));
   };
 
-
   const validatePassword = (password) => {
     if (password.length < 8)
       return "Password must be at least 8 characters long.";
@@ -112,6 +124,36 @@ const SignIn = () => {
     if (hasSequentialChars(password))
       return "Password must not contain sequential characters like '1234' or 'abcd'.";
     return true; // valid
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    const backendURL = process.env.NEXT_PUBLIC_API_URL;
+    setLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${backendURL}/auth/google`,
+        { token: credentialResponse.credential, role: selectedRole },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      dispatch(setUser(data.user));
+      createSocket();
+      router.push("/dashboard");
+      toast.success(data.message || "Signed in");
+    } catch (err) {
+      toast.error(getErrorMessage(err, "Signed failed"));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const triggerGoogleLogin = () => {
+    // clearErrors();
+    if (googleLoginRef.current) {
+      googleLoginRef.current.querySelector("div[role='button']")?.click();
+    }
   };
 
   return (
@@ -221,16 +263,26 @@ const SignIn = () => {
                   <div className=" flex gap-2.5 items-center">
                     <div className=" bg-g-300 h-0.5 flex-1"></div>
                     <div className=" text-g-200 text-base leading-6 font-semibold">
-                      Or Sign with 
+                      Or Sign with
                     </div>
                     <div className=" bg-g-300 h-0.5 flex-1"></div>
+                  </div>
+                  <div ref={googleLoginRef} className="hidden">
+                    <GoogleLogin
+                      onSuccess={handleGoogleSuccess}
+                      useOneTap
+                      auto_select={false}
+                    />
                   </div>
                   <div className="flex gap-4">
                     <button className="flex-1 bg-[#1B1C1E] cursor-pointer text-[#9C9C9D] py-2 px-4 border border-[#2F3031] rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors">
                       <FaLinkedin size={20} className="text-white" />
                       LinkedIn
                     </button>
-                    <button className="flex-1 bg-[#1B1C1E] text-[#9C9C9D] py-2 cursor-pointer px-4 border border-[#2F3031] rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors">
+                    <button
+                      className="flex-1 bg-[#1B1C1E] text-[#9C9C9D] py-2 cursor-pointer px-4 border border-[#2F3031] rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors"
+                      onClick={triggerGoogleLogin}
+                    >
                       <FcGoogle size={20} />
                       Google
                     </button>
@@ -311,4 +363,10 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default function SignUp() {
+  return (
+    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+      <SignInForm />
+    </GoogleOAuthProvider>
+  );
+}
