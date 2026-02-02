@@ -1,5 +1,11 @@
 "use client";
-import React, { useCallback, useEffect, useState, useTransition } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { useForm } from "react-hook-form";
 import {
   Eye,
@@ -15,8 +21,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { FaLinkedin } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
-import {  asyncSignupUser } from "@/store/actions/authActions";
+import { asyncSignupUser } from "@/store/actions/authActions";
 import Link from "next/link";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { createSocket } from "@/utils/socket";
+import { setUser } from "@/store/slices/authSlice";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "@/utils/errMessage";
+import axios from "axios";
 
 const hasUpper = (s) => /[A-Z]/.test(s);
 const hasLower = (s) => /[a-z]/.test(s);
@@ -48,7 +60,7 @@ const hasSequentialChars = (s) => {
   return false;
 };
 
-const SignUp = () => {
+const SignUpForm = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRole, setSelectedRole] = useState("STUDENT");
@@ -58,6 +70,7 @@ const SignUp = () => {
   const [isPending, startTransition] = useTransition();
   const urlTab = searchParams.get("role") || "STUDENT";
   const [activeTab, setActiveTab] = useState(urlTab);
+  const googleLoginRef = useRef(null);
 
   useEffect(() => setActiveTab(urlTab), [urlTab]);
 
@@ -113,6 +126,36 @@ const SignUp = () => {
     return true; // valid
   };
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    const backendURL = process.env.NEXT_PUBLIC_API_URL;
+    setLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${backendURL}/auth/google`,
+        { token: credentialResponse.credential, role: selectedRole },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      dispatch(setUser(data.user));
+      createSocket();
+      router.push("/dashboard");
+      toast.success(data.message || "Signed in");
+    } catch (err) {
+      toast.error(getErrorMessage(err, "Signed failed"));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const triggerGoogleLogin = () => {
+    // clearErrors();
+    if (googleLoginRef.current) {
+      googleLoginRef.current.querySelector("div[role='button']")?.click();
+    }
+  };
+
   return (
     <>
       <section className="bg-g-900 ">
@@ -134,7 +177,7 @@ const SignUp = () => {
 
                 <p className="text-g-200 text-sm">
                   Please enter your details here.
-                </p>    
+                </p>
               </div>
 
               {
@@ -261,12 +304,23 @@ const SignUp = () => {
                     </div>
                     <div className=" bg-g-300 h-0.5 flex-1"></div>
                   </div>
+                  <div ref={googleLoginRef} className="hidden">
+                    <GoogleLogin
+                      onSuccess={handleGoogleSuccess}
+                      useOneTap
+                      auto_select={false}
+                    />
+                  </div>
+
                   <div className="flex gap-4">
                     <button className="flex-1 bg-[#1B1C1E] cursor-pointer text-[#9C9C9D] py-2 px-4 border border-[#2F3031] rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors">
                       <FaLinkedin size={20} className="text-white" />
                       LinkedIn
                     </button>
-                    <button className="flex-1 bg-[#1B1C1E] text-[#9C9C9D] py-2 cursor-pointer px-4 border border-[#2F3031] rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors">
+                    <button
+                      className="flex-1 bg-[#1B1C1E] text-[#9C9C9D] py-2 cursor-pointer px-4 border border-[#2F3031] rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors"
+                      onClick={triggerGoogleLogin}
+                    >
                       <FcGoogle size={20} />
                       Google
                     </button>
@@ -347,4 +401,10 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default function SignUp() {
+  return (
+    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+      <SignUpForm />
+    </GoogleOAuthProvider>
+  );
+}
